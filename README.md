@@ -34,4 +34,7 @@ It's a processor
 - Therefor at 5mm^2, we have 150k to 40k transistors per chip. (it will be less due to the edge ring area being used for other stuff)
 - It should be 4 transistors per gate
 - so 37k to 10k gates per chip
+- on-chip memory:
+  - It looks like a CMOS SRAM cell has 6 transistors ... for 1 bit of storage.
+  - If the entire die was made into SRAM we would therefore get 25kbit to 6.6kbit, or 3.2KB to .8KB
 - The most basic ZPU (which is a tiny processor) calls for "about 1700 gates"
