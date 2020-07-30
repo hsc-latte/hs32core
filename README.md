@@ -7,6 +7,9 @@ It's a processor
 - flat address space, no MMU
 - As simple as possible
 - Should support running unmodified C programs.
+- Required math ops: the usual AND OR NOT XOR shifts, rotates.
+- Integer multiply and divide would be cool if we can fit it.
+- Floating point math would be cool if we can fit it, including addition,mul,div operations
 
 # Ports
 
