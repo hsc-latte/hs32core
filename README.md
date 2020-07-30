@@ -14,9 +14,23 @@ It's a processor
 # Ports
 
 - PS2 mouse, keyboard
+  - https://opencores.org/projects/ps2
 - 4 Serial Ports (UART)
+  - https://opencores.org/projects/uart16550
+  - https://opencores.org/projects/uart
 - Ethernet
+  - https://webcache.googleusercontent.com/search?q=cache:brylkvkD1N4J:https://opencores.org/projects/ethmac+&cd=1&hl=en&ct=clnk&gl=us
+  - oops! ethernet may require too many gates.
 - Display: Either VGA, NTSC, or DVI, or something like that.
+  - ntsc https://webcache.googleusercontent.com/search?q=cache:4BF235L2FPcJ:https://opencores.org/projects/fbas_encoder+&cd=1&hl=en&ct=clnk&gl=us
+  - https://webcache.googleusercontent.com/search?q=cache:uBfl2FENLigJ:https://opencores.org/projects/yavga+&cd=2&hl=en&ct=clnk&gl=us
+  - really not sure if we can do video out without a framebuffer, and then if we can get fast enough external RAM to use as a framebuffer.
+  - possible expensive memory chip: https://www.digikey.com/product-detail/en/renesas-electronics-america-inc/70V28L20PFGI/800-2108-ND/2010195
+   - it is dual port so it can simultaneous read and write (great for framebuffers)
+   - asynchronous SRAM
+   - parallel addr/data bus, 16 bit
+   - full speed should be 50Mhz @ 16 bit accesses
+   - The VGA core has a 50Mhz pixel clock so it should be possible to do color at 800x600!
 - SD Card or Compactflash or something similar
 - GPIOs, 8 would be nice.
 
