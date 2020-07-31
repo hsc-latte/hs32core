@@ -61,3 +61,4 @@ It's a processor
 # Interesting Tools
 
 - A Python toolbox for building complex digital hardware https://github.com/m-labs/migen
+- Generates a custom CPU based on C code tailored to your code https://github.com/dawsonjon/Chips-2.0
