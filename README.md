@@ -36,6 +36,7 @@ It's a processor
    - The VGA core has a 50Mhz pixel clock so it should be possible to do color at 800x600!
 - SD Card or Compactflash or something similar
 - GPIOs, 8 would be nice.
+- If we want we can add a USB host using an external chip https://www.hobbytronics.co.uk/usb-host-dip
 
 # Memory
 
