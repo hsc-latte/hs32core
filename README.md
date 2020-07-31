@@ -56,3 +56,8 @@ It's a processor
   - It looks like a CMOS SRAM cell has 6 transistors ... for 1 bit of storage.
   - If the entire die was made into SRAM we would therefore get 25kbit to 6.6kbit, or 3.2KB to .8KB
 - The most basic ZPU (which is a tiny processor) calls for "about 1700 gates"
+
+
+# Interesting Tools
+
+- A Python toolbox for building complex digital hardware https://github.com/m-labs/migen
