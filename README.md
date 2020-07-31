@@ -21,6 +21,9 @@ It's a processor
 - Ethernet
   - https://webcache.googleusercontent.com/search?q=cache:brylkvkD1N4J:https://opencores.org/projects/ethmac+&cd=1&hl=en&ct=clnk&gl=us
   - oops! ethernet may require too many gates.
+  - We can cheat a little by using this chip which offloads most of the harder networking work and you just need to talk to it over SPI.
+   - https://wizwiki.net/wiki/lib/exe/fetch.php?media=products:w5100s:w5100s_ds_v100e.pdf
+   - in fact it does TCP and UDP for you!
 - Display: Either VGA, NTSC, or DVI, or something like that.
   - ntsc https://webcache.googleusercontent.com/search?q=cache:4BF235L2FPcJ:https://opencores.org/projects/fbas_encoder+&cd=1&hl=en&ct=clnk&gl=us
   - https://webcache.googleusercontent.com/search?q=cache:uBfl2FENLigJ:https://opencores.org/projects/yavga+&cd=2&hl=en&ct=clnk&gl=us
