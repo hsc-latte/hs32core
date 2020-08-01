@@ -3,7 +3,7 @@ It's a processor
 
 # CPU
 
-- 32 bit (is this a dumb idea? should we go 8 bit instead?)
+- 32 bit
 - flat address space, no MMU
 - As simple as possible
 - Should support running unmodified C programs.
