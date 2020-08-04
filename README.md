@@ -1,6 +1,7 @@
 # Processor
-Open Source Hardware Processor
 
+Open Source Hardware Processor
+![silicon die photo](/images/silicon.jpg)
 # CPU
 
 - 32 bit
