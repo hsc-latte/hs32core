@@ -64,6 +64,7 @@ Open Source Hardware Processor
 - A Python toolbox for building complex digital hardware https://github.com/m-labs/migen
 - Generates a custom CPU based on C code tailored to your code https://github.com/dawsonjon/Chips-2.0
 - Open Source VLSI toolbox http://opencircuitdesign.com/magic/
+- EDAlyze - python scripting of EDA tools https://github.com/olofk/edalize
 
 # License 
 
