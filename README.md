@@ -65,6 +65,7 @@ Open Source Hardware Processor
 - Generates a custom CPU based on C code tailored to your code https://github.com/dawsonjon/Chips-2.0
 - Open Source VLSI toolbox http://opencircuitdesign.com/magic/
 - EDAlyze - python scripting of EDA tools https://github.com/olofk/edalize
+- Package manager for IP cores https://github.com/olofk/fusesoc
 
 # License 
 
