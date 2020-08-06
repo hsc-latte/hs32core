@@ -50,8 +50,11 @@ Open Source Hardware Processor
 - Silicon Fab price list: https://europractice-ic.com/wp-content/uploads/2020/07/General-MPW-EUROPRACTICE-200714-v11.pdf
 - Packaging: https://europractice-ic.com/packaging-integration/standard-packaging/
 - Bond pad design for wirebonding https://europractice-ic.com/wp-content/uploads/2020/06/ASIC-Package-Design-Rules-10062020.pdf
+- How many pins can the processor have? chip side length/distance between pads: sqrt(5mm^2) / 65um = 34. To be conservative, round to 30 pads per side. Therefore, estimate maximum 120 total pins for the entire chip. Ceramic quad flat pack (QFP) is available with that many pins from europractice.
+- How much of the die area is dedicated to wire bonding pads? Assume bond pad is 60um. 4 * 60um * sqrt(5mm^2) = .536 mm^2
+  - Therefore approximately 10% of the die ares is wire bonding pads. Not too bad.
 - I would guess theres about 30000 to 8000 transistors per mm^2
-- Therefor at 5mm^2, we have 150k to 40k transistors per chip. (it will be less due to the edge ring area being used for other stuff)
+- Therefore at 5mm^2, we have 150k to 40k transistors per chip. (it will be less due to the edge ring area being used for other stuff)
 - It should be 4 transistors per gate
 - so 37k to 10k gates per chip
 - on-chip memory:
