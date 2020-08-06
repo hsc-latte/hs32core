@@ -49,6 +49,7 @@ Open Source Hardware Processor
 - 5 mm^2 of this tech: ON Semi 0.7µ C07M-D 2M/1P
 - Silicon Fab price list: https://europractice-ic.com/wp-content/uploads/2020/07/General-MPW-EUROPRACTICE-200714-v11.pdf
 - Packaging: https://europractice-ic.com/packaging-integration/standard-packaging/
+- Bond pad design for wirebonding https://europractice-ic.com/wp-content/uploads/2020/06/ASIC-Package-Design-Rules-10062020.pdf
 - I would guess theres about 30000 to 8000 transistors per mm^2
 - Therefor at 5mm^2, we have 150k to 40k transistors per chip. (it will be less due to the edge ring area being used for other stuff)
 - It should be 4 transistors per gate
