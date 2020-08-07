@@ -10,7 +10,7 @@ Open Source Hardware Processor
 - Get prototyping FPGA hardware and needed tools into people's hands
   - this board looks like the most promising one https://www.olimex.com/Products/FPGA/iCE40/iCE40HX8K-EVB/open-source-hardware
 - Prepare reading list for newcomers to computer engineering
-
+  - started here: [link](Resources.md)
 # CPU
 
 - 32 bit
