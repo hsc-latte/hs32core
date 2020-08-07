@@ -2,6 +2,11 @@
 
 Open Source Hardware Processor
 ![silicon die photo](/images/silicon.jpg)
+
+# Task List
+- Get VLSI design tools running in Docker and document usage on various operating systems.
+- Replicate this using their design and same tooling: https://content.riscv.org/wp-content/uploads/2017/12/Wed-1142-RISCV-Tim-Edwards.pdf
+
 # CPU
 
 - 32 bit
