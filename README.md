@@ -9,6 +9,7 @@ Open Source Hardware Processor
   - except we'd rather not use efabless if we can help it (the fab is expensive, and we'd rather not be dependent on donated fab runs.)
 - Get prototyping FPGA hardware and needed tools into people's hands
   - this board looks like the most promising one https://www.olimex.com/Products/FPGA/iCE40/iCE40HX8K-EVB/open-source-hardware
+- Prepare reading list for newcomers to computer engineering
 
 # CPU
 
