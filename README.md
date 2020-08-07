@@ -6,6 +6,7 @@ Open Source Hardware Processor
 # Task List
 - Get VLSI design tools running in Docker and document usage on various operating systems.
 - Replicate this using their design and same tooling: https://content.riscv.org/wp-content/uploads/2017/12/Wed-1142-RISCV-Tim-Edwards.pdf
+  - except we'd rather not use efabless if we can help it (the fab is expensive, and we'd rather not be dependent on donated fab runs.)
 
 # CPU
 
