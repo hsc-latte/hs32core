@@ -53,7 +53,7 @@ Open Source Hardware Processor
 - use an external 16 or 32 bit ram Chip, likely SRAM for ease of use. Use several megabytes
 
 # Target Silicon:
-
+- Silicon price list exploration: https://docs.google.com/spreadsheets/d/1oqIo1lJNRx8SugjHd8WOBk07iPeCCzOLdnaOR9BBdXU/edit#gid=0
 - 700nm process from ON Semi 
 - 5 mm^2 of this tech: ON Semi 0.7µ C07M-D 2M/1P
 - Silicon Fab price list: https://europractice-ic.com/wp-content/uploads/2020/07/General-MPW-EUROPRACTICE-200714-v11.pdf
