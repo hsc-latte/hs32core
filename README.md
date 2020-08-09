@@ -79,6 +79,9 @@ Open Source Hardware Processor
 - Open Source VLSI toolbox http://opencircuitdesign.com/magic/
 - EDAlyze - python scripting of EDA tools https://github.com/olofk/edalize
 - Package manager for IP cores https://github.com/olofk/fusesoc
+- *** OpenLane - fully automated RTL to ASIC flow. https://github.com/efabless/openlane
+- APIO - open ecosystem for FPGA boards https://github.com/FPGAwars/apio
+- 130nm process design kit (PDK) from skywater https://github.com/google/skywater-pdk
 
 # License 
 
