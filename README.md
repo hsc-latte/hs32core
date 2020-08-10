@@ -21,6 +21,7 @@ Open Source Hardware Processor
     - Submit a design for the November free shuttle run.
     - Try not to go too crazy with transistor count. We want to not be dependent on free fabrication in the future.
 4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
+5. Write or port C toolchain. Some higher level languages would also be nice, such as JS/python.
 
 **Fun Side Project for V1** : Make an Apple II or commodore style standalone PC using the processsor.
 
