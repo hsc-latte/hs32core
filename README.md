@@ -7,7 +7,9 @@ Open Source Hardware Processor
 - Reduce the barrier to entry to open source silicon for hobbyists
 - Encourage the production usage of fully open source, royalty-free, community designed ASICs within the maker community (displace proprietary chip designs)
 - Shorten the iteration time from ideation to fabrication
-- Make easy to use, relatively inexpensive hardware that people can acutaly buy
+- Explore creative ideas not found in current hardware offerings
+- Interoperate with modern, high performance components that are typically the realm of proprietary designs (DDR4, PCIE root complex, USB3, etc come to mind)
+- Make easy to use, relatively inexpensive hardware that people can acutally buy
 
 # Project Goals
 
