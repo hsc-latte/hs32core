@@ -14,6 +14,8 @@ Open Source Hardware Processor
     - Try not to go too crazy with transistor count. We want to not be dependent on free fabrication in the future.
 4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
 
+**Fun Side Project for V1** : Make an Apple II or commodore style standalone PC using the processsor.
+
 ## Processor V2 (Early 2021)
 1. Replicate V1 using non-donated fabrication and make the process economically sustainable.
     - This means making chips and boards than people can actually buy.
