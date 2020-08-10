@@ -5,7 +5,7 @@ Open Source Hardware Processor
 
 # Project Goals
 
-## Processor V1
+## Processor V1 (November 2020)
 1. Create a new CPU instruction set and design.
     - it should be a sort of minimum viable 32 bit CPU. Something similar in capability to an Arduino, and with similar ports.
 2. Test the CPU design in simulators and on FPGA
@@ -14,7 +14,7 @@ Open Source Hardware Processor
     - Try not to go too crazy with transistor count. We want to not be dependent on free fabrication in the future.
 4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
 
-## Processor V2
+## Processor V2 (Early 2021)
 1. Replicate V1 using non-donated fabrication and make the process economically sustainable.
     - This means making chips and boards than people can actually buy.
     - See Target Silicon section below.
@@ -25,7 +25,7 @@ Open Source Hardware Processor
     - graphics framebuffer
     - more ports in general.
 
-## Processor V3
+## Processor V3 (Late 2021)
 While maintaining economic sustainability:
 1. Expand capabilities
     - add MMU (ucLinux will run without an MMU, but typical programs will not run. They require fork() and mmap() among other MMU features.)
@@ -35,7 +35,7 @@ While maintaining economic sustainability:
 3. Make a raspberry-Pi style board. It would be much much slower than a Pi, but should have a similar style of capabilities and functions.
 3. Explore Linux support
 
-## Processor V4
+## Processor V4 (2022)
 Generally more powerful and unique. Try to achieve some interoperability with modern hardware, yet remain fully open source.
 Just some ideas:
 - On-chip Software Defined Radio (SDR) so that it can be a flexible radio device (WiFi, LTE, Bluetooth, GPS)
