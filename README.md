@@ -19,6 +19,7 @@ Open Source Hardware Processor
     - This means making chips and boards than people can actually buy.
     - See Target Silicon section below.
     - In theory, multi project wafer runs on very old tech could be < $100 per chip. Costs will go down as volume increases.
+    - we could do a Kickstarter or similar to fund a larger fabrication run for V2.
 2. Expand capabilities
     - more RAM, faster RAM
     - graphics framebuffer
