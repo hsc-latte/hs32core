@@ -35,6 +35,15 @@ While maintaining economic sustainability:
 3. Make a raspberry-Pi style board. It would be much much slower than a Pi, but should have a similar style of capabilities and functions.
 3. Explore Linux support
 
+## Processor V4
+Generally more powerful and unique. Try to achieve some interoperability with modern hardware, yet remain fully open source.
+Just some ideas:
+- On-chip Software Defined Radio (SDR) so that it can be a flexible radio device (WiFi, LTE, Bluetooth, GPS)
+- GPU
+- Multi core
+- PCIE Root Controller
+- DDR4 Controller
+- USB3 Controller
 
 # Task List
 - Get VLSI design tools running in Docker and document usage on various operating systems.
