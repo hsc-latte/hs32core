@@ -3,10 +3,24 @@
 Open Source Hardware Processor
 ![silicon die photo](/images/silicon.jpg)
 
+# Project Goals
+
+## Processor V1
+1. Create a new CPU instruction set and design.
+2. Test the CPU design in simulators and on FPGA
+3. Fabricate the processor using Google and efabless free shuttle service for open source using 130nm process, and open source PDK
+4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
+
+## Processor V2
+1. Replicate V1 using non-donated fabrication and make the process economically sustainable.
+2. Expand capabilities
+
+## Processor V3
+1. Explore Linux support
+
 # Task List
 - Get VLSI design tools running in Docker and document usage on various operating systems.
 - Replicate this using their design and same tooling: https://content.riscv.org/wp-content/uploads/2017/12/Wed-1142-RISCV-Tim-Edwards.pdf
-  - except we'd rather not use efabless if we can help it (the fab is expensive, and we'd rather not be dependent on donated fab runs.)
 - Get prototyping FPGA hardware and needed tools into people's hands
   - this board looks like the most promising one https://www.olimex.com/Products/FPGA/iCE40/iCE40HX8K-EVB/open-source-hardware
 - Prepare reading list for newcomers to computer engineering
