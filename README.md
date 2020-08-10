@@ -3,6 +3,12 @@
 Open Source Hardware Processor
 ![silicon die photo](/images/silicon.jpg)
 
+# Mission
+- Reduce the barrier to entry to open source silicon for hobbyists
+- Encourage the production usage of fully open source, royalty-free, community designed ASICs within the maker community (displace proprietary chip designs)
+- Shorten the iteration time from ideation to fabrication
+- Make easy to use, relatively inexpensive hardware that people can acutaly buy
+
 # Project Goals
 
 ## Processor V1 (November 2020)
