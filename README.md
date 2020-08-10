@@ -7,16 +7,30 @@ Open Source Hardware Processor
 
 ## Processor V1
 1. Create a new CPU instruction set and design.
+  - it should be a sort of minimum viable 32 bit CPU. Something similar in capability to an Arduino, and with similar ports.
 2. Test the CPU design in simulators and on FPGA
 3. Fabricate the processor using Google and efabless free shuttle service for open source using 130nm process, and open source PDK
 4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
 
 ## Processor V2
 1. Replicate V1 using non-donated fabrication and make the process economically sustainable.
+  - This means making chips and boards than people can actually buy.
+  - In theory, multi project wafer runs on very old tech could be < $100 per chip. Costs will go down as volume increases.
 2. Expand capabilities
+  - more RAM, faster RAM
+  - graphics framebuffer
+  - more ports in general.
 
 ## Processor V3
-1. Explore Linux support
+While maintaining economic sustainability:
+1. Expand capabilities
+  - add MMU (ucLinux will run without an MMU, but typical programs will not run. They require fork() and mmap() among other MMU features.)
+  - hardware floating point
+  - more RAM, faster RAM
+  - more ports in general. HDMI, ethernet, possibly USB and WiFi to some degree, with external chips
+3. Make a raspberry-Pi style board. It would be much much slower than a Pi, but should have a similar style of capabilities and functions.
+3. Explore Linux support
+
 
 # Task List
 - Get VLSI design tools running in Docker and document usage on various operating systems.
