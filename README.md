@@ -128,6 +128,7 @@ Just some ideas:
 
 # Interesting Tools
 
+- Long list of companies offering Multi Project Wafer services https://www.mirrorsemi.com/Foundry.html
 - A Python toolbox for building complex digital hardware https://github.com/m-labs/migen
 - Generates a custom CPU based on C code tailored to your code https://github.com/dawsonjon/Chips-2.0
 - Open Source VLSI toolbox http://opencircuitdesign.com/magic/
