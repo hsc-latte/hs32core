@@ -110,6 +110,7 @@ Just some ideas:
 - 700nm process from ON Semi 
 - 5 mm^2 of this tech: ON Semi 0.7µ C07M-D 2M/1P
 - Silicon Fab price list: https://europractice-ic.com/wp-content/uploads/2020/07/General-MPW-EUROPRACTICE-200714-v11.pdf
+- Another price list from europractice... https://europractice-ic.com/wp-content/uploads/2020/05/Miniasic-MPW-EUROPRACTICE-200505-v5.pdf
 - Packaging: https://europractice-ic.com/packaging-integration/standard-packaging/
 - Bond pad design for wirebonding https://europractice-ic.com/wp-content/uploads/2020/06/ASIC-Package-Design-Rules-10062020.pdf
 - How many pins can the processor have? chip side length/distance between pads: sqrt(5mm^2) / 65um = 34. To be conservative, round to 30 pads per side. Therefore, estimate maximum 120 total pins for the entire chip. Ceramic quad flat pack (QFP) is available with that many pins from europractice.
