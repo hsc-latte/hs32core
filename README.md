@@ -106,6 +106,14 @@ Just some ideas:
 - use an external 16 or 32 bit ram Chip, likely SRAM for ease of use. Use several megabytes
 
 # Target Silicon:
+### Google-skywater november 2020 free shuttle run
+- Info collected from skywater-pdk slack:
+- Tim Edwards: The whole chip will be (provisionally) 3.2 x 5.3, but the user area will be about 9 to 10 mm^2.  That is not including the pad frame;  that's the full core area you get to use.  I'm aiming to keep the "management region" off to one side to keep the user area roughly square.  The pads are 200um high, so the height is limited to 2.8mm, so the area you get to work with will be around 3.2 to 3.5mm wide and 2.8mm high.
+- Packaging: WLCSP: Main reason for wlcsp packaging is reduced parasitics for high speed signals like SERDES etc. Wlcsp is done before cutting the wafer so it doesn't require a separate packaging line.
+- Pins: Expected usable pins is more ~ 40
+
+
+### Non-Google, more sustainable options:
 - Silicon price list exploration: https://docs.google.com/spreadsheets/d/1oqIo1lJNRx8SugjHd8WOBk07iPeCCzOLdnaOR9BBdXU/edit#gid=0
 - 700nm process from ON Semi 
 - 5 mm^2 of this tech: ON Semi 0.7µ C07M-D 2M/1P
