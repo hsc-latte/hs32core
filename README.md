@@ -14,14 +14,19 @@ Open Source Hardware Processor
 # Project Goals
 
 ## Processor V1 (November 2020)
+The software and the hardware parts can mostly be done simultaneously.
 1. Create a new CPU instruction set and design.
     - it should be a sort of minimum viable 32 bit CPU. Something similar in capability to an Arduino, and with similar ports.
 2. Test the CPU design in simulators and on FPGA
 3. Fabricate the processor using Google and efabless free shuttle service for open source using 130nm process, and open source PDK
     - Submit a design for the November free shuttle run.
     - Try not to go too crazy with transistor count. We want to not be dependent on free fabrication in the future.
-4. Make an Arduino-like board for the processor, with similar capabilities and supporting software
-5. Write or port C toolchain. Some higher level languages would also be nice, such as JS/python.
+4. Build an assembler for the ISA
+5. Make an Arduino-like board for the processor, with similar capabilities and supporting software
+6. Write or port C toolchain. Some higher level languages would also be nice, such as JS/python.
+    - [TCC](https://bellard.org/tcc/) may be a good compiler to retarget for C.
+        - [Here](https://bellard.org/tcc/tcc-doc.html#CPU-dependent-code-generation) is what would be needed to be done to retarget it.
+    - Port as much of libc as possible. [Uclib-ng](https://www.uclibc-ng.org/) or [newlib](https://sourceware.org/newlib/) would be good options.
 
 **Fun Side Project for V1** : Make an Apple II or commodore style standalone PC using the processsor.
 
@@ -31,20 +36,27 @@ Open Source Hardware Processor
     - See Target Silicon section below.
     - In theory, multi project wafer runs on very old tech could be < $100 per chip. Costs will go down as volume increases.
     - we could do a Kickstarter or similar to fund a larger fabrication run for V2.
-2. Expand capabilities
+2. Expand capabilities with software support
     - more RAM, faster RAM
     - graphics framebuffer
     - more ports in general.
+3. Port other languages.
+    - [MicroPython](https://micropython.org/) may be a good option.
+    - Build a [LLVM backend](https://www.llvm.org/docs/WritingAnLLVMBackend.html).
+        - This is a lot of work, so it could be done in V2 or V3.
+4. A basic OS. This would be similar to old computers running BASIC. This may be porting an existing OS or writing one from sratch. 
 
 ## Processor V3 (Late 2021)
 While maintaining economic sustainability:
-1. Expand capabilities
+1. Expand capabilities with software support
     - add MMU (ucLinux will run without an MMU, but typical programs will not run. They require fork() and mmap() among other MMU features.)
     - hardware floating point
     - more RAM, faster RAM
     - more ports in general. HDMI, ethernet, possibly USB and WiFi to some degree, with external chips
-3. Make a raspberry-Pi style board. It would be much much slower than a Pi, but should have a similar style of capabilities and functions.
-3. Explore Linux support
+2. Make a raspberry-Pi style board. It would be much much slower than a Pi, but should have a similar style of capabilities and functions.
+3. Port more software to the system
+    - glibc should be able to be ported at this stage
+4. Explore Linux support
 
 ## Processor V4 (2022)
 Generally more powerful and unique. Try to achieve some interoperability with modern hardware, yet remain fully open source.
