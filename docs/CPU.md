@@ -52,3 +52,13 @@ Timing Requirements:
 - The duration of the 3rd write clock (write data output) is determined by the `tpd` of whichever memory chip used
 
 ![](images/cpu-wave2.svg)
+
+### Peripheral IO Write Cycle
+
+Clock Cycles: 4 minimum
+
+Timing Requirements:
+- External circuitry required for latching if timing requirements not met
+- I have not managed to get this to work properly yet
+
+![](images/cpu-wave3.svg)
