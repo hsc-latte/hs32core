@@ -92,9 +92,11 @@ The general idea is to have a superset of the peripherals that the old Arduino h
 - 14 digital 1/0
 - 6 pins with PWM
 - 6 analog input
+  - 8 channel SPI ADC https://www.digikey.com/product-detail/en/microchip-technology/MCP3008T-I-SL/MCP3008T-I-SLCT-ND/5148847
+- 4 channel SPI DAC https://www.digikey.com/product-detail/en/texas-instruments/TLV5620IDR/296-41707-2-ND/1669684
 - SPI/I2C/I2S	1/1/1
-- SRAM
-- Flash
+- SRAM: http://www.issi.com/WW/pdf/62WV12816ALL.pdf
+- Flash: S29AL008J https://www.cypress.com/file/216396/download
 - External Clock of at least 16mhz
 - USB port for programming (FTDI chip?)
 - PS2 mouse, keyboard
