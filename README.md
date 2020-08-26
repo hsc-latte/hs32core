@@ -115,10 +115,6 @@ The general idea is to have a superset of the peripherals that the old Arduino h
 - SD Card or Compactflash or something similar
 - If we want we can add a USB host using an external chip https://www.hobbytronics.co.uk/usb-host-dip
 
-# Memory
-
-- use an external 16 or 32 bit ram Chip, likely SRAM for ease of use. Use several megabytes
-
 # Target Silicon:
 ### Google-skywater november 2020 free shuttle run
 - Info collected from skywater-pdk slack:
