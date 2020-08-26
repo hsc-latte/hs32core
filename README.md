@@ -105,10 +105,10 @@ The general idea is to have a superset of the peripherals that the old Arduino h
   - https://opencores.org/projects/uart16550
   - https://opencores.org/projects/uart
 - Ethernet
-  - https://webcache.googleusercontent.com/search?q=cache:brylkvkD1N4J:https://opencores.org/projects/ethmac+&cd=1&hl=en&ct=clnk&gl=us
-  - oops! ethernet may require too many gates.
-  - We can cheat a little by using this chip which offloads most of the harder networking work and you just need to talk to it over SPI.
+  - Ethernet likely takes too many gates, but we can have an external chip:
+  - Using this chip which offloads most of the harder networking work and you just need to talk to it over SPI.
    - https://wizwiki.net/wiki/lib/exe/fetch.php?media=products:w5100s:w5100s_ds_v100e.pdf
+   - https://www.digikey.com/products/en?keywords=W5100S
    - in fact it does TCP and UDP for you!
 - Display: NTSC Composite Video Out
   - ntsc https://webcache.googleusercontent.com/search?q=cache:4BF235L2FPcJ:https://opencores.org/projects/fbas_encoder+&cd=1&hl=en&ct=clnk&gl=us
