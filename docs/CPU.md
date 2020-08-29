@@ -40,7 +40,7 @@ Timing Requirements:
 - The duration of the T<sub>W</sub> read clock (no data input) is determined by the `tpd` of whichever memory chip used.
 - T<sub>W</sub> can span multiple clock periods to allow for different memory timings. This will allow the CPU to be clocked at a higher speed than the memory chips.
 
-In implementation, OE# is the AND of 2 signals, one leading edge and one falling edge driven signals.
+In the implementation, OE# is the AND of 2 signals, one leading edge and one falling edge-driven signals.
 
 <!-- WAVEDROM JSON FILE
 { signal: [
@@ -84,6 +84,16 @@ Clock Cycles: 4 minimum
 
 Timing Requirements:
 - External circuitry required for latching if timing requirements not met
-- I have not managed to get this to work properly yet
 
-<!-- ![](images/cpu-wave3.svg) -->
+<!-- WAVEDROM JSON FILE
+{ signal: [
+  { name: "CLK",		wave: "hlhlhlhlh", node: "..1.2.3.4" },
+  { name: "ALE0",		wave: "xh.l....x" },
+  { name: "WE#",		wave: "h...l.h.." },
+  { name: "OE#",		wave: "h...l..h." },
+  { name: "BHE#",		wave: "x.h.....x" },
+  { name: "IO[15:0]",	wave: "x.9.7...x", data:[ "A[15:0]", "D[15:0]" ] },],
+  head: { text: "Figure 3. Port Mapped I/O Read Timing Waveform" },
+  edge: [ '1<->2 T1', '2<->3 TW', '3<->4 T3' ]
+} -->
+![](images/cpu-wave3.svg)
