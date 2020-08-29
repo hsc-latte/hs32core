@@ -10,10 +10,9 @@
 | 18     | WE#       | Write Enable (Inverted)             |
 | 19     | OE#       | Output Enable (Inverted)            |
 | 20     | BHE#      | Data Bus High 8-bits (Inverted)     |
-| 21     | BLE#      | Data Bus Low 8-bits (Inverted)      |
-| 22     | -         | No-connect (placeholder)            |
-| 23, 24 | RX, TX    | 9600 Baud UART Interface            |
-| 25-... | GPIO0-... | General Purpose Input/Output        |
+| 21     | -         | No-connect (placeholder)            |
+| 22, 23 | RX, TX    | 9600 Baud UART Interface            |
+| 24-... | GPIO0-... | General Purpose Input/Output        |
 
 **Notes:**
 - By adding an extra ALE3 (24-bit address bus) and/or ALE4 (32-bit address bus), 8 more bits can be saved from the IO pins
@@ -21,7 +20,7 @@
 - If IRQ signals are required, each GPIO signal should generate an interrupt
 - GPIO pins are all digital without PWM support. ADCs and IO expansions can be attached later to this or to the IO/data bus with the help of the PIO pin. Someone just has to work out the timing waveforms.
 
-**Chips:**
+**Recommended Chips:**
 - CY62147G variant for 4M (512x16) SRAM (55ns rw cycle)
 - 74xx373/573 for address latches (as fast as 1ns tpd)
 - 74xx245 for tristate bus buffers if needed

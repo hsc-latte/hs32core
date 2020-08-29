@@ -1,0 +1,37 @@
+## Environment Setup
+
+Install the APIO toolchain:
+
+```
+pip3 install apio
+```
+
+Install the drivers:
+
+```
+apio install -a
+```
+
+You should add yosys, iverilog and gtkwave to your path. The binaries are located in subdirectories under:
+```
+~/.apio/packages
+```
+(or equivalent Windows directories).
+
+To compile:
+```
+iverilog tb.v -o a.out
+```
+
+Then run:
+```
+vvp a.out
+```
+
+You should be able to open the `.vcd` files in something like GTKWave.
+
+
+
+## Directory Layout
+
+`machine/` - Contains the Verilog equivalent of physical chips/
