@@ -28,7 +28,7 @@ The software and the hardware parts can mostly be done simultaneously.
         - [Here](https://bellard.org/tcc/tcc-doc.html#CPU-dependent-code-generation) is what would be needed to be done to retarget it.
     - Port as much of libc as possible. [Uclib-ng](https://www.uclibc-ng.org/) or [newlib](https://sourceware.org/newlib/) would be good options.
 
-### Task List for V1:
+### Task List for V1 by Early November 2020 (exact deadline date to be determined):
 - Design FPGA carrier board PCB. Get it manufactured, into peoples hands.
   - This board has this FPGA board on it, https://www.robotshop.com/en/devantech-icewerx-ice40-hx8k-fpga.html?utm_source=google&utm_medium=surfaces&utm_campaign=surfaces_across_google_usen&gclid=EAIaIQobChMI5cem_Lyv6wIV0yCtBh2KFQhIEAYYASABEgJyuvD_BwE
   - The board has SRAM and Flash chips built in.
