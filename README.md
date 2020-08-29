@@ -28,6 +28,23 @@ The software and the hardware parts can mostly be done simultaneously.
         - [Here](https://bellard.org/tcc/tcc-doc.html#CPU-dependent-code-generation) is what would be needed to be done to retarget it.
     - Port as much of libc as possible. [Uclib-ng](https://www.uclibc-ng.org/) or [newlib](https://sourceware.org/newlib/) would be good options.
 
+### Task List for V1:
+- Design FPGA carrier board PCB. Get it manufactured, into peoples hands.
+  - This board has this FPGA board on it, https://www.robotshop.com/en/devantech-icewerx-ice40-hx8k-fpga.html?utm_source=google&utm_medium=surfaces&utm_campaign=surfaces_across_google_usen&gclid=EAIaIQobChMI5cem_Lyv6wIV0yCtBh2KFQhIEAYYASABEgJyuvD_BwE
+  - The board has SRAM and Flash chips built in.
+  - The board has latch chips to function as IO expanders because the fabricated CPU will be pin-limited.
+  - The board should have its own clock IC.
+- Design ISA
+- Write assembler for the ISA
+- Get Verilog simulator up and running and documented.
+- Design CPU and peripherals in Verilog or Migen. 
+- Simulate CPU and periherals in software. Programs should be able to run and take input/output. 
+- Test CPU and peripherals on the FGPA carrier board. RAM and flash should work. We should be able to load an run real programs on the board
+- Create task list to prepare the verilog design for fabrication.
+  - Ensure we haven't overlooked anything that could cause our design to be rejected by Google/Skywater
+  - Ensure our design might actually work when fabricated
+
+
 **Fun Side Project for V1** : Make an Apple II or commodore style standalone PC using the processsor.
 
 ## Processor V2 (Early 2021)
@@ -68,15 +85,9 @@ Just some ideas:
 - DDR4 Controller
 - USB3 Controller
 
-# Task List
-- Find out how many pins will be supported on the WLCSP of Google and efabless free shuttle service.
-- Get VLSI design tools running in Docker and document usage on various operating systems.
-- Replicate this using their design and same tooling: https://content.riscv.org/wp-content/uploads/2017/12/Wed-1142-RISCV-Tim-Edwards.pdf
-- Get prototyping FPGA hardware and needed tools into people's hands
-  - this board looks like the most promising one https://www.olimex.com/Products/FPGA/iCE40/iCE40HX8K-EVB/open-source-hardware
-- Prepare reading list for newcomers to computer engineering
-  - started here: [link](Resources.md)
-  
+# Educational Resources
+- Reading list for newcomers to computer engineering, started here: [link](Resources.md)
+
 # CPU for V1
 
 - 32 bit
