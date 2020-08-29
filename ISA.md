@@ -31,10 +31,10 @@ I think we need a dedicated register for Accumulator, Program Counter and Curren
 |:-----------------:|:--------------:|:--------------------:|:------------------:|:-------------------:|:------------:|:------------:|
 |    Read Memory    |      0x00      |          32          |    OP REG 0x0000   |   0x00 0x01 0x0000  |              |              |
 |    Write Memory   |      0x10      |          32          |     OP REG DATA    |   0x10 0x01 0xDA7A  |              |              |
-|     Read Flash    |      0x20      |          32          |    OP REG 0x0000   |   0x20 0x01 0x0000  |              |              |
-|    Write Flash    |      0x30      |          32          |     OP REG DATA    |   0x30 0x01 0xDA7A  |              |              |
-|    Read Serial    |      0x40      |          32          |    OP REG 0x0000   |   0x40 0x01 0x0000  |              |              |
-|    Write Serial   |      0x50      |          32          |     OP REG DATA    |   0x50 0x01 0xDA7A  |              |              |
+|     Read Flash    |      0x01      |          32          |    OP REG 0x0000   |   0x20 0x01 0x0000  |              |              |
+|    Write Flash    |      0x11      |          32          |     OP REG DATA    |   0x30 0x01 0xDA7A  |              |              |
+|    Read Serial    |      0x02      |          32          |    OP REG 0x0000   |   0x40 0x01 0x0000  |              |              |
+|    Write Serial   |      0x12      |          32          |     OP REG DATA    |   0x50 0x01 0xDA7A  |              |              |
 |   Call Function   |      0x60      |          32          |                    |                     |              |              |
 | Conditional Jumps |      0x70      |          32          |                    |                     |              |              |
 | Install Interrupt |      0x80      |          32          |                    |                     |              |              |
