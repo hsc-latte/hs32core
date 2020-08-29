@@ -1,5 +1,5 @@
 # Resources
-_____________________
+---
 ## Docker
 [Docker Tutorial Video](https://www.youtube.com/watch?v=fqMOX6JJhGo) 
 ## Assembly
@@ -7,9 +7,9 @@ _____________________
 ## Compilers
 [Compiler Explained Simply Video](https://www.youtube.com/watch?v=QXjU9qTsYCc)
 ## Emulators
-##### What is Emulator?
+### What is Emulator?
 An emulator is a hardware or software that emulates the functions of one computer system in another computer system.
-##### Benefits:
+### Benefits:
 Emulators allow users to continue our work on discontinued consoles.
 Many emulators have already been released under GNU General Public License allowing for wide scale collaboration.
 Despite the original cost of developing an emulator, it may prove to be the more cost efficient solution.

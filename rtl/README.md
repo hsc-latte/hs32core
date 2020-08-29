@@ -1,3 +1,7 @@
+## Directory Layout
+
+`machine/` - Contains the Verilog equivalent of physical chips
+
 ## Environment Setup
 
 Install the APIO toolchain:
@@ -29,9 +33,3 @@ vvp a.out
 ```
 
 You should be able to open the `.vcd` files in something like GTKWave.
-
-
-
-## Directory Layout
-
-`machine/` - Contains the Verilog equivalent of physical chips/
