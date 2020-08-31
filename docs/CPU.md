@@ -28,6 +28,11 @@
 - Some ADC for analogue input (I'm not sure what to use)
 
 ---
+
+## Block Diagram
+![](images/cpu-block.svg)
+
+---
 ## Timing Waveforms
 
 Various timing diagrams of the address and data buses
