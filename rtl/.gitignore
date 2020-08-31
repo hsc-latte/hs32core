@@ -1,0 +1,13 @@
+# icarus simulation
+build/
+
+# yosys output files
+*.dblite
+*.bin
+*.asc
+*.json
+abc.*
+*.history
+
+# random stuff
+log.txt

@@ -4,19 +4,21 @@
 
 ## Docker
 
-### Build
+**Build the Docker**
 
+```
 docker build -t $(cat destination.txt) .
+```
 
-### Run in docker 
+**Run in Docker**
 
 Start a shell in the docker environent:
 
+```
 ./dev_docker_run bash
+```
 
 ## Local Environment Setup (without docker)
-
-but really you want docker...
 
 Install the APIO toolchain:
 
@@ -36,9 +38,11 @@ You should add yosys, iverilog and gtkwave to your path. The binaries are locate
 ```
 (or equivalent Windows directories).
 
+**!! EVERYONE, MAKE SURE YOU RUN ALL COMMANDS FROM THE ROOT DIRECTORY, rtl !!**
+
 To compile:
 ```
-iverilog tb.v -o a.out
+iverilog machine/tb.v -o a.out
 ```
 
 Then run:
@@ -47,3 +51,10 @@ vvp a.out
 ```
 
 You should be able to open the `.vcd` files in something like GTKWave.
+
+## The Toolchain
+| Name | Description |
+|-|-|
+| `iverilog` | We'll be using Icarus Verilog mainly as a simulation tool. <br> iverilog is the Verilog compiler |
+| `vvp` | vvp is the Verilog simulation runtime engine |
+| `gtkwave` | Tool to visualize waveforms (`.vcd` files) |
