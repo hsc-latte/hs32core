@@ -2,7 +2,21 @@
 
 `machine/` - Contains the Verilog equivalent of physical chips
 
-## Environment Setup
+## Docker
+
+### Build
+
+docker build -t $(cat destination.txt) .
+
+### Run in docker 
+
+Start a shell in the docker environent:
+
+./dev_docker_run bash
+
+## Local Environment Setup (without docker)
+
+but really you want docker...
 
 Install the APIO toolchain:
 
