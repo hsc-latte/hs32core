@@ -7,7 +7,7 @@ RUN apio install -a
 #for d in /root/.apio/packages/*/bin/; do
 #    PATH+=":$d"
 #done
-
-ENV PATH=/root/.apio/packages/toolchain-ecp5/bin/:/root/.apio/packages/toolchain-ice40/bin/:/root/.apio/packages/toolchain-iverilog/bin/:/root/.apio/packages/toolchain-verilator/bin/:/root/.apio/packages/toolchain-yosys/bin/:/root/.apio/packages/tools-system/bin/:$PATH
+RUN  cp --backup=numbered -R /root/.apio/packages/*/* /usr/local
+#ENV PATH=/root/.apio/packages/toolchain-ecp5/bin/:/root/.apio/packages/toolchain-ice40/bin/:/root/.apio/packages/toolchain-iverilog/bin/:/root/.apio/packages/toolchain-verilator/bin/:/root/.apio/packages/toolchain-yosys/bin/:/root/.apio/packages/tools-system/bin/:$PATH
 
 
