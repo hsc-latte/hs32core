@@ -28,41 +28,76 @@
 |:---:|:--------:|:----:|
 | HEX | Register | Flag |
 
+### Flags
+
+I'm having second thoughts about the flags... It's kinda on the edge of CISC... I'm planning on making everything 1 byte so that its easier to work with but if we're not using the flags maybe we'll just give the extra 4 bits to op code or something.
+
 ## Instruction Listing
 (insert table here)
 
-| Description | LSB |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|:-----------:|:---:|:----:|:----:|:---:|:---:|:---:|:---:|:---:|:---:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|  MSB/Prefix |  0  |   0  |   1  |  2  |  3  |  4  |  5  |  6  |  7  | 8 | 9 | A | B | C | D | E | F |
-|     LOAD    |  0  |  LDM |  LDR |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|    STORE    |  1  |  STM |  STR |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|    INPUT    |  2  |  INB | GPIO | SPI |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|    OUTPUT   |  3  | OUTB | GPIO | SPI |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|   FUNCTION  |  4  |  CPY |  MOV |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|     JUMP    |  5  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|  INTERRUPT  |  6  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|     MATH    |  7  |  ADD |  SUB | DIV | MUL | INC | DEC |     |     |   |   |   |   |   |   |   |   |
-|    LOGIC    |  8  |  AND |  OR  | NOT | XOR | SHL | SHR | ROL | ROR |   |   |   |   |   |   |   |   |
-|             |  9  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  A  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  B  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  C  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  D  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  E  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
-|             |  F  |      |      |     |     |     |     |     |     |   |   |   |   |   |   |   |   |
+My professor is a RISC guy so I'm a very RISC dude as well. I'm only taking ISA class next year so this is has been fun, I do appologise if this looks nothing like an ISA.
 
-### Structure
+This table contains the instruction code and the assembly code. The assembly code is mostly following standard convention (or at least MIPS convention) with a slight mordification for our purposes. Empty cell represent unassigned instruction that we can add things to if needed.
 
-|  TYPE | 1st Byte | 2nd Byte | 3rd Byte | 4th Byte |
-|:-----:|:--------:|:--------:|:--------:|:--------:|
-|  LOAD |    OP    |    REG   |   0x00   |   0x00   |
-| WRITE |    OP    |    REG   |   0xDA   |   0x7A   |
-|  MATH |    OP    |    REG   |    REG   |    REG   |
+| Description | LSB |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|:-----------:|:---:|:---------------------:|:---------------------------:|:---------------------------:|:---------------:|:----------------:|:-----------------:|:-----------------:|:------------------:|:--------------------:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|  MSB/Prefix |  0  |           0           |              1              |              2              |        3        |         4        |         5         |         6         |          7         |           8          | 9 | A | B | C | D | E | F |
+|     LOAD    |  0  |  LDR (Load Register)  |  LDM (Load memory 1st half) |  LDM (Load memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|    STORE    |  1  |  STR (store register) | STM (Store memory 1st half) | STM (Store memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|    INPUT    |  2  |          INB          |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|    OUTPUT   |  3  |          OUTB         |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|   FUNCTION  |  4  |          CPY          |             MOV             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|     JUMP    |  5  | BEQ (Branch if equal) |           J (Jump)          |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|  INTERRUPT  |  6  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|     MATH    |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|    LOGIC    |  8  |          AND          |              OR             |             NOT             |       XOR       | SHL (Shift left) | SHR (Shift right) | ROL (Rotate left) | ROR (Rotate right) | SLT (Set less than)  |   |   |   |   |   |   |   |
+|             |  9  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  A  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  B  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  C  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  D  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  E  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|             |  F  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+
+For math and logic I'm not sure if we want unsigned as well, right now they are signed
+
+### Addressing Mode
+
+|  Type  |        Description       |
+|:------:|:------------------------:|
+| R-Type | Register Only Addressing |
+| I-Type |   Immidiate Addressing   |
+| J-Type |      Jump Addressing     |
+|  Base  |      Base Addressing     |
+| Pseudo |    Pseudo Instructions   |
+
+|  Type  |     Prefix     | 1st Byte | 2nd Byte | 3rd Byte | 4th Byte |
+|:------:|:--------------:|:--------:|:--------:|:--------:|:--------:|
+| I-Type |  LOAD REGISTER |    OP    |    REG   |   0x00   |   0x00   |
+| I-Type | WRITE REGISTER |    OP    |    REG   |   0xDA   |   0x7A   |
+| I-Type |   LOAD MEMORY  |    OP    |    REG   |   0xAD   |   0xD0   |
+| I-Type |  WRITE MEMORY  |    OP    |    REG   |   0xAD   |   0xD0   |
+| R-Type |       CPY      |    OP    |    REG   |    REG   |   0x00   |
+| R-Type |       MATH     |    OP    |    REG   |    REG   |    REG   |
+
+### Memory
+
+32 bits addresses no segments big endian byte addressable
 
 ## Instruction Encoding
 Explain how instrucitions are encoded into "words".
 
-Working on it
+4 bytes 32-bits fixed, see addressing mode
+
+## Timing
+
+Execution Time = (# of instructions)(cycles/instruction)(second/cycle)
+
+By going with RISC we have a smaller number of instructions but complex operation will use more instructions
+
+> The number of instructions also depends enormously on the cleverness of the programmer
+
+Now we only need a few essential instructions, but we also include some special instructions that are useful in our case
 
 ## Examples of instrucion set usage
 These are things we'll need to do
