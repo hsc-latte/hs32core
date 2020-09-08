@@ -3,24 +3,24 @@
 ## Registers
 (insert table here)
 
-| Register | Designation | Size (Bits) | Alias |     Details    |
-|:--------:|:-----------:|:-----------:|:-----:|:--------------:|
-|    g0    |     0x00    |      32     |   NA  |       NA       |
-|    g1    |     0x10    |      32     |   NA  |       NA       |
-|    g2    |     0x20    |      32     |   NA  |       NA       |
-|    g3    |     0x30    |      32     |   NA  |       NA       |
-|    g4    |     0x40    |      32     |   NA  |       NA       |
-|    g5    |     0x50    |      32     |   NA  |       NA       |
-|    g6    |     0x60    |      32     |   NA  |       NA       |
-|    g7    |     0x70    |      32     |   NA  |       NA       |
-|    g8    |     0x80    |      32     |   NA  |       NA       |
-|    g9    |     0x90    |      32     |   NA  |       NA       |
-|    g10   |     0xA0    |      32     |   NA  |       NA       |
-|    g11   |     0xB0    |      32     |   NA  |       NA       |
-|    g12   |     0xC0    |      32     |   NA  |       NA       |
-|    g13   |     0xD0    |      32     |   NA  |       NA       |
-|    g14   |     0xE0    |      32     |   LR  | Return Address |
-|    g15   |     0xF0    |      32     |   SP  |  Stack Pointer |
+| Register | Designation | Size (Bits) | Alias |           Details          |
+|:--------:|:-----------:|:-----------:|:-----:|:--------------------------:|
+|    g0    |     0x00    |      32     |   NA  |             NA             |
+|    g1    |     0x10    |      32     |   NA  |             NA             |
+|    g2    |     0x20    |      32     |   NA  |             NA             |
+|    g3    |     0x30    |      32     |   NA  |             NA             |
+|    g4    |     0x40    |      32     |   NA  |             NA             |
+|    g5    |     0x50    |      32     |   NA  |             NA             |
+|    g6    |     0x60    |      32     |   NA  |             NA             |
+|    g7    |     0x70    |      32     |   NA  |             NA             |
+|    g8    |     0x80    |      32     |   NA  |             NA             |
+|    g9    |     0x90    |      32     |   NA  |             NA             |
+|    g10   |     0xA0    |      32     |   NA  |             NA             |
+|    g11   |     0xB0    |      32     |   NA  |             NA             |
+|    g12   |     0xC0    |      32     |   NA  |             NA             |
+|    g13   |     0xD0    |      32     |   NA  |             NA             |
+|    g14   |     0xE0    |      32     |   PC  | Accessible Program Counter |
+|    g15   |     0xF0    |      32     |   SP  |        Stack Pointer       |
 
 ### Structure
 
@@ -39,29 +39,29 @@ My professor is a RISC guy so I'm a very RISC dude as well. I'm only taking ISA 
 
 This table contains the instruction code and the assembly code. The assembly code is mostly following standard convention (or at least MIPS convention) with a slight mordification for our purposes. Empty cell represent unassigned instruction that we can add things to if needed.
 
-| Description | LSB |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|:-----------:|:---:|:---------------------:|:---------------------------:|:---------------------------:|:---------------:|:----------------:|:-----------------:|:-----------------:|:------------------:|:--------------------:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
-|  MSB/Prefix |  0  |           0           |              1              |              2              |        3        |         4        |         5         |         6         |          7         |           8          | 9 | A | B | C | D | E | F |
-|     LOAD    |  0  |  LDR (Load Register)  |  LDM (Load memory 1st half) |  LDM (Load memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|    STORE    |  1  |  STR (store register) | STM (Store memory 1st half) | STM (Store memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|    INPUT    |  2  |          INB          |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|    OUTPUT   |  3  |          OUTB         |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|   FUNCTION  |  4  |          CPY          |             MOV             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|     JUMP    |  5  | BEQ (Branch if equal) |           J (Jump)          |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|  INTERRUPT  |  6  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|     MATH    |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|    LOGIC    |  8  |          AND          |              OR             |             NOT             |       XOR       | SHL (Shift left) | SHR (Shift right) | ROL (Rotate left) | ROR (Rotate right) | SLT (Set less than)  |   |   |   |   |   |   |   |
-|             |  9  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  A  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  B  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  C  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  D  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  E  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|             |  F  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+Some of the instructions can be done by combining other instructions which I should probably not put it there...
 
-For math and logic I'm not sure if we want unsigned as well, right now they are signed
+|    Description    | LSB |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|:-----------------:|:---:|:---------------------:|:---------------------------:|:---------------------------:|:---------------:|:----------------:|:-----------------:|:-----------------:|:------------------:|:--------------------:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
+|     MSB/Prefix    |  0  |           0           |              1              |              2              |        3        |         4        |         5         |         6         |          7         |           8          | 9 | A | B | C | D | E | F |
+|        LOAD       |  0  |  LDR (Load Register)  |  LMF (Load memory 1st half) |  LMS (Load memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|       STORE       |  1  |  STR (store register) | SMF (Store memory 1st half) | SMS (Store memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|       INPUT       |  2  |          INB          |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|       OUTPUT      |  3  |          OUTB         |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|      FUNCTION     |  4  |          CPY          |             MOV             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|        JUMP       |  5  | BEQ (Branch if equal) |           J (Jump)          |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|     INTERRUPT     |  6  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|        MATH       |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|       LOGIC       |  8  |          AND          |              OR             |             NOT             |       XOR       | SHL (Shift left) | SHR (Shift right) | ROL (Rotate left) | ROR (Rotate right) | SLT (Set less than)  |   |   |   |   |   |   |   |
+|       STACK       |  9  |          PUSH         |             POP             |           PUSHALL           |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+| REGISTER INDIRECT |  A  |      RIA (Size 1)     |         RIB (Size 2)        |         RIC (Size 4)        |   RID (Size 8)  |   RIE (Size 16)  |   RIF (Size 32)   |   RIG (Size 64)   |   RIG (Size 128)   |                      |   |   |   |   |   |   |   |
+|                   |  B  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|                   |  C  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|                   |  D  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|                   |  E  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|                   |  F  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 
-### Addressing Mode
+### Instruction Format
 
 |  Type  |        Description       |
 |:------:|:------------------------:|
@@ -71,23 +71,57 @@ For math and logic I'm not sure if we want unsigned as well, right now they are 
 |  Base  |      Base Addressing     |
 | Pseudo |    Pseudo Instructions   |
 
-|  Type  |     Prefix     | 1st Byte | 2nd Byte | 3rd Byte | 4th Byte |
-|:------:|:--------------:|:--------:|:--------:|:--------:|:--------:|
-| I-Type |  LOAD REGISTER |    OP    |    REG   |   0x00   |   0x00   |
-| I-Type | WRITE REGISTER |    OP    |    REG   |   0xDA   |   0x7A   |
-| I-Type |   LOAD MEMORY  |    OP    |    REG   |   0xAD   |   0xD0   |
-| I-Type |  WRITE MEMORY  |    OP    |    REG   |   0xAD   |   0xD0   |
-| R-Type |       CPY      |    OP    |    REG   |    REG   |   0x00   |
-| R-Type |       MATH     |    OP    |    REG   |    REG   |    REG   |
+**0x0000 == default**
+
+**0xDA7A == DATA**
+
+**0xADD0 == Address**
+
+|  Type  |       Prefix      | 1st Byte | 2nd Byte | 3rd Byte | 4th Byte |
+|:------:|:-----------------:|:--------:|:--------:|:--------:|:--------:|
+| I-Type |    LOAD REGISTER  |    OP    |    REG   |   0x00   |   0x00   |
+| I-Type |   WRITE REGISTER  |    OP    |    REG   |   0xDA   |   0x7A   |
+| I-Type |     LOAD MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
+| I-Type |    WRITE MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
+| R-Type |         CPY       |    OP    |    REG   |    REG   |   0x00   |
+| R-Type |         MATH      |    OP    |    REG   |    REG   |    REG   |
+| R-Type |        LOGIC      |    OP    |    REG   |    REG   |    REG   |
+| R-Type |     STACK PUSH    |    OP    |     SP   |    REG   |   0x00   |
+| R-Type |      STACK POP    |    OP    |     SP   |   0x00   |   0x00   |
+| R-Type | REGISTER INDIRECT |    OP    |    REG   |    REG   |   0x00   |
 
 ### Memory
 
-32 bits addresses no segments big endian byte addressable
+- 32 bits addresses
+- no segment 
+- big endian
+- byte addressable + 32 bits == inc/dec by 4
+
+load/store require splitting into two 16-bits and combined in a register to get full 32 bit address similar to LUI and ORI in MIPS
+
+Example: Loading from address 0x6D5E4F3C
+
+Assembly
+
+```assembly
+LMF g0 0x6D5E
+LMS g0 0x4F3C
+```
+
+Machine Code
+```
+0x01006D5E
+0x02004F3C
+```
 
 ## Instruction Encoding
 Explain how instrucitions are encoded into "words".
 
-4 bytes 32-bits fixed, see addressing mode
+4 bytes 32-bits fixed
+
+### Addressing Mode
+
+Working on it... see Instruction Format for now
 
 ## Timing
 
@@ -126,13 +160,15 @@ These are things we'll need to do
 # Notes and changes to make to the ISA
 One general comment is that making most special features accessible as if they were memory - called memory mapping - tends to make the architecture clearer. 
 
-One big thing missing seems to be “register-indirect” addressing. This is how pointers are implemented.
-We need to read and write a memory location pointed to by a register
+> One big thing missing seems to be “register-indirect” addressing. This is how pointers are implemented.
+> We need to read and write a memory location pointed to by a register
 
-Here’s how I would like register indirect to be ideally:
-- memory[base+index*size] = register (Writes to a memory location where base and index are registers. Size is part of the opcode, and it is one of: 1,2,4,8,16,32,64,128)
+> Here’s how I would like register indirect to be ideally:
+> - memory[base+index*size] = register (Writes to a memory location where base and index are registers. Size is part of the opcode, and it is one of: 1,2,4,8,16,32,64,128)
 
-- register  = memory[base+index*size] (Writes to a memory location where base and index are registers. Size is part of the opcode, and it is one of: 1,2,4,8,16,32,64,128)
+> - register  = memory[base+index*size] (Writes to a memory location where base and index are registers. Size is part of the opcode, and it is one of: 1,2,4,8,16,32,64,128)
+
+*Um this is a little weird for a register indirect, not sure if I get it right*
 
 This allows efficient operations on arrays of items of varying sizes. 
 
@@ -161,8 +197,14 @@ Most math operators are missing, although I think the structure looks good. We s
 
 Increment and decrement instructions would be nice
 
-Should we also have math instructions that can take 1 literal value in place of one of the register inputs?
-Should we also have math instructions that overwrite the first register?
+> Should we also have math instructions that can take 1 literal value in place of one of the register inputs?
+I'm not sure that this is
 
-Should we have push and pop instructions for stack usage?
-Should we have a PUSHALL instruction that pushes a bunch of registers to save the stack
+> Should we also have math instructions that overwrite the first register?
+I dont see why we need them since we can read/write any register
+
+> Should we have push and pop instructions for stack usage?
+Yup
+
+> Should we have a PUSHALL instruction that pushes a bunch of registers to save the stack
+Sure, this is nice to have especially if we do interupts
