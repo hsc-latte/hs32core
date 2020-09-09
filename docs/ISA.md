@@ -32,6 +32,12 @@
 
 I'm having second thoughts about the flags... It's kinda on the edge of CISC... I'm planning on making everything 1 byte so that its easier to work with but if we're not using the flags maybe we'll just give the extra 4 bits to op code or something.
 
+| Flag | Definition |
+|:----:|:----------:|
+|   0  | Default    |
+
+I forgot what I'm trying to do... I just have an idea where this would be useful
+
 ## Instruction Listing
 (insert table here)
 
@@ -44,12 +50,12 @@ Some of the instructions can be done by combining other instructions which I sho
 |    Description    | LSB |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |:-----------------:|:---:|:---------------------:|:---------------------------:|:---------------------------:|:---------------:|:----------------:|:-----------------:|:-----------------:|:------------------:|:--------------------:|:-:|:-:|:-:|:-:|:-:|:-:|:-:|
 |     MSB/Prefix    |  0  |           0           |              1              |              2              |        3        |         4        |         5         |         6         |          7         |           8          | 9 | A | B | C | D | E | F |
-|        LOAD       |  0  |  LDR (Load Register)  |  LMF (Load memory 1st half) |  LMS (Load memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|        LOAD       |  0  |                       |  LMF (Load memory 1st half) |  LMS (Load memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |       STORE       |  1  |  STR (store register) | SMF (Store memory 1st half) | SMS (Store memory 2nd half) |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |       INPUT       |  2  |          INB          |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |       OUTPUT      |  3  |          OUTB         |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |      FUNCTION     |  4  |          CPY          |             MOV             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|        JUMP       |  5  | BEQ (Branch if equal) |           J (Jump)          |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|        JUMP       |  5  | BEQ (Branch if equal) |           J (Jump)          |             NOP             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |     INTERRUPT     |  6  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |        MATH       |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |       LOGIC       |  8  |          AND          |              OR             |             NOT             |       XOR       | SHL (Shift left) | SHR (Shift right) | ROL (Rotate left) | ROR (Rotate right) | SLT (Set less than)  |   |   |   |   |   |   |   |
@@ -60,6 +66,8 @@ Some of the instructions can be done by combining other instructions which I sho
 |                   |  D  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |                   |  E  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |                   |  F  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+
+`CPY` and `MOV` is pretty much the same... we should just keep `MOV` just to be more risc ish
 
 ### Instruction Format
 
@@ -79,7 +87,6 @@ Some of the instructions can be done by combining other instructions which I sho
 
 |  Type  |       Prefix      | 1st Byte | 2nd Byte | 3rd Byte | 4th Byte |
 |:------:|:-----------------:|:--------:|:--------:|:--------:|:--------:|
-| I-Type |    LOAD REGISTER  |    OP    |    REG   |   0x00   |   0x00   |
 | I-Type |   WRITE REGISTER  |    OP    |    REG   |   0xDA   |   0x7A   |
 | I-Type |     LOAD MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
 | I-Type |    WRITE MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
@@ -198,13 +205,17 @@ Most math operators are missing, although I think the structure looks good. We s
 Increment and decrement instructions would be nice
 
 > Should we also have math instructions that can take 1 literal value in place of one of the register inputs?
+
 I'm not sure that this is
 
 > Should we also have math instructions that overwrite the first register?
+
 I dont see why we need them since we can read/write any register
 
 > Should we have push and pop instructions for stack usage?
+
 Yup
 
 > Should we have a PUSHALL instruction that pushes a bunch of registers to save the stack
+
 Sure, this is nice to have especially if we do interupts
