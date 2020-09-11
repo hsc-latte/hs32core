@@ -57,7 +57,7 @@ Some of the instructions can be done by combining other instructions which I sho
 |      FUNCTION     |  4  |          CPY          |             MOV             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |        JUMP       |  5  | BEQ (Branch if equal) |           J (Jump)          |             NOP             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |     INTERRUPT     |  6  |                       |                             |                             |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
-|        MATH       |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
+|        MATH       |  7  |          ADD          |             SUB             |       INC (Increment)       | DEC (Decrement) |       ADDI       |                   |                   |                    |                      |   |   |   |   |   |   |   |
 |       LOGIC       |  8  |          AND          |              OR             |             NOT             |       XOR       | SHL (Shift left) | SHR (Shift right) | ROL (Rotate left) | ROR (Rotate right) | SLT (Set less than)  |   |   |   |   |   |   |   |
 |       STACK       |  9  |          PUSH         |             POP             |           PUSHALL           |                 |                  |                   |                   |                    |                      |   |   |   |   |   |   |   |
 | REGISTER INDIRECT |  A  |      RIA (Size 1)     |         RIB (Size 2)        |         RIC (Size 4)        |   RID (Size 8)  |   RIE (Size 16)  |   RIF (Size 32)   |   RIG (Size 64)   |   RIG (Size 128)   |                      |   |   |   |   |   |   |   |
@@ -91,6 +91,7 @@ Some of the instructions can be done by combining other instructions which I sho
 | I-Type |     LOAD MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
 | I-Type |    WRITE MEMORY   |    OP    |    REG   |   0xAD   |   0xD0   |
 | R-Type |         CPY       |    OP    |    REG   |    REG   |   0x00   |
+| R-Type |         ADDI      |    OP    |    REG   |    REG   |   0xDA   |
 | R-Type |         MATH      |    OP    |    REG   |    REG   |    REG   |
 | R-Type |        LOGIC      |    OP    |    REG   |    REG   |    REG   |
 | R-Type |     STACK PUSH    |    OP    |     SP   |    REG   |   0x00   |
