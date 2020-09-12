@@ -1,0 +1,19 @@
+[tasks]
+prf
+cvr
+
+[options]
+prf: mode prove
+prf: depth 4
+cvr: mode cover
+cvr: depth 32
+
+[engines]
+smtbmc
+
+[script]
+read -formal -D UFIFO ufifo.v
+prep -top ufifo
+
+[files]
+../../rtl/ufifo.v

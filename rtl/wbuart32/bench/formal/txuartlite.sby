@@ -1,0 +1,18 @@
+[tasks]
+cvr
+prf
+
+[options]
+prf: mode prove
+cvr: mode cover
+depth 90
+
+[engines]
+smtbmc boolector
+
+[script]
+read -formal -DTXUARTLITE txuartlite.v
+prep -top txuartlite
+
+[files]
+../../rtl/txuartlite.v
