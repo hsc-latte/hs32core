@@ -22,6 +22,8 @@ RUN apt-get update && apt-get install -y build-essential git make autoconf g++ f
 RUN git clone https://github.com/verilator/verilator
 RUN cd verilator && git checkout v4.100 && unset VERILATOR_ROOT && autoconf && ./configure && make && make install
 
+RUN apt-get install -y ctags
+
 #
 ## Every time you need to build:
 #unsetenv VERILATOR_ROOT  # For csh; ignore error if on bash
