@@ -51,12 +51,6 @@ Legend:
 
 **I will specify flags that STM uses soon**
 
-<style>
-table {
-    width:100%;
-}
-</style>
-
 | Bank | Hi / Lo -> | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B | C | D | E | F |
 |-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
 | LOAD | 0 |  | list = [Rs]<br>`LDM list, Rs` | LDR Rd, [Rs + imm16] | Should we allowpost increment? |  |  |  |  |  |  |  |  |  |  |  |  |
