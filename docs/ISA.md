@@ -27,8 +27,8 @@ Internal registers: PC and NZCV flags. These are inaccessible to the programmer.
 
 All possible encodings (depends on OP I guess, someone has to work that out).
 
-| 8 bits | 4 bits | 4 bits | 16 bits |  |  |  |
-|---|--------|----|-|-|-|-|-|
+| 8 bits | 4 bits | 4 bits | 16 bits | x | x | x |
+|---|--------|----|-|-|-|-|
 | OP | SRC | DST | IMM16 | | | |
 | OP | FLAG| REG | 16-bit MASK | | | |
 | OP | SRC | REG | REG | IMM12 | | |
