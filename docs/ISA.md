@@ -23,7 +23,7 @@ Legend:
  </tr>
  <tr height=19>
   <td>LDR</td>
-  <td>Rd, [Rm+imm12]</td>
+  <td>Rd, [Rm+imm16]</td>
   <td>Load from memory immed</td>
  </tr>
  <tr height=19>
@@ -36,7 +36,7 @@ Legend:
  </tr>
  <tr height=19>
   <td>STR</td>
-  <td>[Rm+imm12], Rd</td>
+  <td>[Rm+imm16], Rd</td>
   <td>Store to memory immed</td>
  </tr>
  <tr height=19>
@@ -190,7 +190,7 @@ In supervisor mode, r12-15 is separate from user-mode r12-15. In all modes, r14 
   <td>Supervisor</td>
  </tr>
  <tr height=19>
-  <td height=19>r0-r10</td>
+  <td height=19>r0-r11</td>
   <td colspan=3><center>Shared general purpose registers</center></td>
  </tr>
  <!--<tr height=19>
@@ -199,12 +199,6 @@ In supervisor mode, r12-15 is separate from user-mode r12-15. In all modes, r14 
   <td>General</td>
   <td>General</td>
  </tr>-->
- <tr height=19>
-  <td height=19>r11</td>
-  <td>General</td>
-  <td>IRQ Number</td>
-  <td>General</td>
- </tr>
  <tr height=19>
   <td height=19>r12</td>
   <td>General</td>
