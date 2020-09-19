@@ -1,31 +1,246 @@
-# Instruction Set Architecture 
+# Instruction Set
 
-## Register File
+## Overview
 
-| Register | Bits        | Alias |           Details          |
-|:--------:|:-----------:|:-----:|:--------------------------:|
-|    0     |      32     |   R0  |      General purpose       |
-|    1     |      32     |   R1  |      General purpose       |
-|    2     |      32     |   R2  |      General purpose       |
-|    3     |      32     |   R3  |      General purpose       |
-|    4     |      32     |   R4  |      General purpose       |
-|    5     |      32     |   R5  |      General purpose       |
-|    6     |      32     |   R6  |      General purpose       |
-|    7     |      32     |   R7  |      General purpose       |
-|    8     |      32     |   R8  |      General purpose       |
-|    9     |      32     |   R9  |      General purpose       |
-|    10    |      32     |   R10 |      General purpose       |
-|    11    |      32     |   R11 |      General purpose       |
-|    12    |      32     |   R12 |      General purpose       |
-|    13    |      32     |   R13 |      General purpose       |
-|    14    |      32     |   LR  |        Link register        |
-|    15    |      32     |   SP  |        Stack Pointer       |
+Legend:
+- imm12/16/24 = 12/16/24-bit immediate value
+- Rd, Rn and Rm specify the way each register is wired to the ALU. In this case,
+  Rd represents the read/write source/destination, Rm and Rn represents the 2 operands fed into the ALU; note that Rn will always have a barrel shifter in front of it.
+- [xxx] = Dereference pointer, address is stored in xxx
+- sh(Rn) shifts contents of Rn left or right by an 8-bit amount
 
-Internal registers: PC and NZCV flags. These are inaccessible to the programmer.
+<table border=0 cellpadding=0 cellspacing=0 width=703>
+ <tr height=19>
+   <td height=19 colspan=6><center><h3>Full Instruction Listing (Draft)</h3></center></td>
+ </tr>
+ <tr height=19>
+  <td>Mnemonic</td>
+  <td>Operands</td>
+  <td>Description</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>Load Instsructions</b></center></td>
+ </tr>
+ <tr height=19>
+  <td>LDR</td>
+  <td>Rd, [Rm+imm12]</td>
+  <td>Load from memory immed</td>
+ </tr>
+ <tr height=19>
+  <td>LDR</td>
+  <td>Rd, [Rm+sh(Rn)]</td>
+  <td>Load from memory</td>
+ </tr>
+ <tr height=19>
+ <td colspan=3><center><b>Store Instructions</center></td>
+ </tr>
+ <tr height=19>
+  <td>STR</td>
+  <td>[Rm+imm12], Rd</td>
+  <td>Store to memory immed</td>
+ </tr>
+ <tr height=19>
+  <td>STR</td>
+  <td>[Rm+sh(Rn)], Rd</td>
+  <td>Store to memory</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>Movement Instructions</center></td>
+ </tr>
+ <tr height=19>
+  <td>MOV</td>
+  <td>Rd, imm16</td>
+  <td>Move immed</td>
+ </tr>
+ <tr height=19>
+  <td>MOV</td>
+  <td>Rd, sh(Rn)</td>
+  <td>Move</td>
+ </tr>
+ <tr height=19>
+  <td>MOVT</td>
+  <td>Rd, imm16</td>
+  <td>Move to top word immed</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>Arithmetic Instructions</center></td>
+ </tr>
+ <tr height=19>
+  <td>ADD(?C)</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>Add (with carry)</td>
+ </tr>
+ <tr height=19>
+  <td>ADD(?C)</td>
+  <td>Rd, Rm, imm16</td>
+  <td>Add (with carry) immed</td>
+ </tr>
+ <tr height=19>
+  <td>(?R)SUB(?C)</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>(Reverse) sub (with c)</td>
+ </tr>
+ <tr height=19>
+  <td>(?R)SUB(?C)</td>
+  <td>Rd, Rm, imm16</td>
+  <td>(Reverse) sub (with c) immed</td>
+ </tr>
+ <tr height=19>
+  <td>MUL</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>Signed multiply</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>Logic Instructions</center></td>
+ </tr>
+ <tr height=19>
+  <td>AND</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>And</td>
+ </tr>
+ <tr height=19>
+  <td>AND</td>
+  <td>Rd, Rm, imm16</td>
+  <td>And immed</td>
+ </tr>
+ <tr height=19>
+  <td>OR</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>Or</td>
+ </tr>
+ <tr height=19>
+  <td>OR</td>
+  <td>Rd, Rm, imm16</td>
+  <td>Or immed</td>
+ </tr>
+ <tr height=19>
+  <td>XOR</td>
+  <td>Rd, Rm, sh(Rn)</td>
+  <td>XOR</td>
+ </tr>
+ <tr height=19>
+  <td>XOR</td>
+  <td>Rd, Rm, imm16</td>
+  <td>XOR immed</td>
+ </tr>
+ <tr height=19>
+  <td>NOT</td>
+  <td>Rd, Rm</td>
+  <td>Invert Rm</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>Compare and Test</center></td>
+ </tr>
+ <tr height=19>
+  <td>CMP</td>
+  <td>Rm, Rn</td>
+  <td>Flags when Rm - Rn</td>
+ </tr>
+ <tr height=19>
+  <td>CMP</td>
+  <td>Rm, imm16</td>
+  <td>Flags when Rm - imm16</td>
+ </tr>
+ <tr height=19>
+  <td>TST</td>
+  <td>Rm, Rn</td>
+  <td>Flags when Rm &amp; Rn</td>
+ </tr>
+ <tr height=19>
+  <td>TST</td>
+  <td>Rm, imm16</td>
+  <td>Flags when Rm &amp; imm16</td>
+ </tr>
+ <tr height=19>
+   <td colspan=3><center><b>Branch and Jump</center></td>
+ </tr>
+ <tr height=19>
+  <td>B&lt;cond&gt;L</td>
+  <td>imm16</td>
+  <td>Branch and link to PC+imm</td>
+ </tr>
+ <tr height=19>
+  <td>B&lt;cond&gt;</td>
+  <td>imm16</td>
+  <td>Branch to PC+imm</td>
+ </tr>
+ <tr height=19>
+  <td colspan=3><center><b>System Instructions</center></td>
+ </tr>
+ <tr height=19>
+  <td>INT</td>
+  <td>imm24</td>
+  <td>Invoke software interrupt</td>
+ </tr>
+</table>
 
-### Encoding
+## System Details
 
-All possible encodings (depends on OP I guess, someone has to work that out).
+There are 16 (r0-r15) general-purpose registers plus 4 privileged registers.
+In supervisor mode, r12-15 is separate from user-mode r12-15. In all modes, r14 and r15 will be used as the link register and stack pointer respectively.
+
+<table border=0 cellpadding=0 cellspacing=0 width=543>
+ <tr height=19>
+  <td rowspan=2 height=38 width=64>Register</td>
+  <td colspan=3 width=287>Alias/Description</td>
+ </tr>
+ <tr height=19>
+  <td height=19>User</td>
+  <td>IRQ</td>
+  <td>Supervisor</td>
+ </tr>
+ <tr height=19>
+  <td height=19>r0-r10</td>
+  <td colspan=3><center>Shared general purpose registers</center></td>
+ </tr>
+ <!--<tr height=19>
+  <td height=19>r10</td>
+  <td>General</td>
+  <td>General</td>
+  <td>General</td>
+ </tr>-->
+ <tr height=19>
+  <td height=19>r11</td>
+  <td>General</td>
+  <td>IRQ Number</td>
+  <td>General</td>
+ </tr>
+ <tr height=19>
+  <td height=19>r12</td>
+  <td>General</td>
+  <td colspan=2><center>Interrupt Vector Table</center></td>
+ </tr>
+ <tr height=19>
+  <td height=19>r13</td>
+  <td>General</td>
+  <td colspan=2><center>Machine Configuration Register</center></td>
+ </tr>
+ <tr height=19>
+  <td height=19>r14</td>
+  <td>User LR</td>
+  <td>IRQ LR</td>
+  <td>Super LR</td>
+ </tr>
+ <tr height=19>
+  <td height=19>r15</td>
+  <td>User SP</td>
+  <td>IRQ SP</td>
+  <td>Super SP</td>
+ </tr>
+</table>
+
+---
+
+### Operation
+
+During a mode switch, the return address will be stored in the appropriate LR and the return stack pointer will be stored in the appropriate SP.
+
+For instance, an interrupt call from User mode will prompt a switch to IRQ mode.
+The return address and stack pointer of the caller will be stored in IRQ LR (r14) and IRQ SP (r15) respectively.
+
+## Encoding
+
+Blah blah blah
 
 | 8 bits | 4 bits | 4 bits | 16 bits | x | x | x |
 |---|--------|----|-|-|-|-|
@@ -34,110 +249,3 @@ All possible encodings (depends on OP I guess, someone has to work that out).
 | OP | SRC | REG | REG | IMM12 | | |
 | OP | SRC | DST | SRC | DST | SHIFT1 | SHIFT2|
 | OP | SRC | DST | SRC | DST | SRC | DST|
-
-dw anth baby i got this no flags needed
-
-## Instruction Listing
-
-This table contains the instruction code and the assembly code. The assembly code is mostly following INTEL SYNTAX with slight modifications for our purposes.
-
-The low nibble is by row, the high nibble is by column. Together, the lo and hi nibbles form the opcode.
-
-Legend:
-- imm12/16/24 = 12/16/24-bit immediate valute
-- list = any combination/list of registers
-- Rs = source register, Rd = destination register, Ra, Rb... = Operand registers
-- [xxx] = dereference pointer, address is stored in xxx
-
-**I will specify flags that STM uses soon**
-
-| Bank | Hi / Lo -> | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 | 8 | 9 | A | B | C | D | E | F |
-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|-|
-| LOAD | 0 |  | list = [Rs]<br>`LDM list, Rs` | LDR Rd, [Rs + imm16] | Should we allowpost increment? |  |  |  |  |  |  |  |  |  |  |  |  |
-| STORE | 1 |  | [Rd] = list<br>based on flags<br>`STM [flags] [Rd], list` | STR [Rd + imm16], Rs | Should we allowpost increment? |  |  |  |  |  |  |  |  |  |  |  |  |
-| MOV | 2 | Move to lower word<br>MOV Rd, imm16 | Rd = Rs << s<br>MOV Rd, Rs << s | Vector move<br>(2 pairs with shift)<br>MOV Rd..., Rs... << s | Vector move<br>(3 pairs, no shift)<br>MOV Rd..., Rs... |  |  |  |  | Move to upper word<br>MOVT Rd, imm16 | etc… |  |  |  |  |  |  |
-| BANK 3 | 3 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| IO | 4 | IN | OUT |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BRANCH | 5 | Branch and Link<br>B<cond>L (PC+imm24) | etc… |  |  |  |  |  |  | Branch<br>B<cond> (PC+imm24) | etc… |  |  |  |  |  |  |
-| BANK 6 | 6 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| ARITH | 7 | Rd = Ra + Rb + imm12<br>ADD Rd, Ra, Rb, imm12 | SUB Rd, Ra, Rb, imm12 | MUL Rd, Ra, Rb |  |  |  |  |  | ADDC Rd, Ra, Rb | etc… |  |  |  |  |  |  |
-| LOGIC | 8 | AND (i got tired) | OR | NOT | XOR | SHL | SHR |  |  |  |  |  |  |  |  |  |  |
-| BANK9 | 9 |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BANK 10 | A | hehe vector arith and<br>logic would be so cool! |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BANK 11 | B |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BANK 12 | C |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BANK 13 | D |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| BANK 14 | E |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-| INT | 6 | INT (vector) |  |  |  |  |  |  |  |  |  |  |  |  |  |  |  |
-
-Yes anth the kung I yeeted CPY.
-
-### Memory
-
-- 32 bits addresses
-- no segment 
-- big endian
-- byte addressable + 32 bits == inc/dec by 4
-
-load/store require splitting into two 16-bits and combined in a register to get full 32 bit address similar to LUI and ORI in MIPS
-
-yes good boy someone understands
-
-ignore everything below I haven't gotten to fixing below.
-
-Example: Loading from address 0x6D5E4F3C
-
-Assembly
-
-```assembly
-LMF g0 0x6D5E lmf = load muthaf*
-LMS g0 0x4F3C
-```
-
-Machine Code
-```
-0x01006D5E
-0x02004F3C
-```
-
-## Instruction Encoding
-
-
-### Addressing Mode
-
-
-
-## Timing
-
-Execution Time = (# of instructions)(cycles/instruction)(second/cycle)
-
-By going with RISC we have a smaller number of instructions but complex operation will use more instructions
-
-> The number of instructions also depends enormously on the cleverness of the programmer
-
-Now we only need a few essential instructions, but we also include some special instructions that are useful in our case
-
-## Examples of instrucion set usage
-These are things we'll need to do
-
-### Read from memory
-
-### Write to memory
-
-### Read from flash
-
-### Write to flash
-
-### Read and write to serial
-
-### Call a function
-
-### Conditional jumps
-
-### Install an interrupt handler
-
-### Handle an interrupt - such as: new serial byte available
-
-### Basic loop - print numbers 1 to 10
-
-
