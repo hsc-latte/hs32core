@@ -91,6 +91,16 @@ Legend:
   <td>Signed multiply</td>
  </tr>
  <tr height=19>
+  <td>INC</td>
+  <td>Rd, Rm, 0001</td>
+  <td>Post increment</td>
+ </tr>
+ <tr height=19>
+  <td>DEC</td>
+  <td>Rd, Rm, 1001</td>
+  <td>Post decrement</td>
+ </tr>
+ <tr height=19>
   <td colspan=3><center><b>Logic Instructions</center></td>
  </tr>
  <tr height=19>
