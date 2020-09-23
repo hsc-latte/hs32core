@@ -145,23 +145,23 @@ Legend:
  </tr>
  <tr height=19>
   <td>CMP</td>
-  <td>Rm, Rn</td>
-  <td>Flags when Rm - Rn</td>
+  <td>Rd, Rn</td>
+  <td>Flags when Rd - Rn</td>
  </tr>
  <tr height=19>
   <td>CMP</td>
-  <td>Rm, imm16</td>
-  <td>Flags when Rm - imm16</td>
+  <td>Rd, imm16</td>
+  <td>Flags when Rd - imm16</td>
  </tr>
  <tr height=19>
   <td>TST</td>
-  <td>Rm, Rn</td>
-  <td>Flags when Rm &amp; Rn</td>
+  <td>Rd, Rn</td>
+  <td>Flags when Rd &amp; Rn</td>
  </tr>
  <tr height=19>
   <td>TST</td>
-  <td>Rm, imm16</td>
-  <td>Flags when Rm &amp; imm16</td>
+  <td>Rd, imm16</td>
+  <td>Flags when Rd &amp; imm16</td>
  </tr>
  <tr height=19>
    <td colspan=3><center><b>Branch and Jump</center></td>
@@ -258,7 +258,6 @@ The remain 24 bits come from these families of encodings:
 * Rd imm16
 * Rd <4> Rn
 * Rd Rm
-* <4> Rm Rn
 * Rd Rm 0001
 * Rd Rm 1001
 * Imm16
