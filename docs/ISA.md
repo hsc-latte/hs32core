@@ -260,10 +260,9 @@ Rd, Rm, Rn are always in the same position in the instruciton if present
   - ImmX: X bit literal field
 
 The remain 24 bits come from these families of encodings:
-* Rd Rm imm16
+* Rd Rm Imm16 (Some instructions ignore Imm16)
 * Rd Rm Rn Shift
 * Rd <4> Rn Shift
 * Rd Imm24 (Some instructions only use 16 bits of Imm24, and may ignore Rd)
-* Rd Rm
 * Rd Rm 0001
 * Rd Rm 1001
