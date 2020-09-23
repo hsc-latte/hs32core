@@ -263,9 +263,7 @@ The remain 24 bits come from these families of encodings:
 * Rd Rm imm16
 * Rd Rm Rn Shift
 * Rd <4> Rn Shift
-* Rd imm16
+* Rd Imm24 (Some instructions only use 16 bits of Imm24, and may ignore Rd)
 * Rd Rm
 * Rd Rm 0001
 * Rd Rm 1001
-* Imm16
-* Imm24
