@@ -5,7 +5,9 @@
 Legend:
 - imm12/16/24 = 12/16/24-bit immediate value
 - Rd, Rn and Rm specify the way each register is wired to the ALU. In this case,
-  Rd represents the read/write source/destination, Rm and Rn represents the 2 operands fed into the ALU; note that Rn will always have a barrel shifter in front of it.
+  Rd represents the read/write source/destination, Rm and Rn represents the 2 operands fed into the ALU; note that Rn will always have a barrel
+  shifter in front of it.
+   - naming a register with Rd Rn Rm is always 4 bits
 - [xxx] = Dereference pointer, address is stored in xxx
 - sh(Rn) shifts contents of Rn left or right by an 8-bit amount
 
