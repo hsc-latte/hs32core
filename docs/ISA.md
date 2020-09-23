@@ -246,12 +246,20 @@ The return address and stack pointer of the caller will be stored in IRQ LR (r14
 
 ## Encoding
 
-Blah blah blah
+These are the different encodings that instructions come in. 
+All instructions are 32 bit.
+The first 8 bits is opcode.
+Rd, Rm, Rn are always in the same position in the instruciton if present
+<X> indicates unused spacer value of X bits
 
-| 8 bits | 4 bits | 4 bits | 16 bits | x | x | x |
-|---|--------|----|-|-|-|-|
-| OP | SRC | DST | IMM16 | | | |
-| OP | FLAG| REG | 16-bit MASK | | | |
-| OP | SRC | REG | REG | IMM12 | | |
-| OP | SRC | DST | SRC | DST | SHIFT1 | SHIFT2|
-| OP | SRC | DST | SRC | DST | SRC | DST|
+The remain 24 bits come from these families of encodings:
+* Rd Rm imm16
+* Rd Rm Rn
+* Rd imm16
+* Rd <4> Rn
+* Rd Rm
+* <4> Rm Rn
+* Rd Rm 0001
+* Rd Rm 1001
+* Imm16
+* Imm24
