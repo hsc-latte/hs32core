@@ -252,11 +252,18 @@ The first 8 bits is opcode.
 Rd, Rm, Rn are always in the same position in the instruciton if present
 <X> indicates unused spacer value of X bits
 
+- Field Sizes:
+  - Rd : 4 bit register name
+  - Rm : 4 bit register name
+  - Rn : 4 bit register name
+  - Shift: 5 bit shift amount applied to Rn
+  - ImmX: X bit literal field
+
 The remain 24 bits come from these families of encodings:
 * Rd Rm imm16
-* Rd Rm Rn
+* Rd Rm Rn Shift
+* Rd <4> Rn Shift
 * Rd imm16
-* Rd <4> Rn
 * Rd Rm
 * Rd Rm 0001
 * Rd Rm 1001
