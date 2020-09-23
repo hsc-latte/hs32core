@@ -262,4 +262,5 @@ Rd, Rm, Rn are always in the same position in the instruciton if present
 The remain 24 bits come from these families of encodings:
 * Rd Rm Imm16 (Some instructions ignore Imm16)
 * Rd Rm Rn Shift (Some instructions ignore Rm)
-* Rd Imm24 (Some instructions only use 16 bits of Imm24, and may ignore Rd)
+* Rd Imm16 (Some instructions may ignore Rd)
+* Imm24
