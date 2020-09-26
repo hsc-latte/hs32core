@@ -1,1 +1,0 @@
-There are two bench testing directories, [one for Verilator sources](verilog), and [one for C++ simulation sources](cpp) that will work with Verilator.  The Verilog sources may or may not be used with Verilator.  Indeed, they would work nicely as stand--alone top--level files that may be used to test whether or not the UART on a given board works.
