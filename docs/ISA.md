@@ -5,7 +5,9 @@
 Legend:
 - imm12/16/24 = 12/16/24-bit immediate value
 - Rd, Rn and Rm specify the way each register is wired to the ALU. In this case,
-  Rd represents the read/write source/destination, Rm and Rn represents the 2 operands fed into the ALU; note that Rn will always have a barrel shifter in front of it.
+  Rd represents the read/write source/destination, Rm and Rn represents the 2 operands fed into the ALU; note that Rn will always have a barrel
+  shifter in front of it.
+   - naming a register with Rd Rn Rm is always 4 bits
 - [xxx] = Dereference pointer, address is stored in xxx
 - sh(Rn) shifts contents of Rn left or right by an 8-bit amount
 
@@ -17,6 +19,7 @@ Legend:
   <td>Mnemonic</td>
   <td>Operands</td>
   <td>Description</td>
+  <td>Operation</td>
  </tr>
  <tr height=19>
   <td colspan=3><center><b>Load Instsructions</b></center></td>
@@ -133,23 +136,23 @@ Legend:
  </tr>
  <tr height=19>
   <td>CMP</td>
-  <td>Rm, Rn</td>
-  <td>Flags when Rm - Rn</td>
+  <td>Rd, Rn</td>
+  <td>Flags when Rd - Rn</td>
  </tr>
  <tr height=19>
   <td>CMP</td>
-  <td>Rm, imm16</td>
-  <td>Flags when Rm - imm16</td>
+  <td>Rd, imm16</td>
+  <td>Flags when Rd - imm16</td>
  </tr>
  <tr height=19>
   <td>TST</td>
-  <td>Rm, Rn</td>
-  <td>Flags when Rm &amp; Rn</td>
+  <td>Rd, Rn</td>
+  <td>Flags when Rd &amp; Rn</td>
  </tr>
  <tr height=19>
   <td>TST</td>
-  <td>Rm, imm16</td>
-  <td>Flags when Rm &amp; imm16</td>
+  <td>Rd, imm16</td>
+  <td>Flags when Rd &amp; imm16</td>
  </tr>
  <tr height=19>
    <td colspan=3><center><b>Branch and Jump</center></td>
@@ -234,12 +237,93 @@ The return address and stack pointer of the caller will be stored in IRQ LR (r14
 
 ## Encoding
 
-Blah blah blah
+These are the different encodings that instructions come in. 
+All instructions are 32 bit.
+The first 8 bits is opcode.
+Rd, Rm, Rn are always in the same position in the instruciton if present
+<X> indicates unused spacer value of X bits
 
-| 8 bits | 4 bits | 4 bits | 16 bits | x | x | x |
-|---|--------|----|-|-|-|-|
-| OP | SRC | DST | IMM16 | | | |
-| OP | FLAG| REG | 16-bit MASK | | | |
-| OP | SRC | REG | REG | IMM12 | | |
-| OP | SRC | DST | SRC | DST | SHIFT1 | SHIFT2|
-| OP | SRC | DST | SRC | DST | SRC | DST|
+- Field Sizes:
+  - Rd : 4 bit register name
+  - Rm : 4 bit register name
+  - Rn : 4 bit register name
+  - Shift: 5 bit shift amount applied to Rn
+  - ImmX: X bit literal field
+
+We have these unique encodings then
+
+<!-- Unindent??? >:[ -->
+
+<div class="ritz grid-container" dir="ltr"><table class="waffle" cellspacing="0" cellpadding="0"><thead><tr><th class="row-header freezebar-origin-ltr"></th><th id="1092009867C0" style="width:121px" class="column-headers-background">A</th><th id="1092009867C1" style="width:100px" class="column-headers-background">B</th><th id="1092009867C2" style="width:100px" class="column-headers-background">C</th><th id="1092009867C3" style="width:100px" class="column-headers-background">D</th><th id="1092009867C4" style="width:100px" class="column-headers-background">E</th><th id="1092009867C5" style="width:100px" class="column-headers-background">F</th><th id="1092009867C6" style="width:100px" class="column-headers-background">G</th><th id="1092009867C7" style="width:100px" class="column-headers-background">H</th><th id="1092009867C8" style="width:100px" class="column-headers-background">I</th></tr></thead><tbody>
+
+<tr style='height:20px;'>
+  <th id="1092009867R0" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">1</div>
+  </th>
+  <td class="s0" dir="ltr">Encoding Name</td>
+  <td class="s0" dir="ltr">Bits 0-3</td>
+  <td class="s0" dir="ltr">Bits 4-7</td>
+  <td class="s0" dir="ltr">Bits 8-11</td>
+  <td class="s0" dir="ltr">Bits 12-15</td>
+  <td class="s0" dir="ltr">Bits 16-19</td>
+  <td class="s0" dir="ltr">Bits 20-23</td>
+  <td class="s0" dir="ltr">Bits 24-27</td>
+  <td class="s0" dir="ltr">Bits 28-31</td>
+</tr>
+
+<tr style='height:20px;'>
+  <th id="1092009867R1" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">2</div>
+  </th>
+  <td class="s1" dir="ltr">Rd Rm Imm16 (I-Type)</td>
+  <td class="s0" dir="ltr" colspan="2">Opcode</td>
+  <td class="s0" dir="ltr">Rd</td>
+  <td class="s0" dir="ltr">Rm</td>
+  <td class="s0" dir="ltr" colspan="4">Imm16</td>
+</tr>
+
+<tr style='height:20px;'>
+  <th id="1092009867R2" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">3</div>
+  </th>
+  <td class="s1" dir="ltr">Rd Rm Rn Shift</td>
+  <td class="s0" dir="ltr" colspan="2">Opcode</td>
+  <td class="s0" dir="ltr">Rd</td>
+  <td class="s0" dir="ltr">Rm</td>
+  <td class="s0" dir="ltr">Rn</td>
+  <td class="s0" dir="ltr" colspan="2">Shift(5 bits)</td>
+  <td class="s0" dir="ltr">Unused</td>
+</tr>
+
+<tr style='height:20px;'>
+  <th id="1092009867R3" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">4</div>
+  </th>
+  <td class="s0" dir="ltr">Imm24 (I-Type)</td>
+  <td class="s0" dir="ltr" colspan="2">Opcode</td>
+  <td class="s0" dir="ltr" colspan="6">Imm24</td>
+</tr>
+
+<tr style='height:20px;'>
+  <th id="1092009867R3" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">5</div>
+  </th>
+  <td class="s0" dir="ltr">Register Type (R-Type)</td>
+  <td class="s0" dir="ltr" colspan="2">Opcode</td>
+  <td class="s0" dir="ltr" colspan="1">Rd</td>
+  <td class="s0" dir="ltr" colspan="1">Rm</td>
+  <td class="s0" dir="ltr" colspan="1">Rn</td>
+  <td class="s0" dir="ltr" colspan="3">Unused</td>
+</tr>
+
+<tr style='height:20px;'>
+  <th id="1092009867R3" style="height: 20px;" class="row-headers-background">
+    <div class="row-header-wrapper" style="line-height: 20px;">6</div>
+  </th>
+  <td class="s0" dir="ltr">Jump Type (J-Type)</td>
+  <td class="s0" dir="ltr" colspan="2">Opcode</td>
+  <td class="s0" dir="ltr" colspan="1">Rd</td>
+  <td class="s0" dir="ltr" colspan="1">Unused</td>
+  <td class="s0" dir="ltr" colspan="4">16-bit Address or first half of 32-bit Address</td>
+</tr>
+</tbody></table></div>
