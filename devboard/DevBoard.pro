@@ -1,4 +1,4 @@
-update=8/26/2020 9:05:00 PM
+update=Sat 12 Sep 2020 01:57:23 PM EDT
 version=1
 last_client=kicad
 [general]
@@ -25,7 +25,7 @@ ERC_TestSimilarLabels=1
 [pcbnew]
 version=1
 PageLayoutDescrFile=
-LastNetListRead=FPGA.net
+LastNetListRead=DevBoard.net
 CopperLayerCount=2
 BoardThickness=1.6
 AllowMicroVias=0
