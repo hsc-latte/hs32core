@@ -22,7 +22,7 @@
 
 **Recommended Chips:**
 - CY62147G variant for 4M (512x16) SRAM (55ns rw cycle)
-- 74xx373/573 for address latches (as fast as 1ns tpd)
+- 74xx573 for address latches (as fast as 1ns tpd)
 - 74xx245 for tristate bus buffers if needed
 - Some I2C/SPI GPIO expansion
 - Some ADC for analogue input (I'm not sure what to use)
