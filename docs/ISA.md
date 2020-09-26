@@ -22,158 +22,184 @@ Legend:
   <td>Operation</td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>Load Instsructions</b></center></td>
+  <td colspan=4><center><b>Load Instsructions</b></center></td>
  </tr>
  <tr height=19>
   <td>LDR</td>
   <td>Rd, [Rm+imm16]</td>
   <td>Load from memory immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>LDR</td>
   <td>Rd, [Rm+sh(Rn)]</td>
   <td>Load from memory</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
- <td colspan=3><center><b>Store Instructions</center></td>
+ <td colspan=4><center><b>Store Instructions</center></td>
  </tr>
  <tr height=19>
   <td>STR</td>
   <td>[Rm+imm16], Rd</td>
   <td>Store to memory immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>STR</td>
   <td>[Rm+sh(Rn)], Rd</td>
   <td>Store to memory</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>Movement Instructions</center></td>
+  <td colspan=4><center><b>Movement Instructions</center></td>
  </tr>
  <tr height=19>
   <td>MOV</td>
   <td>Rd, imm16</td>
   <td>Move immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>MOV</td>
   <td>Rd, sh(Rn)</td>
   <td>Move</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>MOVT</td>
   <td>Rd, imm16</td>
   <td>Move to top word immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>Arithmetic Instructions</center></td>
+  <td colspan=4><center><b>Arithmetic Instructions</center></td>
  </tr>
  <tr height=19>
   <td>ADD(?C)</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>Add (with carry)</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>ADD(?C)</td>
   <td>Rd, Rm, imm16</td>
   <td>Add (with carry) immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>(?R)SUB(?C)</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>(Reverse) sub (with c)</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>(?R)SUB(?C)</td>
   <td>Rd, Rm, imm16</td>
   <td>(Reverse) sub (with c) immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>MUL</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>Signed multiply</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>Logic Instructions</center></td>
+  <td colspan=4><center><b>Logic Instructions</center></td>
  </tr>
  <tr height=19>
   <td>AND</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>And</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>AND</td>
   <td>Rd, Rm, imm16</td>
   <td>And immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>OR</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>Or</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>OR</td>
   <td>Rd, Rm, imm16</td>
   <td>Or immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>XOR</td>
   <td>Rd, Rm, sh(Rn)</td>
   <td>XOR</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>XOR</td>
   <td>Rd, Rm, imm16</td>
   <td>XOR immed</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>NOT</td>
   <td>Rd, Rm</td>
   <td>Invert Rm</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>Compare and Test</center></td>
+  <td colspan=4><center><b>Compare and Test</center></td>
  </tr>
  <tr height=19>
   <td>CMP</td>
   <td>Rd, Rn</td>
   <td>Flags when Rd - Rn</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>CMP</td>
   <td>Rd, imm16</td>
   <td>Flags when Rd - imm16</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>TST</td>
   <td>Rd, Rn</td>
   <td>Flags when Rd &amp; Rn</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>TST</td>
   <td>Rd, imm16</td>
   <td>Flags when Rd &amp; imm16</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-   <td colspan=3><center><b>Branch and Jump</center></td>
+   <td colspan=4><center><b>Branch and Jump</center></td>
  </tr>
  <tr height=19>
   <td>B&lt;cond&gt;L</td>
   <td>imm16</td>
   <td>Branch and link to PC+imm</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
   <td>B&lt;cond&gt;</td>
   <td>imm16</td>
   <td>Branch to PC+imm</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
  <tr height=19>
-  <td colspan=3><center><b>System Instructions</center></td>
+  <td colspan=4><center><b>System Instructions</center></td>
  </tr>
  <tr height=19>
   <td>INT</td>
   <td>imm24</td>
   <td>Invoke software interrupt</td>
+  <td><!-- Change this >:[ --></td>
  </tr>
 </table>
 
