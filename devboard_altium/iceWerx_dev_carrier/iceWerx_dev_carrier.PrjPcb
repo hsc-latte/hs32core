@@ -55,6 +55,23 @@ GenerateClassCluster=0
 DocumentUniqueId=OAMLULJU
 
 [Document2]
+DocumentPath=peripherals.SchDoc
+AnnotationEnabled=1
+AnnotateStartValue=1
+AnnotationIndexControlEnabled=0
+AnnotateSuffix=
+AnnotateScope=All
+AnnotateOrder=-1
+DoLibraryUpdate=1
+DoDatabaseUpdate=1
+ClassGenCCAutoEnabled=1
+ClassGenCCAutoRoomEnabled=1
+ClassGenNCAutoScope=None
+DItemRevisionGUID=
+GenerateClassCluster=0
+DocumentUniqueId=KXMAAAZJ
+
+[Document3]
 DocumentPath=symbols.SchLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -71,7 +88,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=FJYTQHAR
 
-[Document3]
+[Document4]
 DocumentPath=footprints.PcbLib
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -88,7 +105,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=HBBYKDIC
 
-[Document4]
+[Document5]
 DocumentPath=iceWerx_dev_carrier.PcbDoc
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -105,7 +122,7 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=POKHPGTC
 
-[Document5]
+[Document6]
 DocumentPath=schematic_print.OutJob
 AnnotationEnabled=1
 AnnotateStartValue=1
@@ -122,22 +139,15 @@ DItemRevisionGUID=
 GenerateClassCluster=0
 DocumentUniqueId=
 
-[Document6]
-DocumentPath=peripherals.SchDoc
-AnnotationEnabled=1
-AnnotateStartValue=1
-AnnotationIndexControlEnabled=0
-AnnotateSuffix=
-AnnotateScope=All
-AnnotateOrder=-1
-DoLibraryUpdate=1
-DoDatabaseUpdate=1
-ClassGenCCAutoEnabled=1
-ClassGenCCAutoRoomEnabled=1
-ClassGenNCAutoScope=None
-DItemRevisionGUID=
-GenerateClassCluster=0
-DocumentUniqueId=KXMAAAZJ
+[ProjectVariant1]
+UniqueID=9A265D58-65C0-4271-B4FB-8893B7BBB9B7
+Description=PRODUCTION
+AllowFabrication=0
+ParameterCount=0
+VariationCount=2
+Variation1=Designator=R?|UniqueId=\CVSUMJCY|Kind=0|AlternatePart= 
+Variation2=Designator=R?|UniqueId=\FUAEBCME|Kind=0|AlternatePart= 
+ParamVariationCount=0
 
 [Configuration1]
 Name=Sources
