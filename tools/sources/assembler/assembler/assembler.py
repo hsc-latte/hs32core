@@ -1,17 +1,28 @@
+#!/usr/bin/env python3
 import argparse
 import os
 import typing as tp
+from parser import parse
 
-import scanner
+from errors import ParseError, ScanError
+from scanner import scan
 
 Path = tp.Union[str, bytes, os.PathLike]
+__all__ = ["assemble", "assemble_file", "cli"]
 
 
 def assemble(assembly_code: str) -> bytes:
+    tokens = scan(assembly_code)
     try:
-        scanner.scan(assembly_code)
-    except scanner.ScanError as exc:
+        instructions = parse(tokens)
+    # Error checking for the scanner is pushed here due to scan() being
+    # a lazy generator
+    except (ScanError, ParseError) as exc:
         exc.error_exit()
+    import pprint
+
+    pprint.pprint(instructions.instructions)
+    pprint.pprint(instructions.symbol_table)
     return b""
 
 

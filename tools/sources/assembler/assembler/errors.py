@@ -1,5 +1,9 @@
+from __future__ import annotations
+
 import sys
 import typing
+
+T = typing.TypeVar("T")
 
 
 def format_error(error_message: str, line: typing.Optional[int]) -> str:
@@ -9,3 +13,44 @@ def format_error(error_message: str, line: typing.Optional[int]) -> str:
 
 def error_print(*args, **kwargs) -> None:
     print(*args, file=sys.stderr, **kwargs)
+
+
+class AsmException(Exception):
+    """ Base class for exceptions in this module """
+
+    def __init__(self, message: str, line: typing.Optional[int], *args):
+        super().__init__(format_error(message, line), *args)
+
+    @classmethod
+    def collect_errors(cls, errors: typing.Iterable[str]) -> AsmException:
+        """ Collects multiple error messages into a single error """
+        message = "\n".join(errors)
+        return cls(message, None)
+
+    # Code is EX_DATAERR, taken from here https://man.openbsd.org/sysexits.3
+    def error_exit(self, code=65):
+        """ Prints the error then exits the program """
+        error_print(self.args[0])
+        sys.exit(code)
+
+
+class ScanError(AsmException):
+    pass
+
+
+class ParseError(AsmException):
+    pass
+
+
+def exception_chain(
+    functions: typing.Iterable[typing.Callable[..., T]],
+    exception: BaseException,
+    *args: object,
+    **kwargs: object,
+) -> T:
+    for function in functions:
+        try:
+            return function(*args, **kwargs)
+        except type(exception):
+            pass
+    raise exception

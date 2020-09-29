@@ -1,95 +1,16 @@
 from __future__ import annotations
 
 import dataclasses
-import enum
 import shlex
-import sys
 import typing
 
-from errors import error_print, format_error
+from errors import ScanError, exception_chain
+from sized_numbers import MAX_NUM
+from token_enums import Instruction, Register, Syntax, TokenType
 
 
-# Move some of this to a seperate base class?
-class ScanError(Exception):
-    def __init__(self, message: str, line: typing.Optional[int], *args):
-        super().__init__(format_error(message, line), *args)
-
-    @classmethod
-    def collect_errors(cls, errors: typing.Iterable[str]) -> ScanError:
-        """ Collects multiple errors into a single error """
-        message = "\n".join(errors)
-        return cls(message, None)
-
-    # Code is EX_DATAERR, taken from here https://man.openbsd.org/sysexits.3
-    def error_exit(self, code=65):
-        """ Prints the error then exits the program """
-        error_print(self.args[0])
-        sys.exit(code)
-
-
-class TokenType(enum.Enum):
-    INSTRUCTION = enum.auto()
-    REGISTER = enum.auto()
-    SYNTAX = enum.auto()
-    LABEL = enum.auto()
-    CONSTANT = enum.auto()
-
-
-# This is defined like this because of the special characters as the enum names
-Syntax = enum.Enum("Syntax", [",", "[", "]", "+", ":", "<<", ">>"])
-
-
-class Register(enum.Enum):
-    """
-    Enum of the registers.
-    If the value is positive, it is the value of the register in code.
-    """
-
-    r0 = 0
-    r1 = 1
-    r2 = 2
-    r3 = 3
-    r4 = 4
-    r5 = 5
-    r6 = 6
-    r7 = 7
-    r8 = 8
-    r9 = 9
-    r10 = 10
-    r11 = 11
-    r12 = 12
-    r13 = 13
-    r14 = 14
-    r15 = 15
-    lp = -1
-    sr = -2
-
-
-class Instruction(enum.Enum):
-    # Should the values mean something?
-    LDR = enum.auto()
-    STR = enum.auto()
-    MOV = enum.auto()
-    MOVT = enum.auto()
-    ADD = enum.auto()
-    SUB = enum.auto()
-    MUL = enum.auto()
-    INC = enum.auto()
-    DEC = enum.auto()
-    AND = enum.auto()
-    OR = enum.auto()
-    XOR = enum.auto()
-    NOT = enum.auto()
-    CMP = enum.auto()
-    TST = enum.auto()
-    INT = enum.auto()
-    ADDC = enum.auto()
-    RSUB = enum.auto()
-    SUBC = enum.auto()
-    RSUBC = enum.auto()
-    # TODO: Add branch, jump, and other missed instructions
-
-
+# This is defined here, instead of in token_enums.py because of its scanner methods
+# Maybe the visitor pattern would help here for code organization?
 @dataclasses.dataclass
 class Token:
     type: TokenType
@@ -98,9 +19,11 @@ class Token:
     # REGISTER: Register (the specific register)
     # SYNTAX: Syntax (the specific syntax)
     # LABEL: str (Name of the label)
-    # CONSTANT: bytes or int
+    # STRING: int
+    # INT: int
     value: typing.Union[str, bytes, int, Register, Instruction, Syntax]
     line: int
+    text: str
 
     @classmethod
     def scan_instruction(cls, token_string: str, line: int) -> Token:
@@ -108,7 +31,7 @@ class Token:
             instruction = Instruction[token_string.upper()]
         except KeyError:
             raise ScanError(f"Invalid instruction {token_string}", line) from None
-        return Token(TokenType.INSTRUCTION, instruction, line)
+        return Token(TokenType.INSTRUCTION, instruction, line, token_string)
 
     @classmethod
     def scan_register(cls, token_string: str, line: int) -> Token:
@@ -116,7 +39,7 @@ class Token:
             register = Register[token_string.lower()]
         except KeyError:
             raise ScanError(f"Invalid register {token_string}", line) from None
-        return cls(TokenType.REGISTER, register, line)
+        return cls(TokenType.REGISTER, register, line, token_string)
 
     @classmethod
     def scan_string(cls, token_string: str, line: int) -> Token:
@@ -125,12 +48,12 @@ class Token:
         If the token isn't valid, returns None.
         """
         if token_string[0] in {"'", '"'} and token_string[-1] == token_string[0]:
-            return cls(
-                TokenType.CONSTANT,
+            value = int.from_bytes(
                 token_string[1:-1].encode()
                 + (b"\0" if token_string[0] == '"' else b""),
-                line,
+                "big",
             )
+            return cls(TokenType.STRING, value, line, token_string)
         raise ScanError(f"Invalid string {token_string}", line)
 
     @classmethod
@@ -140,7 +63,7 @@ class Token:
             syntax = Syntax[token_string]
         except KeyError:
             raise ScanError(f"Invalid syntax {token_string}", line)
-        return cls(TokenType.SYNTAX, syntax, line)
+        return cls(TokenType.SYNTAX, syntax, line, token_string)
 
     @classmethod
     def scan_integer(cls, token_string: str, line: int) -> Token:
@@ -148,7 +71,14 @@ class Token:
             value = int(token_string, 0)
         except ValueError:
             raise ScanError(f"Invalid integer {token_string}", line) from None
-        return cls(TokenType.CONSTANT, value, line)
+        if value < 0:
+            raise ScanError(f"Negative integer {value} is not supported", line)
+        if value > MAX_NUM:
+            message = (
+                f"Integer {value} is too big, the largest supported number is {MAX_NUM}"
+            )
+            raise ScanError(message, line)
+        return cls(TokenType.UINT, value, line, token_string)
 
     @classmethod
     def scan_label(cls, token_string: str, line: int) -> Token:
@@ -159,12 +89,12 @@ class Token:
         """
         if any(syntax in token_string for syntax in Syntax.__members__):
             raise ScanError(
-                f"Invalid label {token_string}."
+                f"Invalid label {token_string}. "
                 "Does this have a syntax character in it? They're one of these:\n"
                 f"{list(Syntax.__members__)}",
                 line,
             )
-        return cls(TokenType.LABEL, token_string, line)
+        return cls(TokenType.LABEL, token_string, line, token_string)
 
     @classmethod
     def scan_token(cls, token_string: str, line: int) -> Token:
@@ -176,22 +106,25 @@ class Token:
             cls.scan_integer,
             cls.scan_label,
         )
-        for scan in scanners:
-            try:
-                return scan(token_string, line)
-            except ScanError:
-                pass
-        raise ScanError(f'Invalid token "{token_string}"', line)
+        return exception_chain(
+            scanners,
+            ScanError(f'Invalid token "{token_string}"', line),
+            token_string,
+            line,
+        )
 
 
-def counted_lowered_lines(text: str) -> typing.Iterator[typing.Tuple[int, str]]:
+def counted_lowered_no_comment_lines(
+    text: str,
+) -> typing.Iterator[typing.Tuple[int, str]]:
     """
-    Yields the line number and the lower cased line.
+    Yields the line number and the lower cased line without comments.
 
-    If the line is empty or only has whitespace, the line counts towards
-    the line count but isn't yielded. The line count starts at 1
+    If the line is empty, only has whitespace, or only has comments the line
+    counts towards the line count but isn't yielded. The line count starts at 1.
     """
     for line_num, line in enumerate(text.lower().splitlines(), 1):
+        line = line.split(";", 1)[0].strip()
         if not line.isspace() and line:
             yield line_num, line
 
@@ -200,7 +133,7 @@ def scan_label_def(str_token: str, line: int) -> typing.Tuple[Token, Token]:
     if str_token[-1] == ":":
         return (
             Token.scan_label(str_token[:-1], line),
-            Token(TokenType.SYNTAX, Syntax[":"], line),
+            Token(TokenType.SYNTAX, Syntax[":"], line, str_token),
         )
     raise ScanError(f"Invalid label definition {str_token}", line)
 
@@ -208,8 +141,7 @@ def scan_label_def(str_token: str, line: int) -> typing.Tuple[Token, Token]:
 def scan(text: str) -> typing.Iterator[typing.List[Token]]:
     # This keeps going after it errors to find all the errors in the program
     errors: typing.List[str] = []
-    for line_num, line in counted_lowered_lines(text):
-        line = line.split(";", 1)[0].strip()
+    for line_num, line in counted_lowered_no_comment_lines(text):
         try:
             if line[-1] == ":":
                 line_tokens = list(scan_label_def(line, line_num))
@@ -234,5 +166,5 @@ def scan(text: str) -> typing.Iterator[typing.List[Token]]:
         except ScanError as exc:
             errors.append(exc.args[0])
 
-        if errors:
-            raise ScanError.collect_errors(errors)
+    if errors:
+        raise ScanError.collect_errors(errors)
