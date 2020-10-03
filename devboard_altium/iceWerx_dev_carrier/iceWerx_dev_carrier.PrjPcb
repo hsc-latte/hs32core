@@ -44,7 +44,7 @@ AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-AnnotateOrder=-1
+AnnotateOrder=0
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -61,7 +61,7 @@ AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
 AnnotateSuffix=
 AnnotateScope=All
-AnnotateOrder=-1
+AnnotateOrder=1
 DoLibraryUpdate=1
 DoDatabaseUpdate=1
 ClassGenCCAutoEnabled=1
@@ -148,6 +148,10 @@ VariationCount=2
 Variation1=Designator=R?|UniqueId=\CVSUMJCY|Kind=0|AlternatePart= 
 Variation2=Designator=R?|UniqueId=\FUAEBCME|Kind=0|AlternatePart= 
 ParamVariationCount=0
+
+[GeneratedDocument1]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\Design Rule Check - iceWerx_dev_carrier.html
+DItemRevisionGUID=
 
 [Configuration1]
 Name=Sources
