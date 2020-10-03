@@ -4,26 +4,19 @@ import os
 import typing as tp
 from parser import parse
 
-from errors import ParseError, ScanError
+from errors import AsmException
+from instruction import encode_instructions
 from scanner import scan
 
 Path = tp.Union[str, bytes, os.PathLike]
 __all__ = ["assemble", "assemble_file", "cli"]
 
 
-def assemble(assembly_code: str) -> bytes:
-    tokens = scan(assembly_code)
+def assemble(assembly_code: str) -> bytes:  # type: ignore
     try:
-        instructions = parse(tokens)
-    # Error checking for the scanner is pushed here due to scan() being
-    # a lazy generator
-    except (ScanError, ParseError) as exc:
+        return encode_instructions(*parse(scan(assembly_code)))
+    except AsmException as exc:
         exc.error_exit()
-    import pprint
-
-    pprint.pprint(instructions.instructions)
-    pprint.pprint(instructions.symbol_table)
-    return b""
 
 
 def assemble_file(source: Path, destination: Path):

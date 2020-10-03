@@ -3,11 +3,12 @@ from __future__ import annotations
 
 import typing
 
-from errors import ParseError, exception_chain, format_error
+from errors import ParseError, format_error
+from instruction import Instruction
 from sized_numbers import OverflowError_, PositiveSizedNumber, Uint5, Uint16
 from token_enums import Instruction as InstructionEnum
 from token_enums import (
-    InstructionArgTypes,
+    Label,
     Register,
     Shift,
     ShiftType,
@@ -23,13 +24,7 @@ if typing.TYPE_CHECKING:
 TPA = typing.TypeVar("TPA", bound="Parseable")
 
 
-__all__ = ["Instruction", "InstructionsNT", "parse"]
-
-
-class Instruction(typing.NamedTuple):
-    type: InstructionEnum
-    # The exact types are based on the value of the InstructionEnum
-    args: typing.Sequence[InstructionArgTypes]
+__all__ = ["InstructionsNT", "parse"]
 
 
 class InstructionsNT(typing.NamedTuple):
@@ -109,7 +104,7 @@ def parse_Register(
 
 
 def parse_PointerDeref(
-    cls: typing.Type[PointerDeref], tokens: typing.Sequence[Token], line: int
+    cls: typing.Type[PointerDeref], tokens: typing.Sequence[Token], line: int,
 ) -> PointerDeref:
     empty_token_check(tokens, line)
     if tokens[0].value != Syntax["["] or tokens[-1].value != Syntax["]"]:
@@ -118,19 +113,13 @@ def parse_PointerDeref(
     if len(tokens) > 3:
         if tokens[2].value != Syntax["+"]:
             raise ParseError(f'Expected "+" sign, instead got {tokens[2].text}', line)
-        error_message = (
-            f"Increment "
-            f'"{"".join(token.text for token in tokens[3:-1])}" is invalid'
-        )
-        increment = exception_chain(
-            [Uint16.parse, Shift.parse],
-            ParseError(error_message, line),
-            tokens[3:-1],
-            line,
-        )
+        increment = cls.inc_parse_function(tokens[3:-1], line)
     else:
         increment = Uint16(0)
     return cls(register, increment)
+
+
+parse_Uint16PointerDeref = parse_ShiftPointerDeref = parse_PointerDeref
 
 
 def parse_number(
@@ -167,8 +156,6 @@ def parse_args(
 ) -> typing.Iterator[TPA]:
     errors = []
     for arg_types, arg in zip(parser_types, args):
-        if isinstance(arg_types, type) and issubclass(arg_types, instruction_arg_types):
-            arg_types = (arg_types,)
         # enums are a pain with type hinting, thus the # type: ignore
         for arg_type in arg_types:  # type: ignore
             try:
@@ -182,6 +169,14 @@ def parse_args(
             yield parsed_arg
     if errors:
         raise ParseError.collect_errors(errors)
+
+
+def parse_Label(
+    cls: typing.Type[Label], tokens: typing.Sequence[Token], line: int
+) -> Label:
+    return Label(
+        token_type_check(extact_token(tokens, line), TokenType.LABEL, line).value
+    )
 
 
 def parse(tokens: typing.Iterator[typing.Sequence[Token]]) -> InstructionsNT:
@@ -211,7 +206,7 @@ def parse(tokens: typing.Iterator[typing.Sequence[Token]]) -> InstructionsNT:
                 )
                 errors.append(format_error(message, line_num))
 
-            args = parse_args(instruction.value, raw_args)
+            args = parse_args(instruction.value.types, raw_args)
 
             instructions.append(Instruction(instruction, list(args)))
     if errors:
