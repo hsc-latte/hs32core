@@ -28,7 +28,7 @@ DItemRevisionGUID=
 ReportSuppressedErrorsInMessages=0
 FSMCodingStyle=eFMSDropDownList_OneProcess
 FSMEncodingStyle=eFMSDropDownList_OneHot
-OutputPath=
+OutputPath=Project Outputs for iceWerx_dev_carrier
 LogFolderPath=
 ManagedProjectGUID=
 IncludeDesignInRelease=0
@@ -123,7 +123,7 @@ GenerateClassCluster=0
 DocumentUniqueId=POKHPGTC
 
 [Document6]
-DocumentPath=schematic_print.OutJob
+DocumentPath=outputs.OutJob
 AnnotationEnabled=1
 AnnotateStartValue=1
 AnnotationIndexControlEnabled=0
@@ -144,13 +144,157 @@ UniqueID=9A265D58-65C0-4271-B4FB-8893B7BBB9B7
 Description=PRODUCTION
 AllowFabrication=0
 ParameterCount=0
-VariationCount=2
-Variation1=Designator=R?|UniqueId=\CVSUMJCY|Kind=0|AlternatePart= 
-Variation2=Designator=R?|UniqueId=\FUAEBCME|Kind=0|AlternatePart= 
+VariationCount=10
+Variation1=Designator=R?|UniqueId=\CVSUMJCY|Kind=1|AlternatePart= 
+Variation2=Designator=R?|UniqueId=\FUAEBCME|Kind=1|AlternatePart= 
+Variation3=Designator=R34|UniqueId=\CAVCJIWD|Kind=1|AlternatePart= 
+Variation4=Designator=R35|UniqueId=\MHARSENE|Kind=1|AlternatePart= 
+Variation5=Designator=R36|UniqueId=\WNOSALZR|Kind=1|AlternatePart= 
+Variation6=Designator=R72|UniqueId=\IIGTPMWV|Kind=1|AlternatePart= 
+Variation7=Designator=R73|UniqueId=\BQNEZFPM|Kind=1|AlternatePart= 
+Variation8=Designator=R74|UniqueId=\LUVKNXKY|Kind=1|AlternatePart= 
+Variation9=Designator=R75|UniqueId=\IWKJOOSY|Kind=0|AlternatePart= 
+Variation10=Designator=R79|UniqueId=\FLWWFMVT|Kind=1|AlternatePart= 
 ParamVariationCount=0
 
 [GeneratedDocument1]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\BOM\Bill of Materials-iceWerx_dev_carrier(PRODUCTION).xls
+DItemRevisionGUID=
+
+[GeneratedDocument2]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\comp_+_top\components
+DItemRevisionGUID=
+
+[GeneratedDocument3]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\eda\data
+DItemRevisionGUID=
+
+[GeneratedDocument4]
 DocumentPath=Project Outputs for iceWerx_dev_carrier\Design Rule Check - iceWerx_dev_carrier.html
+DItemRevisionGUID=
+
+[GeneratedDocument5]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\board\features
+DItemRevisionGUID=
+
+[GeneratedDocument6]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_3d_body\features
+DItemRevisionGUID=
+
+[GeneratedDocument7]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_assembly\features
+DItemRevisionGUID=
+
+[GeneratedDocument8]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument9]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument10]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument11]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\bottom_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument12]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\comp_+_top\features
+DItemRevisionGUID=
+
+[GeneratedDocument13]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\drill\features
+DItemRevisionGUID=
+
+[GeneratedDocument14]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\keep-out_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument15]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\mechanical_1\features
+DItemRevisionGUID=
+
+[GeneratedDocument16]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\mechanical_15\features
+DItemRevisionGUID=
+
+[GeneratedDocument17]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_3d_body\features
+DItemRevisionGUID=
+
+[GeneratedDocument18]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_assembly\features
+DItemRevisionGUID=
+
+[GeneratedDocument19]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_layer\features
+DItemRevisionGUID=
+
+[GeneratedDocument20]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_overlay\features
+DItemRevisionGUID=
+
+[GeneratedDocument21]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_paste\features
+DItemRevisionGUID=
+
+[GeneratedDocument22]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\top_solder\features
+DItemRevisionGUID=
+
+[GeneratedDocument23]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\NC Drill\iceWerx_dev_carrier.DRR
+DItemRevisionGUID=
+
+[GeneratedDocument24]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\Gerber\iceWerx_dev_carrier.EXTREP
+DItemRevisionGUID=
+
+[GeneratedDocument25]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\NC Drill\iceWerx_dev_carrier.LDP
+DItemRevisionGUID=
+
+[GeneratedDocument26]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\Gerber\iceWerx_dev_carrier.REP
+DItemRevisionGUID=
+
+[GeneratedDocument27]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\iceWerx_dev_carrier.REP
+DItemRevisionGUID=
+
+[GeneratedDocument28]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\Gerber\iceWerx_dev_carrier.RUL
+DItemRevisionGUID=
+
+[GeneratedDocument29]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\NC Drill\iceWerx_dev_carrier.TXT
+DItemRevisionGUID=
+
+[GeneratedDocument30]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\matrix\matrix
+DItemRevisionGUID=
+
+[GeneratedDocument31]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\netlists\cadnet\netlist
+DItemRevisionGUID=
+
+[GeneratedDocument32]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\Pick Place\Pick Place for iceWerx_dev_carrier.txt
+DItemRevisionGUID=
+
+[GeneratedDocument33]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\profile
+DItemRevisionGUID=
+
+[GeneratedDocument34]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\stephdr
+DItemRevisionGUID=
+
+[GeneratedDocument35]
+DocumentPath=Project Outputs for iceWerx_dev_carrier\ODB\odb\steps\pcb\layers\drill\tools
 DItemRevisionGUID=
 
 [Configuration1]
@@ -200,7 +344,7 @@ SCH_HasExpandLogicalToPhysicalSheets=-1
 SaveSettingsToOutJob=-1
 
 [Generic_EDE]
-OutputDir=
+OutputDir=Project Outputs for iceWerx_dev_carrier
 
 [OutputGroup1]
 Name=Netlist Outputs
