@@ -2,6 +2,8 @@
 
 Just a quick guide, I'm flooded with homework but I'll get this updated before the end of the week. I didn't use the iCEcube2 and its been fine.
 
+Also iCEcube2 require a free license and you'll need a MAC address to get a license.
+
 FPGA Website [https://www.robot-electronics.co.uk/products/fpga/icewerx.html](https://www.robot-electronics.co.uk/products/fpga/icewerx.html)
 
 ## FPGA Programmer
