@@ -1,0 +1,10 @@
+Output: Generates pick and place files
+Type  : Pick Place
+From  : PCB Document [iceWerx_dev_carrier.PcbDoc]
+   Generated File[Pick Place for iceWerx_dev_carrier.txt]
+
+
+Files Generated   : 1
+Documents Printed : 0
+
+Finished Output Generation At 10:00:37 PM On 10/3/2020
