@@ -2,19 +2,6 @@
 FileName = iceWerx_dev_carrier.GBR
 AutoAperture = True
 *************************************************************
-Generating : Bottom Assembly
-      File : iceWerx_dev_carrier.GM3
-
-    Adding Layer      : Bottom Assembly
-
-    Adding Layer      : Board
-
-
-Used DCodes :
-    D13
-*************************************************************
-
-*************************************************************
 Generating : Bottom Solder
       File : iceWerx_dev_carrier.GBS
 
@@ -38,58 +25,24 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Top Paste
-      File : iceWerx_dev_carrier.GTP
+Generating : Top Overlay
+      File : iceWerx_dev_carrier.GTO
 
-    Adding Layer      : Top Paste
-
-    Adding Layer      : Board
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D13
-    D19
-    D20
-    D21
-    D22
-    D23
-    D24
-    D25
-    D26
-    D27
-    D28
-    D29
-    D30
-    D31
-    D32
-*************************************************************
-
-*************************************************************
-Generating : Bottom Layer
-      File : iceWerx_dev_carrier.GBL
-
-    Adding Layer      : Bottom Layer
+    Adding Layer      : Top Overlay
 
     Adding Layer      : Board
 
-    Adding Layer      : Multi-Layer
-
 
 Used DCodes :
+    D10
+    D11
+    D12
     D13
+    D14
     D15
     D16
     D17
-    D56
-    D57
-    D58
-    D59
-    D60
-    D61
+    D18
 *************************************************************
 
 *************************************************************
@@ -126,6 +79,89 @@ Used DCodes :
     D49
     D50
     D51
+*************************************************************
+
+*************************************************************
+Generating : Bottom Layer
+      File : iceWerx_dev_carrier.GBL
+
+    Adding Layer      : Bottom Layer
+
+    Adding Layer      : Board
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D13
+    D15
+    D16
+    D17
+    D56
+    D57
+    D58
+    D59
+    D60
+    D61
+*************************************************************
+
+*************************************************************
+Generating : Bottom Assembly
+      File : iceWerx_dev_carrier.GM3
+
+    Adding Layer      : Bottom Assembly
+
+    Adding Layer      : Board
+
+
+Used DCodes :
+    D13
+*************************************************************
+
+*************************************************************
+Generating : Top Assembly
+      File : iceWerx_dev_carrier.GM2
+
+    Adding Layer      : Top Assembly
+
+    Adding Layer      : Board
+
+
+Used DCodes :
+    D13
+    D15
+    D63
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : iceWerx_dev_carrier.GTP
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Board
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D13
+    D19
+    D20
+    D21
+    D22
+    D23
+    D24
+    D25
+    D26
+    D27
+    D28
+    D29
+    D30
+    D31
+    D32
 *************************************************************
 
 *************************************************************
@@ -169,41 +205,5 @@ Used DCodes :
     D59
     D60
     D61
-*************************************************************
-
-*************************************************************
-Generating : Top Assembly
-      File : iceWerx_dev_carrier.GM2
-
-    Adding Layer      : Top Assembly
-
-    Adding Layer      : Board
-
-
-Used DCodes :
-    D13
-    D15
-    D63
-*************************************************************
-
-*************************************************************
-Generating : Top Overlay
-      File : iceWerx_dev_carrier.GTO
-
-    Adding Layer      : Top Overlay
-
-    Adding Layer      : Board
-
-
-Used DCodes :
-    D10
-    D11
-    D12
-    D13
-    D14
-    D15
-    D16
-    D17
-    D18
 *************************************************************
 
