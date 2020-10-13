@@ -4,8 +4,8 @@ C:\Users\Julian\Documents\gitprocessor\Processor\devboard_altium\iceWerx_dev_car
 ========================================================================================================================
 File Design Information:
 
-Date:       11/10/20
-Time:       18:24
+Date:       12/10/20
+Time:       19:16
 Revision:   9725d5a9eec35ae92cc67b7b3afbd95f2ceae477
 Variant:    No variations
 Units used: mil
