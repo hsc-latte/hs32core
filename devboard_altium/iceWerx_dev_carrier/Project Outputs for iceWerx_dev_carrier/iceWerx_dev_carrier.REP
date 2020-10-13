@@ -2,22 +2,55 @@
 FileName = iceWerx_dev_carrier.GBR
 AutoAperture = True
 *************************************************************
-Generating : Top Layer
-      File : iceWerx_dev_carrier.GTL
+Generating : Bottom Assembly
+      File : iceWerx_dev_carrier.GM3
 
-    Adding Layer      : Top Layer
+    Adding Layer      : Bottom Assembly
 
     Adding Layer      : Board
+
+
+Used DCodes :
+    D13
+*************************************************************
+
+*************************************************************
+Generating : Bottom Solder
+      File : iceWerx_dev_carrier.GBS
+
+    Adding Layer      : Bottom Solder
+
+    Adding Layer      : Board
+
+    Adding Layer      : Bottom Layer
 
     Adding Layer      : Multi-Layer
 
 
 Used DCodes :
     D13
-    D15
-    D16
-    D17
-    D18
+    D47
+    D48
+    D49
+    D50
+    D51
+*************************************************************
+
+*************************************************************
+Generating : Top Paste
+      File : iceWerx_dev_carrier.GTP
+
+    Adding Layer      : Top Paste
+
+    Adding Layer      : Board
+
+    Adding Layer      : Top Layer
+
+    Adding Layer      : Multi-Layer
+
+
+Used DCodes :
+    D13
     D19
     D20
     D21
@@ -32,16 +65,42 @@ Used DCodes :
     D30
     D31
     D32
-    D52
-    D53
-    D54
-    D55
-    D56
-    D57
-    D58
-    D59
-    D60
-    D61
+*************************************************************
+
+*************************************************************
+Generating : Top Assembly
+      File : iceWerx_dev_carrier.GM2
+
+    Adding Layer      : Top Assembly
+
+    Adding Layer      : Board
+
+
+Used DCodes :
+    D13
+    D15
+    D62
+*************************************************************
+
+*************************************************************
+Generating : Top Overlay
+      File : iceWerx_dev_carrier.GTO
+
+    Adding Layer      : Top Overlay
+
+    Adding Layer      : Board
+
+
+Used DCodes :
+    D10
+    D11
+    D12
+    D13
+    D14
+    D15
+    D16
+    D17
+    D18
 *************************************************************
 
 *************************************************************
@@ -105,92 +164,22 @@ Used DCodes :
 *************************************************************
 
 *************************************************************
-Generating : Top Assembly
-      File : iceWerx_dev_carrier.GM2
+Generating : Top Layer
+      File : iceWerx_dev_carrier.GTL
 
-    Adding Layer      : Top Assembly
+    Adding Layer      : Top Layer
 
     Adding Layer      : Board
+
+    Adding Layer      : Multi-Layer
 
 
 Used DCodes :
     D13
-    D15
-    D63
-*************************************************************
-
-*************************************************************
-Generating : Top Overlay
-      File : iceWerx_dev_carrier.GTO
-
-    Adding Layer      : Top Overlay
-
-    Adding Layer      : Board
-
-
-Used DCodes :
-    D10
-    D11
-    D12
-    D13
-    D14
     D15
     D16
     D17
     D18
-*************************************************************
-
-*************************************************************
-Generating : Bottom Assembly
-      File : iceWerx_dev_carrier.GM3
-
-    Adding Layer      : Bottom Assembly
-
-    Adding Layer      : Board
-
-
-Used DCodes :
-    D13
-*************************************************************
-
-*************************************************************
-Generating : Bottom Solder
-      File : iceWerx_dev_carrier.GBS
-
-    Adding Layer      : Bottom Solder
-
-    Adding Layer      : Board
-
-    Adding Layer      : Bottom Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D13
-    D47
-    D48
-    D49
-    D50
-    D51
-    D62
-*************************************************************
-
-*************************************************************
-Generating : Top Paste
-      File : iceWerx_dev_carrier.GTP
-
-    Adding Layer      : Top Paste
-
-    Adding Layer      : Board
-
-    Adding Layer      : Top Layer
-
-    Adding Layer      : Multi-Layer
-
-
-Used DCodes :
-    D13
     D19
     D20
     D21
@@ -205,5 +194,15 @@ Used DCodes :
     D30
     D31
     D32
+    D52
+    D53
+    D54
+    D55
+    D56
+    D57
+    D58
+    D59
+    D60
+    D61
 *************************************************************
 

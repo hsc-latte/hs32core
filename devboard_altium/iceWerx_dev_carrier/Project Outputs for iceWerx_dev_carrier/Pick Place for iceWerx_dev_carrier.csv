@@ -5,7 +5,7 @@ C:\Users\Julian\Documents\gitprocessor\Processor\devboard_altium\iceWerx_dev_car
 File Design Information:
 
 Date:       12/10/20
-Time:       19:16
+Time:       21:36
 Revision:   9725d5a9eec35ae92cc67b7b3afbd95f2ceae477
 Variant:    No variations
 Units used: mm
@@ -134,10 +134,10 @@ Units used: mm
 "C4","Cap_NP","TopLayer","0805","23.1140","78.8830","90","Capacitor"
 "C3","Cap_NP","TopLayer","0805","13.8430","81.5340","90","Capacitor"
 "C2","Cap_NP","TopLayer","0805","72.7550","63.1190","360","Capacitor"
-"C1","Cap_NP","TopLayer","0805","61.4680","50.8000","270","Capacitor"
+"C1","Cap_NP","TopLayer","0805","61.4680","51.1650","270","Capacitor"
 "U7","MCP23S08T-E/SO","TopLayer","MICROCHIP_18-SOIC","92.3290","23.8760","0",""
 "U6","PCT2075DP,118","TopLayer","NXP_TSSOP-8_(SOT505-1)","48.2600","23.2410","0","Temperature Sensor Digital, Local -55ÅãC ~ 125ÅãC 11 b 8-TSSOP"
-"U5","S29AL008J70TFI020","TopLayer","CYPRRESS_48-TSOP","93.4720","53.0860","270","FLASH - NOR Memory IC 8Mb (1M x 8, 512K x 16) Parallel  70ns 48-TSOP"
+"U5","MX29LV640EBTI-70G","TopLayer","CYPRRESS_48-TSOP","93.4720","53.0860","270","FLASH - NOR Memory IC 8Mb (1M x 8, 512K x 16) Parallel  70ns 48-TSOP"
 "U4","74LVC16373ADGG,118","TopLayer","NEXPERIA_TSSOP-48_(SOT362-1)","54.3503","60.1320","180","D-Type Transparent Latch 2 Channel 8:8 IC Tri-State 48-TSSOP"
 "U3","CY62147GE30-45ZSXI","TopLayer","CYPRESS_Z44_44-TSOP_II","73.4060","53.0860","90","SRAM - Asynchronous Memory IC 4Mb (256K x 16) Parallel 45ns 44-TSOP II"
 "U2","74LVC16373ADGG,118","TopLayer","NEXPERIA_TSSOP-48_(SOT362-1)","54.3460","46.9060","180","D-Type Transparent Latch 2 Channel 8:8 IC Tri-State 48-TSSOP"
