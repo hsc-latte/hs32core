@@ -2,7 +2,7 @@ from __future__ import annotations
 
 import typing
 
-from parseable import Parseable
+from hsc_assembler.parseable import Parseable
 
 MAX_NUM = 0b111111111111111111111111
 
@@ -49,6 +49,8 @@ class PositiveSizedNumber(int):
         cls, fields: typing.Dict[typing.Tuple[str, ...], int]
     ) -> PositiveSizedNumber:
         return cls(fields[()])
+
+    asm_code = __str__
 
 
 class Uint5(PositiveSizedNumber):

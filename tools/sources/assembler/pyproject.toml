@@ -1,7 +1,7 @@
 [tool.poetry]
 name = "hsc_assembler"
 version = "0.1.0"
-description = ""
+description = "Assembler for the hsc (name TBD) ISA (https://github.com/HomebrewSiliconClub/Processor)"
 authors = ["Bolun Thompson <abolunthompson@gmail.com>"]
 
 [tool.poetry.dependencies]

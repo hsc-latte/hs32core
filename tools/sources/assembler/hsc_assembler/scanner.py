@@ -4,9 +4,10 @@ import dataclasses
 import shlex
 import typing
 
-from errors import ScanError, exception_chain
-from sized_numbers import MAX_NUM
-from token_enums import Instruction, Register, Syntax, TokenType
+from hsc_assembler.errors import ScanError, exception_chain
+from hsc_assembler.instruction_info import Instruction
+from hsc_assembler.sized_numbers import MAX_NUM
+from hsc_assembler.token_enums import Register, Syntax, TokenType
 
 
 # This is defined here, instead of in token_enums.py because of its scanner methods
@@ -147,6 +148,7 @@ def scan(text: str) -> typing.Iterator[typing.List[Token]]:
                 line_tokens = list(scan_label_def(line, line_num))
             else:
                 # Using shlex seems to work, but there may be issues
+                # TODO: Shlex doesn't fully support unicode characters.
                 tokens = shlex.shlex(line, punctuation_chars="><", posix=False)
                 try:
                     instruction = Token.scan_instruction(tokens.get_token(), line_num)
