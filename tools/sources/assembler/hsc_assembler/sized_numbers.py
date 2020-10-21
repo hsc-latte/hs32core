@@ -1,6 +1,8 @@
+from __future__ import annotations
+
 import typing
 
-from parseable import Parseable
+from hsc_assembler.parseable import Parseable
 
 MAX_NUM = 0b111111111111111111111111
 
@@ -8,7 +10,7 @@ MAX_NUM = 0b111111111111111111111111
 class OverflowError_(Exception):
     def __init__(self, number: int, max_size: int, type_name: str) -> None:
         message = (
-            f"Number {number} is too large for type {type_name}."
+            f"Number {number} is too large for type {type_name}. "
             f"Its max size is {max_size}."
         )
         super().__init__(message)
@@ -36,11 +38,27 @@ class PositiveSizedNumber(int):
         return f"{type(self).__name__}({super().__repr__()})"
 
     def __str__(self) -> str:
-        return super().__str__()
+        return super().__repr__()
+
+    @classmethod
+    def from_int(cls, value: int) -> PositiveSizedNumber:
+        return cls(value)
+
+    @classmethod
+    def from_fields(
+        cls, fields: typing.Dict[typing.Tuple[str, ...], int]
+    ) -> PositiveSizedNumber:
+        return cls(fields[()])
+
+    asm_code = __str__
 
 
 class Uint5(PositiveSizedNumber):
     MAX = 0b11111
+
+
+class Uint8(PositiveSizedNumber):
+    MAX = 0b11111111
 
 
 class Uint16(PositiveSizedNumber, Parseable):

@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-from assembler import cli
+from hsc_assembler.main import cli
 
 if __name__ == "__main__":
     cli()

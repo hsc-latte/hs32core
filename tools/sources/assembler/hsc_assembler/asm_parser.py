@@ -1,35 +1,35 @@
 # TODO: Improve error messages
+# Replace this with a parsing library (e.g pyparsing)?
 from __future__ import annotations
 
 import typing
 
-from errors import ParseError, exception_chain, format_error
-from sized_numbers import OverflowError_, PositiveSizedNumber, Uint5, Uint16
-from token_enums import Instruction as InstructionEnum
-from token_enums import (
-    InstructionArgTypes,
+from hsc_assembler.errors import ParseError, format_error
+from hsc_assembler.instruction import Instruction
+from hsc_assembler.instruction_info import Instruction as InstructionEnum
+from hsc_assembler.sized_numbers import (
+    OverflowError_,
+    PositiveSizedNumber,
+    Uint5,
+    Uint16,
+)
+from hsc_assembler.token_enums import (
+    Label,
     Register,
     Shift,
     ShiftType,
     Syntax,
     TokenType,
-    instruction_arg_types,
 )
 
 if typing.TYPE_CHECKING:
-    from parseable import Parseable  # noqa
-    from token_enums import PointerDeref, Token
+    from .parseable import Parseable  # noqa
+    from .token_enums import PointerDeref, Token
 
-TPA = typing.TypeVar("TPA", bound="Parseable")
-
-
-__all__ = ["Instruction", "InstructionsNT", "parse"]
+    TPA = typing.TypeVar("TPA", bound=Parseable)
 
 
-class Instruction(typing.NamedTuple):
-    type: InstructionEnum
-    # The exact types are based on the value of the InstructionEnum
-    args: typing.Sequence[InstructionArgTypes]
+__all__ = ["InstructionsNT", "parse"]
 
 
 class InstructionsNT(typing.NamedTuple):
@@ -80,17 +80,17 @@ def token_type_check(
     return token
 
 
-TN = typing.TypeVar("TN", bound=typing.Type[PositiveSizedNumber])
+TN = typing.TypeVar("TN", bound=PositiveSizedNumber)
 
 
-def extract_token_num(token: Token, num_type: TN, line: int) -> TN:
+def extract_token_num(token: Token, num_type: typing.Type[TN], line: int) -> TN:
     token_type_check(token, (TokenType.UINT, TokenType.STRING), line)
     try:
         return num_type(token.value)
     except OverflowError_:
         assert isinstance(token.value, int)
         message = (
-            f"Number or string {token.value} is too large. "
+            f"Number or string {token.value} is too large. "  # type: ignore
             f"The max size for this operand is {num_type.MAX}. "
             f"The orignal text was {token.text}."
         )
@@ -109,28 +109,23 @@ def parse_Register(
 
 
 def parse_PointerDeref(
-    cls: typing.Type[PointerDeref], tokens: typing.Sequence[Token], line: int
+    cls: typing.Type[PointerDeref], tokens: typing.Sequence[Token], line: int,
 ) -> PointerDeref:
     empty_token_check(tokens, line)
     if tokens[0].value != Syntax["["] or tokens[-1].value != Syntax["]"]:
-        raise ParseError(f"Invalid pointer dereference {tokens}", line)
+        str_tokens = "".join(token.text for token in tokens)
+        raise ParseError(f"Invalid pointer dereference {str_tokens}", line)
     register = Register.parse(tokens[1], line)
     if len(tokens) > 3:
         if tokens[2].value != Syntax["+"]:
             raise ParseError(f'Expected "+" sign, instead got {tokens[2].text}', line)
-        error_message = (
-            f"Increment "
-            f'"{"".join(token.text for token in tokens[3:-1])}" is invalid'
-        )
-        increment = exception_chain(
-            [Uint16.parse, Shift.parse],
-            ParseError(error_message, line),
-            tokens[3:-1],
-            line,
-        )
+        increment = cls.inc_parse_function(tokens[3:-1], line)
     else:
         increment = Uint16(0)
     return cls(register, increment)
+
+
+parse_Uint16PointerDeref = parse_ShiftPointerDeref = parse_PointerDeref
 
 
 def parse_number(
@@ -160,17 +155,12 @@ def parse_Shift(
 
 
 def parse_args(
-    parser_types: typing.Iterable[
-        typing.Union[typing.Type[TPA], typing.Iterable[typing.Type[TPA]]]
-    ],
+    parser_types: typing.Iterable[typing.Iterable[typing.Type[TPA]]],
     args: typing.Iterable[typing.Sequence[Token]],
 ) -> typing.Iterator[TPA]:
     errors = []
     for arg_types, arg in zip(parser_types, args):
-        if isinstance(arg_types, type) and issubclass(arg_types, instruction_arg_types):
-            arg_types = (arg_types,)
-        # enums are a pain with type hinting, thus the # type: ignore
-        for arg_type in arg_types:  # type: ignore
+        for arg_type in arg_types:
             try:
                 parsed_arg = arg_type.parse(arg, arg[0].line)  # type: ignore
                 break
@@ -182,6 +172,14 @@ def parse_args(
             yield parsed_arg
     if errors:
         raise ParseError.collect_errors(errors)
+
+
+def parse_Label(
+    cls: typing.Type[Label], tokens: typing.Sequence[Token], line: int
+) -> Label:
+    return Label(
+        token_type_check(extact_token(tokens, line), TokenType.LABEL, line).value
+    )
 
 
 def parse(tokens: typing.Iterator[typing.Sequence[Token]]) -> InstructionsNT:
@@ -196,22 +194,22 @@ def parse(tokens: typing.Iterator[typing.Sequence[Token]]) -> InstructionsNT:
             assert len(line) == 2
             assert line[0].type is TokenType.LABEL
             assert isinstance(line[0].value, str)
-            # is ip + 1 the correct value for this?
-            symbol_table[line[0].value] = ip + 1
+            # is ip the correct value for this?
+            symbol_table[line[0].value] = ip
         else:
             ip += 32
             assert line[0].type is TokenType.INSTRUCTION
             instruction = line[0].value
             assert isinstance(instruction, InstructionEnum)
             raw_args = list(comma_split(line[1:]))
-            if len(raw_args) != len(instruction.value):
+            if len(raw_args) != len(instruction.value.types):
                 message = (
                     f"Opcode {instruction.name} takes {len(instruction.value)} "
                     f"arguments, but was given {len(raw_args)} arguments."
                 )
                 errors.append(format_error(message, line_num))
 
-            args = parse_args(instruction.value, raw_args)
+            args = parse_args(instruction.value.types, raw_args)
 
             instructions.append(Instruction(instruction, list(args)))
     if errors:

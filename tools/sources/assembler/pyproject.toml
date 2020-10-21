@@ -1,12 +1,11 @@
 [tool.poetry]
 name = "hsc_assembler"
 version = "0.1.0"
-description = ""
+description = "Assembler for the hsc (name TBD) ISA (https://github.com/HomebrewSiliconClub/Processor)"
 authors = ["Bolun Thompson <abolunthompson@gmail.com>"]
 
 [tool.poetry.dependencies]
 python = "^3.7"
-aenum = "^2.2.4"
 
 [tool.poetry.dev-dependencies]
 pytest = "^5.2"

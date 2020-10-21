@@ -1,3 +1,8 @@
 FROM python:3
-COPY assembler assembler
-ENTRYPOINT ["python3", "-O", "/assembler/__main__.py"]
+
+ARG wheel
+COPY $wheel $wheel
+
+RUN pip install $wheel
+
+ENTRYPOINT ["python", "-m", "hsc_assembler"]

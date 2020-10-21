@@ -28,7 +28,7 @@ class AsmException(Exception):
         return cls(message, None)
 
     # Code is EX_DATAERR, taken from here https://man.openbsd.org/sysexits.3
-    def error_exit(self, code=65):
+    def error_exit(self, code=65) -> typing.NoReturn:
         """ Prints the error then exits the program """
         error_print(self.args[0])
         sys.exit(code)
@@ -39,6 +39,10 @@ class ScanError(AsmException):
 
 
 class ParseError(AsmException):
+    pass
+
+
+class DecodingError(AsmException):
     pass
 
 
@@ -54,3 +58,9 @@ def exception_chain(
         except type(exception):
             pass
     raise exception
+
+
+def merge_exceptions(
+    name, *bases: typing.Type[BaseException]
+) -> typing.Type[BaseException]:
+    return type(name, bases, {})
