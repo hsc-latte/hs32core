@@ -5,7 +5,6 @@ build/
 *.dblite
 *.bin
 *.asc
-*.json
 abc.*
 *.history
 

@@ -1,0 +1,58 @@
+{
+    // See https://go.microsoft.com/fwlink/?LinkId=733558
+    // for the documentation about the tasks.json format
+    "version": "2.0.0",
+    "tasks": [
+        ////////////////////////////////////////////////////////////////
+        {
+            "label": "yosys",
+            "detail": "Synthesize and check design",
+            "type": "shell",
+            "command": "yosys",
+            "args": [
+                "-QT",
+                "-p", "synth_ice40 -json build/hardware.json",
+                "main.v"
+            ],
+            "problemMatcher": []
+        },
+        ////////////////////////////////////////////////////////////////
+        {
+            "label": "nextpnr",
+            "detail": "Place and Route Design",
+            "command": "nextpnr-ice40",
+            "args": [
+                "--hx8k",
+                "--package", "cb132",
+                "--json", "build/hardware.json",
+                "--asc", "build/hardware.asc",
+                "--pcf", "pins.pcf"
+            ],
+            //"dependsOn": [ "yosys" ],
+            "problemMatcher": []
+        },
+        ////////////////////////////////////////////////////////////////
+        {
+            "label": "icepack",
+            "detail": "Pack into bitstream",
+            "command": "icepack",
+            "args": [
+                "build/hardware.asc",
+                "build/hardware.bin"
+            ],
+            "problemMatcher": [],
+        },
+        ////////////////////////////////////////////////////////////////
+        {
+            "label": "Build All",
+            "detail": "Build everything all at once",
+            "dependsOrder": "sequence",
+            "dependsOn": [ "yosys", "nextpnr", "icepack" ],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            },
+            "problemMatcher": [],
+        },
+    ]
+}
