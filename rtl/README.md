@@ -5,6 +5,11 @@
 - [Docker Setup](#docker-setup)
 - [Setup without Docker](#setup-without-docker)
 ---
+## Get iceFUNprog (console version)
+Located in the tools folder, a **dotnet core** distribution for
+Windows users only (for now). Linux and Mac support should be
+easy if the need arises. Add the executable to your PATH.
+
 ## VSCode Users
 Install the following recommended extensions (all optional):
 - spmeesseman.vscode-taskexplorer

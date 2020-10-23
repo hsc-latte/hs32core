@@ -44,6 +44,19 @@
         },
         ////////////////////////////////////////////////////////////////
         {
+            "label": "upload",
+            "detail": "Upload to FPGA (must have it plugged in)",
+            "windows": {
+                "command": "iceFUNprog",
+                "args": [
+                    "upload",
+                    "build/hardware.bin"
+                ],
+            },
+            "problemMatcher": [],
+        },
+        ////////////////////////////////////////////////////////////////
+        {
             "label": "Build All",
             "detail": "Build everything all at once",
             "dependsOrder": "sequence",
