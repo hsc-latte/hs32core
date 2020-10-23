@@ -1,24 +1,45 @@
-## Directory Layout
+## Building
+**!! MAKE SURE YOU RUN ALL COMMANDS FROM THE ROOT DIRECTORY, `rtl` !!**
 
-`machine/` - Contains the Verilog equivalent of physical chips
+Synthesis
+```
+yosys -p "synth_ice40 -json build/hardware.json" main.v
+```
+PnR
+```
+nextpnr-ice40 --hx8k --package cb132 --json build/hardware.json --pcf pins.pcf --asc build/hardware.asc
+```
+Packing
+```
+icepack build/hardware.asc build/hardware.bin
+```
+Finally, upload `hardware.bin` to the iceWerx board.
+
+To simulate, compile:
+```
+iverilog machine/tb.v -o a.out
+```
+
+Then run:
+```
+vvp a.out
+```
+
+You should be able to open the `.vcd` files in something like GTKWave.
+
 
 ## Docker
 
-**Build the Docker**
-
+Build image
 ```
 docker build -t $(cat destination.txt) .
 ```
-
-**Run in Docker**
-
-Start a shell in the docker environent:
-
+Run shell
 ```
 ./dev_docker_run bash
 ```
 
-## Local Environment Setup (without docker)
+## Local Environment Setup (without Docker)
 
 Install the APIO toolchain:
 
@@ -37,24 +58,3 @@ You should add yosys, iverilog and gtkwave to your path. The binaries are locate
 ~/.apio/packages
 ```
 (or equivalent Windows directories).
-
-**!! EVERYONE, MAKE SURE YOU RUN ALL COMMANDS FROM THE ROOT DIRECTORY, rtl !!**
-
-To compile:
-```
-iverilog machine/tb.v -o a.out
-```
-
-Then run:
-```
-vvp a.out
-```
-
-You should be able to open the `.vcd` files in something like GTKWave.
-
-## The Toolchain
-| Name | Description |
-|-|-|
-| `iverilog` | We'll be using Icarus Verilog mainly as a simulation tool. <br> iverilog is the Verilog compiler |
-| `vvp` | vvp is the Verilog simulation runtime engine |
-| `gtkwave` | Tool to visualize waveforms (`.vcd` files) |

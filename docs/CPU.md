@@ -21,9 +21,11 @@
 - GPIO pins are all digital without PWM support. ADCs and IO expansions can be attached later to this or to the IO/data bus with the help of the PIO pin. Someone just has to work out the timing waveforms.
 
 **Recommended Chips:**
-- CY62147G variant for 4M (512x16) SRAM (55ns rw cycle)
-- 74xx573 for address latches (as fast as 1ns tpd)
+- CY62147G SRAM: [Digikey](https://www.digikey.com/product-detail/en/cypress-semiconductor-corp/CY62147GE30-45ZSXI/2015-CY62147GE30-45ZSXI-ND/9771508)
+- S29AL008J NOR Flash: [Digikey](https://www.digikey.ca/en/products/detail/cypress-semiconductor-corp/S29AL008J55TFNR10/5787672)
+- 74xx373/573 for address latches (as fast as 1ns tpd)
 - 74xx245 for tristate bus buffers if needed
+- 74xx138 1 of 8 Demux
 - Some I2C/SPI GPIO expansion
 - Some ADC for analogue input (I'm not sure what to use)
 
