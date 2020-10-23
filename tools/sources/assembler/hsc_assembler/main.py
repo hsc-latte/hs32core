@@ -4,7 +4,6 @@ import os
 import typing as tp
 
 from hsc_assembler.asm_parser import parse
-
 from hsc_assembler.errors import AsmException
 from hsc_assembler.instruction import encode_instructions
 from hsc_assembler.scanner import scan

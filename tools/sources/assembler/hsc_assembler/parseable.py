@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 import typing
+
 from hsc_assembler import asm_parser
 
 if typing.TYPE_CHECKING:
