@@ -43,7 +43,7 @@ class Program
         cmdprogram.AddOption(argport);
         cmdprogram.AddOption(argverify);
         cmdprogram.AddArgument(argfile);
-        var root = new RootCommand { cmdlist, cmdreset, cmdprogram };
+        var root = new RootCommand { cmdlist, cmdrun, cmdreset, cmdprogram };
         cmdlist.Handler = CommandHandler.Create<string, FileInfo>(
             (port, file) =>
             {
