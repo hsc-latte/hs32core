@@ -1,4 +1,23 @@
+## Table of Contents
+- [Table of Contents](#table-of-contents)
+- [VSCode Users](#vscode-users)
+- [Building](#building)
+- [Docker Setup](#docker-setup)
+- [Setup without Docker](#setup-without-docker)
+---
+## VSCode Users
+Install the following recommended extensions (all optional):
+- spmeesseman.vscode-taskexplorer
+- theonekevin.icarusext
+- fredericbonnet.cmake-test-adapter
+
+Ensure you have all the tools needed under your environment PATH variable, this includes:
+`yosys`, `nextpnr-ice40`, `icepack`, `iverilog`, `vvp`, `gtkwave`, `verilator`. Windows users, ensure you have WSL enabled with `cmake` and the GNU toolchain installed.
+
 ## Building
+
+Instructions are for if you are not using vscode.
+
 **!! MAKE SURE YOU RUN ALL COMMANDS FROM THE ROOT DIRECTORY, `rtl` !!**
 
 Synthesis
@@ -27,8 +46,7 @@ vvp a.out
 
 You should be able to open the `.vcd` files in something like GTKWave.
 
-
-## Docker
+## Docker Setup
 
 Build image
 ```
@@ -39,7 +57,7 @@ Run shell
 ./dev_docker_run bash
 ```
 
-## Local Environment Setup (without Docker)
+## Setup without Docker
 
 Install the APIO toolchain:
 
