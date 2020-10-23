@@ -10,7 +10,7 @@ class IceSerialInfo
     const string WIN32_DEV_QUERY = "SELECT * FROM WIN32_SerialPort";
     public void enumerate()
     {
-        Console.WriteLine("Legend: [?] Unknown Device, [x] Not IceWerx, [*] IceWerx");
+        Console.WriteLine("Legend: [?] Unknown Device, [x] Not IceWerx, [v] IceWerx");
         if(RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) {
             enumerateWin32();
         }
@@ -46,7 +46,7 @@ class IceSerialInfo
                 var mc = Regex.Match(devid, WIN32_DEVID_REGEX).Groups;
                 if(mc.Count == 3) {
                     devid_fmt = $"{mc[1].Value}:{mc[2].Value} ({devid})";
-                    isFun = tryMatchDevice(mc[1].Value.ToLower(), mc[2].Value.ToLower()) ? "*" : "x";
+                    isFun = tryMatchDevice(mc[1].Value.ToLower(), mc[2].Value.ToLower()) ? "v" : "x";
                 }
                 Console.WriteLine($"[{isFun}] {x.Properties["Name"].Value}, ID = {devid_fmt}");
             });

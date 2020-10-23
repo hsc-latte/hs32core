@@ -1,4 +1,7 @@
-﻿using System;
+﻿// Original source for GUI programmer can be found
+// here https://www.robot-electronics.co.uk/files/iceWerx.pdf
+
+using System;
 using System.IO;
 using System.IO.Ports;
 using System.CommandLine;
