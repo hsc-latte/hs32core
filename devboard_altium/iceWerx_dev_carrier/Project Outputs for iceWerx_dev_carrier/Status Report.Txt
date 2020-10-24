@@ -1,10 +1,17 @@
-Output: Imperial Generates pick and place files
-Type  : Pick Place
+Output: SiSoft (AutoPCB)
+Type  : Exporter Wrapper
 From  : PCB Document [iceWerx_dev_carrier.PcbDoc]
-   Generated File[Pick Place for iceWerx_dev_carrier.txt]
+   Generated File[iceWerx_dev_carrier_neutral_cad_nets.csv]
+   Generated File[iceWerx_dev_carrier_neutral_layers.csv]
+   Generated File[iceWerx_dev_carrier_neutral_padstacks.csv]
+   Generated File[iceWerx_dev_carrier_neutral_parts.csv]
+   Generated File[iceWerx_dev_carrier_neutral_components.csv]
+   Generated File[iceWerx_dev_carrier_neutral_pins.csv]
+   Generated File[iceWerx_dev_carrier_neutral_vias.csv]
+   Generated File[iceWerx_dev_carrier_neutral_traces.csv]
 
 
-Files Generated   : 1
+Files Generated   : 8
 Documents Printed : 0
 
-Finished Output Generation At 9:36:45 PM On 10/12/2020
+Finished Output Generation At 12:01:41 PM On 10/24/2020

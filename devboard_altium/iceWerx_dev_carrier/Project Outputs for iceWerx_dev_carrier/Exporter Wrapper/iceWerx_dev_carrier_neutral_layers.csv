@@ -1,0 +1,4 @@
+Layer Name,Type,Thickness (mil),ER,Material,Conductivity
+Top Layer,Signal,1.4,,Copper,5e6
+Dielectric,Dielectric,12.6,4.8,FR-4,
+Bottom Layer,Signal,1.4,,Copper,5e6

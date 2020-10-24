@@ -1,0 +1,155 @@
+Altium Designer Pick and Place Locations
+C:\Users\Julian\Documents\gitprocessor\Processor\devboard_altium\iceWerx_dev_carrier\Project Outputs for iceWerx_dev_carrier\Pick Place\Pick Place for iceWerx_dev_carrier.txt
+
+========================================================================================================================
+File Design Information:
+
+Date:       24/10/20
+Time:       11:59
+Revision:   f428db478ef256c9dde51c6533959bf21d3a97a2
+Variant:    No variations
+Units used: mil
+
+Designator Comment            Layer    Footprint                    Center-X(mil) Center-Y(mil) Rotation Description                                                              
+TP24       TP                 TopLayer KEYSTONE_5012                4040.000      1370.000      90       ""                                                                       
+TP23       TP                 TopLayer KEYSTONE_5012                1990.000      3235.000      180      ""                                                                       
+TP22       TP                 TopLayer KEYSTONE_5012                1150.000      1960.000      180      ""                                                                       
+TP20       TP                 TopLayer KEYSTONE_5012                2845.000      1610.000      180      ""                                                                       
+TP19       TP                 TopLayer KEYSTONE_5012                3325.000      2970.000      180      ""                                                                       
+TP18       TP                 TopLayer KEYSTONE_5012                3345.000      2545.000      270      ""                                                                       
+TP17       TP                 TopLayer KEYSTONE_5012                1140.000      2570.000      360      ""                                                                       
+TP16       TP                 TopLayer KEYSTONE_5012                1165.000      2250.000      180      ""                                                                       
+TP15       TP                 TopLayer KEYSTONE_5012                1090.000      2150.000      180      ""                                                                       
+TP14       TP                 TopLayer KEYSTONE_5012                1090.000      2055.000      180      ""                                                                       
+TP13       TP                 TopLayer KEYSTONE_5012                2510.000      2495.000      360      ""                                                                       
+TP10       TP                 TopLayer KEYSTONE_5012                1210.000      1425.000      180      ""                                                                       
+R41        Res                TopLayer 0805                         1950.000      705.000       180      Resistor                                                                 
+R1         Res                TopLayer 0805                         1040.134      3104.370      90       Resistor                                                                 
+D18        LED                TopLayer HSMG-C170                    1170.000      3065.000      0        ""                                                                       
+TP1        TP                 TopLayer KEYSTONE_5012                495.000       3395.000      0        ""                                                                       
+SW3        "PUSHBUTTON SW"    TopLayer XKB_TS-1187A                 1290.000      915.000       360      ""                                                                       
+C13        Cap_NP             TopLayer 0805                         100.000       679.370       270      Capacitor                                                                
+C12        Cap_NP             TopLayer 0805                         1735.000      3109.370      270      Capacitor                                                                
+U9         TLV73333PDBVR      TopLayer TI_DBV0005A_(SOT23-5)        705.000       3185.000      0        ""                                                                       
+TP7        TP                 TopLayer KEYSTONE_5012                655.000       2931.429      90       ""                                                                       
+R83        Res                TopLayer 0805                         465.000       3209.370      90       Resistor                                                                 
+R82        Res                TopLayer 0805                         870.000       3220.000      360      Resistor                                                                 
+SW2        "PUSHBUTTON SW"    TopLayer XKB_TS-1187A                 1330.000      2840.000      360      ""                                                                       
+U8         ADS7830IPWR        TopLayer TI_PW0016A_(16TSSOP)         2695.000      815.000       90       ""                                                                       
+R81        Res                TopLayer 0805                         2455.630      700.000       360      Resistor                                                                 
+R80        Res                TopLayer 0805                         2790.000      1015.000      360      Resistor                                                                 
+R79        Res                TopLayer 0805                         3053.061      680.315       270      Resistor                                                                 
+R78        Res                TopLayer 0805                         2968.061      679.685       270      Resistor                                                                 
+R77        Res                TopLayer 0805                         3148.984      885.315       270      Resistor                                                                 
+R76        Res                TopLayer 0805                         3229.524      884.685       270      Resistor                                                                 
+R75        Res                TopLayer 0805                         3053.061      885.945       270      Resistor                                                                 
+R74        Res                TopLayer 0805                         2968.061      885.315       270      Resistor                                                                 
+R73        Res                TopLayer 0805                         3148.984      679.055       90       Resistor                                                                 
+R72        Res                TopLayer 0805                         3229.524      680.315       90       Resistor                                                                 
+R70        Res                TopLayer 0805                         200.000       675.000       270      Resistor                                                                 
+R69        Res                TopLayer 0805                         4214.370      1140.000      360      Resistor                                                                 
+R68        Res                TopLayer 0805                         300.000       675.000       270      Resistor                                                                 
+R67        Res                TopLayer 0805                         4214.370      1040.000      360      Resistor                                                                 
+R66        Res                TopLayer 0805                         400.000       675.000       270      Resistor                                                                 
+R65        Res                TopLayer 0805                         4214.370      940.000       360      Resistor                                                                 
+R64        Res                TopLayer 0805                         500.000       675.000       270      Resistor                                                                 
+R63        Res                TopLayer 0805                         3335.000      874.370       90       Resistor                                                                 
+R62        Res                TopLayer 0805                         3720.000      275.630       270      Resistor                                                                 
+R61        Res                TopLayer 0805                         3800.000      275.000       270      Resistor                                                                 
+R60        Res                TopLayer 0805                         4214.370      840.000       360      Resistor                                                                 
+R59        Res                TopLayer 0805                         600.000       675.000       270      Resistor                                                                 
+R58        Res                TopLayer 0805                         3555.000      465.000       270      Resistor                                                                 
+R57        Res                TopLayer 0805                         3190.000      1079.370      90       Resistor                                                                 
+R56        Res                TopLayer 0805                         3270.000      1130.000      90       Resistor                                                                 
+R55        Res                TopLayer 0805                         3555.000      275.000       90       Resistor                                                                 
+R54        Res                TopLayer 0805                         3640.000      275.630       90       Resistor                                                                 
+R53        Res                TopLayer 0805                         3880.000      275.000       90       Resistor                                                                 
+R52        Res                TopLayer 0805                         3350.000      1175.000      90       Resistor                                                                 
+R51        Res                TopLayer 0805                         4214.370      740.000       360      Resistor                                                                 
+R50        Res                TopLayer 0805                         700.000       675.000       270      Resistor                                                                 
+R49        Res                TopLayer 0805                         4214.370      640.000       360      Resistor                                                                 
+R48        Res                TopLayer 0805                         800.000       675.000       270      Resistor                                                                 
+R47        Res                TopLayer 0805                         4215.000      540.000       360      Resistor                                                                 
+R46        Res                TopLayer 0805                         900.000       675.000       270      Resistor                                                                 
+R45        Res                TopLayer 0805                         4215.000      440.000       360      Resistor                                                                 
+R44        Res                TopLayer 0805                         1000.000      675.000       270      Resistor                                                                 
+R43        Res                TopLayer 0805                         2155.000      1005.000      90       Resistor                                                                 
+R42        Res                TopLayer 0805                         2235.000      890.000       90       Resistor                                                                 
+R40        Res                TopLayer 0805                         1685.000      1020.000      90       Resistor                                                                 
+R39        Res                TopLayer 0805                         1850.630      1065.000      360      Resistor                                                                 
+R38        Res                TopLayer 0805                         1605.000      1098.740      270      Resistor                                                                 
+R37        Res                TopLayer 0805                         1849.370      1145.000      360      Resistor                                                                 
+R36        Res                TopLayer 0805                         2075.000      1005.000      270      Resistor                                                                 
+R35        Res                TopLayer 0805                         2315.000      889.370       270      Resistor                                                                 
+R34        Res                TopLayer 0805                         1950.000      785.000       360      Resistor                                                                 
+R33        Res                TopLayer 0805                         1825.000      3109.370      90       Resistor                                                                 
+R32        Res                TopLayer 0805                         4015.394      2805.710      90       Resistor                                                                 
+R31        Res                TopLayer 0805                         3930.000      1530.630      270      Resistor                                                                 
+R30        Res                TopLayer 0805                         3935.394      2805.710      270      Resistor                                                                 
+R29        Res                TopLayer 0805                         4095.394      2805.710      90       Resistor                                                                 
+R28        Res                TopLayer 0805                         4175.394      2805.710      90       Resistor                                                                 
+R27        Res                TopLayer 0805                         1035.616      2930.000      360      Resistor                                                                 
+R25        Res                TopLayer 0805                         3330.630      1620.000      180      Resistor                                                                 
+R23        Res                TopLayer 0805                         3330.630      1750.000      180      Resistor                                                                 
+R22        Res                TopLayer 0805                         385.000       3210.630      90       Resistor                                                                 
+R21        Res                TopLayer 0805                         3850.000      1530.630      90       Resistor                                                                 
+R18        Res                TopLayer 0805                         1390.630      2590.000      360      Resistor                                                                 
+R17        Res                TopLayer 0805                         1390.630      2235.000      360      Resistor                                                                 
+R16        Res                TopLayer 0805                         1390.630      2150.000      0        Resistor                                                                 
+R13        Res                TopLayer 0805                         1390.630      1980.000      0        Resistor                                                                 
+R10        Res                TopLayer 0805                         1390.630      2065.000      0        Resistor                                                                 
+R9         Res                TopLayer 0805                         1390.000      1580.000      360      Resistor                                                                 
+R8         Res                TopLayer 0805                         2626.992      1634.173      180      Resistor                                                                 
+R7         Res                TopLayer 0805                         3035.000      1673.543      270      Resistor                                                                 
+R6         Res                TopLayer 0805                         2850.000      2985.000      360      Resistor                                                                 
+R5         Res                TopLayer 0805                         2635.000      3025.000      270      Resistor                                                                 
+R4         Res                TopLayer 0805                         2638.325      2554.409      90       Resistor                                                                 
+R3         Res                TopLayer 0805                         1390.000      1495.000      360      Resistor                                                                 
+J3         "16X1 CONN"        TopLayer 0.100_16X1_HEADER            2625.000      480.000       90       ""                                                                       
+J2         "16X1 CONN"        TopLayer 0.100_16X1_HEADER            4395.000      1190.000      180      ""                                                                       
+J1         "16X1 CONN"        TopLayer 0.100_16X1_HEADER            850.000       480.000       90       ""                                                                       
+C11        Cap_NP             TopLayer 0805                         2444.537      892.520       90       Capacitor                                                                
+C10        Cap_NP             TopLayer 0805                         2524.537      891.890       90       Capacitor                                                                
+D17        LED                TopLayer HSMG-C170                    200.000       890.000       90       ""                                                                       
+D16        LED                TopLayer HSMG-C170                    4055.630      1140.000      180      ""                                                                       
+D15        LED                TopLayer HSMG-C170                    300.000       890.000       90       ""                                                                       
+D14        LED                TopLayer HSMG-C170                    4055.630      1040.000      180      ""                                                                       
+D13        LED                TopLayer HSMG-C170                    400.000       890.000       90       ""                                                                       
+D12        LED                TopLayer HSMG-C170                    4055.630      940.000       180      ""                                                                       
+D11        LED                TopLayer HSMG-C170                    500.000       890.000       90       ""                                                                       
+D10        LED                TopLayer HSMG-C170                    4055.000      840.000       180      ""                                                                       
+D9         LED                TopLayer HSMG-C170                    600.000       890.000       90       ""                                                                       
+D8         LED                TopLayer HSMG-C170                    4055.000      740.000       180      ""                                                                       
+D7         LED                TopLayer HSMG-C170                    700.000       885.000       90       ""                                                                       
+D6         LED                TopLayer HSMG-C170                    4055.000      640.000       180      ""                                                                       
+D5         LED                TopLayer HSMG-C170                    800.000       885.000       90       ""                                                                       
+D4         LED                TopLayer HSMG-C170                    4055.000      540.000       180      ""                                                                       
+D3         LED                TopLayer HSMG-C170                    900.000       885.000       90       ""                                                                       
+D2         LED                TopLayer HSMG-C170                    4055.000      440.000       180      ""                                                                       
+D1         LED                TopLayer HSMG-C170                    1000.000      884.370       90       ""                                                                       
+C9         Cap_NP             TopLayer 0805                         1460.630      594.370       360      Capacitor                                                                
+C8         Cap_NP             TopLayer 0805                         3925.000      1189.370      270      Capacitor                                                                
+C7         Cap_NP             TopLayer 0805                         1990.000      1085.000      270      Capacitor                                                                
+C6         Cap_NP             TopLayer 0805                         2380.000      2380.000      90       Capacitor                                                                
+C4         Cap_NP             TopLayer 0805                         910.000       3105.630      90       Capacitor                                                                
+C3         Cap_NP             TopLayer 0805                         545.000       3210.000      90       Capacitor                                                                
+C2         Cap_NP             TopLayer 0805                         2864.370      2485.000      360      Capacitor                                                                
+C1         Cap_NP             TopLayer 0805                         2420.000      2014.370      270      Capacitor                                                                
+U7         MCP23S08T-E/SO     TopLayer MICROCHIP_18-SOIC            3635.000      940.000       0        ""                                                                       
+U6         PCT2075DP,118      TopLayer NXP_TSSOP-8_(SOT505-1)       1900.000      915.000       0        "Temperature Sensor Digital, Local -55ÅãC ~ 125ÅãC 11 b 8-TSSOP"           
+U5         MX29LV640EBTI-70G  TopLayer CYPRRESS_48-TSOP             3680.000      2090.000      270      "FLASH - NOR Memory IC 8Mb (1M x 8, 512K x 16) Parallel  70ns 48-TSOP"   
+U4         74LVC16373ADGG,118 TopLayer NEXPERIA_TSSOP-48_(SOT362-1) 2139.777      2367.401      180      "D-Type Transparent Latch 2 Channel 8:8 IC Tri-State 48-TSSOP"           
+U3         CY62147GE30-45ZSXI TopLayer CYPRESS_Z44_44-TSOP_II       2890.000      2090.000      90       "SRAM - Asynchronous Memory IC 4Mb (256K x 16) Parallel 45ns 44-TSOP II" 
+U2         74LVC16373ADGG,118 TopLayer NEXPERIA_TSSOP-48_(SOT362-1) 2139.606      1846.693      180      "D-Type Transparent Latch 2 Channel 8:8 IC Tri-State 48-TSSOP"           
+U1         "iCE40 HX8K"       TopLayer iCE40_HX8K_FPGA_MODULE       504.724       2091.850      180      ""                                                                       
+TP21       TP                 TopLayer KEYSTONE_5012                3400.000      620.000       360      ""                                                                       
+TP9        TP                 TopLayer KEYSTONE_5012                1720.000      730.000       90       ""                                                                       
+TP8        TP                 TopLayer KEYSTONE_5012                3965.000      2985.000      360      ""                                                                       
+TP6        TP                 TopLayer KEYSTONE_5012                3745.000      2985.000      360      ""                                                                       
+TP5        TP                 TopLayer KEYSTONE_5012                207.225       3172.776      180      ""                                                                       
+TP4        TP                 TopLayer KEYSTONE_5012                980.000       3395.000      360      ""                                                                       
+TP3        TP                 TopLayer KEYSTONE_5012                335.000       2980.000      270      ""                                                                       
+TP2        TP                 TopLayer KEYSTONE_5012                2460.000      1110.000      360      ""                                                                       
+SW1        "PUSHBUTTON SW"    TopLayer XKB_TS-1187A                 1490.000      3155.000      180      ""                                                                       
+R24        Res                TopLayer 0805                         1390.630      2505.000      360      Resistor                                                                 
+C5         Cap_NP             TopLayer 0805                         3735.000      1580.000      180      Capacitor                                                                

@@ -1,0 +1,12 @@
+Padstack,Shape,Diameter (in),Width (in),Height (in),Hole (in),AntiPad (in),Start Layer,End Layer,
+Pad_1,Circle,0.03937,,,,,"Top Layer","Top Layer"
+Pad_2,Circle,0.017716,,,,,"Top Layer","Top Layer"
+Pad_3,Circle,0.023622,,,,,"Top Layer","Top Layer"
+Pad_4,Circle,0.011811,,,,,"Top Layer","Top Layer"
+Pad_5,Circle,0.135039,,,,,"Top Layer","Top Layer"
+Pad_6,Circle,0.047244,,,,,"Top Layer","Top Layer"
+Pad_7,Circle,0.021654,,,,,"Top Layer","Top Layer"
+Pad_8,Circle,0.05,,,0.028,0.068,"Top Layer","Bottom Layer"
+Pad_9,Circle,0.065,,,0.04,0.08,"Top Layer","Bottom Layer"
+Pad_10,Circle,0.25,,,0.125,0.165,"Top Layer","Bottom Layer"
+Pad_11,Circle,0.028,,,0.011,0,"Top Layer","Bottom Layer"
