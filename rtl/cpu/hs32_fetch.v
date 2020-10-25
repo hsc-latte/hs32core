@@ -1,0 +1,44 @@
+/**
+ * Fetches instructions from the memory arbiter and holds
+ * them in an internal queue/fifo. The size of the queue
+ * is PREFETCH_SIZE, currently 4 instructions.
+*/
+
+module hs32_fetch (
+    input clk,
+
+    // Memory arbiter interface
+    output  reg  [31:0] addr,   // Address
+    input   wire [31:0] dtr,    // Data input
+    output  reg  reqm,          // Valid address
+    input   wire ackm,          // Valid data
+
+    // Decode
+    output  wire [31:0] instd,  // Next instruction
+    input   wire reqd,          // Valid input
+    output  wire ackd,          // Valid output
+
+    // Pipeline controller
+    input   wire[31:0] newpc,   // New program counter
+    input   wire flush          // Flush
+);
+    parameter PREFETCH_SIZE = 4;
+    parameter PBITS = 2; // Must be Log2 of PREFETCH_SIZE
+
+    reg[31:0] pc; // Program counter
+
+    // Fifo Logic, fill is size of fifo
+    reg [PBITS:0] wp = 0, rp = 0, fill;
+    reg full;
+    reg[31:0] fifo[PREFETCH_SIZE:0];
+    assign instd = fifo[rp];
+    assign ackd = fill > 1;
+    // Combinatorial logic to update the values of fill and full
+    always @(*) fill = wp - rp;
+    always @(*) full = fill == { 1'b1, {(PBITS) {1'b0}} };
+
+    // ...
+    always @(posedge clk) begin
+        // ...
+    end
+endmodule
