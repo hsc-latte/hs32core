@@ -1,0 +1,32 @@
+# Pin assignment for iCE40-HX8K FPGA
+# https://github.com/HomebrewSiliconClub/Processor
+# Created with <3 by Anthony Kung <hi@anth.dev>
+
+# LED Red
+set_io --warn-no-port ledr 	A5
+
+# LED Green
+set_io --warn-no-port ledg 	M4
+
+# 12MHz Clock
+set_io --warn-no-port clk  	P7
+
+# Tx Pin
+set_io --warn-no-port tx  	P4
+
+# Rx Pin
+set_io --warn-no-port rx  	P5
+
+# SPI Flash
+
+# CS Pin
+set_io --warn-no-port cs  	P13
+
+# SCK Pin
+set_io --warn-no-port sck  	P12
+
+# SDI Pin
+set_io --warn-no-port sdi  	P11
+
+# SDO Pin
+set_io --warn-no-port sdo  	M11
