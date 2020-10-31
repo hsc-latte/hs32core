@@ -12,7 +12,7 @@
             "args": [
                 "-QT",
                 "-p", "synth_ice40 -json build/hardware.json",
-                "main.v"
+                "top.v"
             ],
             "problemMatcher": []
         },
