@@ -49,7 +49,7 @@
             "windows": {
                 "command": "iceFUNprog",
                 "args": [
-                    "upload",
+                    "program",
                     "build/hardware.bin"
                 ],
             },
