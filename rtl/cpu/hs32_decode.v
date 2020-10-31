@@ -3,8 +3,8 @@
  *               instruction to Execute Cycle
 */
 module hs32_decode (
-    input clk,                       // 12 MHz Clock
-    input reset_n,                   // Active Low Reset
+    input clk,                  // 12 MHz Clock
+    input reset,                // Reset
 
     // Fetch
     input   wire [31:0] instd,  // Next instruction

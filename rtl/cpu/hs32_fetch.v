@@ -6,7 +6,6 @@
 
 module hs32_fetch (
     input clk,                       // 12 MHz Clock
-    input reset_n,                   // Active Low Reset
 
     // Memory arbiter interface
     output  reg  [31:0] addr,        // Address
@@ -42,8 +41,8 @@ module hs32_fetch (
     always @(*) full = fill == { 1'b1, {(PBITS) {1'b0}} };
 
     // Reset
-    always @ (posedge clk, negedge reset_n, posedge flush) begin
-      if (reset_n || flush) begin     // Check if reset_n or flush
+    always @ (posedge clk, posedge flush) begin
+      if (flush) begin     // Check if reset_n or flush
           pc = 32'd0;                 // Set PC to 0
       end
     end
