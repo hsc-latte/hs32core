@@ -1,26 +1,52 @@
-set_io -nowarn CLK  P7
-set_io -nowarn LEDR_N A5
-set_io -nowarn LEDG_N M4
-set_io -nowarn IO2  A1
-set_io -nowarn IO1  A3
-set_io -nowarn IO0  A4
-set_io -nowarn OE_N C4
-set_io -nowarn WE_N C5
-set_io -nowarn RX   M12
-set_io -nowarn TX   N14
-set_io -nowarn IO4  C1
-set_io -nowarn IO3  C3
-set_io -nowarn IO5  E1
-set_io -nowarn RST_N F3
-set_io -nowarn IO6  G1
-set_io -nowarn ALE0 G3
-set_io -nowarn IO7  H1
-set_io -nowarn ALE1 H3
-set_io -nowarn IO8  J1
-set_io -nowarn IO9  K3
-set_io -nowarn IO10 M1
-set_io -nowarn IO11 M3
-set_io -nowarn IO14 M6
-set_io -nowarn IO15 M7
-set_io -nowarn IO12 P2
-set_io -nowarn IO13 P3
+# pins.pcf (c) 2020 Kevin Dai, GNU License
+# Written for the custom iceWerx carrier dev board.
+# All active low signals have suffix "_N," otherwise
+# assume active high.
+
+# FPGA Signals
+set_io -nowarn CLK      P7
+set_io -nowarn LEDR_N   A5
+set_io -nowarn LEDG_N   M4
+
+# FPGA external reset
+set_io -nowarn RST_N    F3
+
+# IO Pins 0 through 15 in order
+set_io -nowarn IO2      A1
+set_io -nowarn IO1      A3
+set_io -nowarn IO0      A4
+set_io -nowarn IO8      J1
+set_io -nowarn IO9      K3
+set_io -nowarn IO10     M1
+set_io -nowarn IO11     M3
+set_io -nowarn IO14     M6
+set_io -nowarn IO15     M7
+set_io -nowarn IO12     P2
+set_io -nowarn IO13     P3
+set_io -nowarn IO4      C1
+set_io -nowarn IO3      C3
+set_io -nowarn IO5      E1
+set_io -nowarn IO6      G1
+set_io -nowarn IO7      H1
+
+# Memory bus control signals
+set_io -nowarn OE_N     C4
+set_io -nowarn WE_N     C5
+set_io -nowarn ALE0     G3
+set_io -nowarn ALE1     H3
+
+# 3v3 UART
+set_io -nowarn RX       M12
+set_io -nowarn TX       N14
+
+# GPIO0 through 9, controls blue LEDs
+set_io -nowarn GPIO9    A7
+set_io -nowarn GPIO6    A10
+set_io -nowarn GPIO4    A11
+set_io -nowarn GPIO8    C7
+set_io -nowarn GPIO5    C10
+set_io -nowarn GPIO2    C12
+set_io -nowarn GPIO7    D6
+set_io -nowarn GPIO3    B14
+set_io -nowarn GPIO1    D12
+set_io -nowarn GPIO0    E12
