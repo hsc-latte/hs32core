@@ -77,6 +77,8 @@ module EXT_SRAM (
         end
         // Before TW
         3'b010: begin
+            ale0_negedge <= 0;
+            ale1_negedge <= 0;
             oe_negedge   <= 0;
         end
         // So verilator doesn't complain
