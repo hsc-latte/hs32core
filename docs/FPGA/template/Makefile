@@ -5,6 +5,7 @@
 # Configuration
 EXEC = hsc
 TYPE = hx8k
+PKG = cb132
 PINS = hsc.pcf
 VERILOG = hsc.v
 MODULE = hsc
@@ -17,7 +18,7 @@ hsc:
 	# Synthesize Verilog file with Yosys
 	yosys -p "synth_ice40 -top $(MODULE) -json $(EXEC).json" $(VERILOG)
 	# Map PINs with nextpnr
-	nextpnr-ice40 -r --$(TYPE) --json $(EXEC).json --package cb132 --asc $(EXEC).asc --opt-timing --pcf $(PINS)
+	nextpnr-ice40 -r --$(TYPE) --json $(EXEC).json --package $(PKG) --asc $(EXEC).asc --opt-timing --pcf $(PINS)
 	# Convert to .bin file using IcePack
 	icepack $(EXEC).asc $(EXEC).bin
 
