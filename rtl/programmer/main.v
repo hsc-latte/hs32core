@@ -20,6 +20,8 @@ module main (
     assign ALE0 = ale0_neg;
     assign ALE1 = ale1_neg;
     assign BHE_N = !bhe;
+    assign io = isout ? data_out : 16'bz;
+    assign data_in = io;
 
     EXT_SRAM ext_sram (
         .clk(CLK),
