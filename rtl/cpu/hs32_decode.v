@@ -13,16 +13,15 @@ module hs32_decode (
 
     // Execute
     output  reg  [2:0]  aluop,  // ALU Operation
-    output  reg  [15:0] imm16,  // Immidiate 16 bits
-    output  reg  [15:0] imm5,  // Immidiate 5 bits
-    output  reg  [15:0] imm24,  // Immidiate 24 bits
+    output  reg  [4:0]  shift,  // 5-bit shift
+    output  reg  [15:0] imm,    // Immediate value
     output  reg  [3:0]  regdst, // Register Destination Rd
     output  reg  [3:0]  regsrc, // Register Source Rm
     output  reg  [3:0]  regopd, // Register Operand Rn
     output  reg  [15:0] ctlsig  // Control signals
 );
-
-    always @ (posedge clk) begin
+    // Do you know what is going on hahaha
+    /*always @ (posedge clk) begin
         if (ackd) begin
             case (instd[31:28])
                4'h0: begin
@@ -72,6 +71,6 @@ module hs32_decode (
                end
             endcase
         end
-    end
+    end*/
 
 endmodule

@@ -22,8 +22,6 @@ module hs32_fetch (
     input   wire[31:0] newpc,        // New program counter
     input   wire flush               // Flush
 );
-
-    // Idk how this fifo works... sorry :C
     parameter PREFETCH_SIZE = 4;
     parameter PBITS = 2;             // Must be Log2 of PREFETCH_SIZE
 
@@ -43,7 +41,7 @@ module hs32_fetch (
     // Reset
     always @ (posedge clk) begin
         if (flush) begin     // Check if reset_n or flush
-            pc = 32'd0;                 // Set PC to 0
+            pc = 32'd0;      // Set PC to 0
         end
     end
 
