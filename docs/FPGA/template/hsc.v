@@ -112,11 +112,14 @@ module hsc (
     assign ledr = ~ledg;
     assign {gpio0, gpio1, gpio2, gpio3, gpio4, gpio5, gpio6, gpio7, gpio8} = gpio[9:1] ^ 9'h000;
 
-    always @ (posedge clk) begin
+    always @(posedge clk) begin
         second <= second + 1;
     end
 
-    always @ (posedge second[24]) begin
+    always @(posedge second[24]) begin
+        if (gpio == 10'd0) begin
+            gpio = 10'd1;
+        end
         gpio <= gpio << 1;
     end
 
