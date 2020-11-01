@@ -34,6 +34,7 @@ set_io -nowarn OE_N     C4
 set_io -nowarn WE_N     C5
 set_io -nowarn ALE0     G3
 set_io -nowarn ALE1     H3
+set_io -nowarn BHE_N    B1 # Replaces MISO
 
 # 3v3 UART
 set_io -nowarn RX       M12

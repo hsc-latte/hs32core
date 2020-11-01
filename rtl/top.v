@@ -1,5 +1,9 @@
-`ifdef SoC
+`ifdef SOC
     `include "soc/main.v"
 `else
-    `include "frontend/main.v"
+    `ifdef PROG
+        `include "programmer/main.v"
+    `else
+        `include "frontend/main.v"
+    `endif
 `endif

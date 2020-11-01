@@ -5,12 +5,13 @@
     "tasks": [
         ////////////////////////////////////////////////////////////////
         {
-            "label": "yosys",
+            "label": "1. yosys",
             "detail": "Synthesize and check design",
             "type": "shell",
             "command": "yosys",
             "args": [
                 "-QT",
+                "-D${input:type}",
                 "-p", "synth_ice40 -json build/hardware.json",
                 "top.v"
             ],
@@ -18,7 +19,7 @@
         },
         ////////////////////////////////////////////////////////////////
         {
-            "label": "nextpnr",
+            "label": "2. nextpnr",
             "detail": "Place and Route Design",
             "command": "nextpnr-ice40",
             "args": [
@@ -33,7 +34,7 @@
         },
         ////////////////////////////////////////////////////////////////
         {
-            "label": "icepack",
+            "label": "3. icepack",
             "detail": "Pack into bitstream",
             "command": "icepack",
             "args": [
@@ -44,7 +45,7 @@
         },
         ////////////////////////////////////////////////////////////////
         {
-            "label": "upload",
+            "label": "Upload to FPGA",
             "detail": "Upload to FPGA (must have it plugged in)",
             "windows": {
                 "command": "iceFUNprog",
@@ -57,10 +58,10 @@
         },
         ////////////////////////////////////////////////////////////////
         {
-            "label": "Build All",
+            "label": "Build all",
             "detail": "Build everything all at once",
             "dependsOrder": "sequence",
-            "dependsOn": [ "yosys", "nextpnr", "icepack" ],
+            "dependsOn": [ "1. yosys", "2. nextpnr", "3. icepack" ],
             "group": {
                 "kind": "build",
                 "isDefault": true
@@ -68,5 +69,16 @@
             "problemMatcher": [],
         },
         ////////////////////////////////////////////////////////////////
+    ],
+    "inputs": [
+        {
+            "id": "type",
+            "description": "Build Type",
+            "type": "pickString",
+            "options": [
+                "REGULAR", "PROG", "SOC"
+            ],
+            "default": "REGULAR"
+        }
     ]
 }
