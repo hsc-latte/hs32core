@@ -22,7 +22,7 @@ module hs32_fetch (
     input   wire[31:0] newpc,        // New program counter
     input   wire flush               // Flush
 );
-    
+
     // Idk how this fifo works... sorry :C
     parameter PREFETCH_SIZE = 4;
     parameter PBITS = 2;             // Must be Log2 of PREFETCH_SIZE
@@ -41,14 +41,14 @@ module hs32_fetch (
     always @(*) full = fill == { 1'b1, {(PBITS) {1'b0}} };
 
     // Reset
-    always @ (posedge clk, posedge flush) begin
-      if (flush) begin     // Check if reset_n or flush
-          pc = 32'd0;                 // Set PC to 0
-      end
+    always @ (posedge clk) begin
+        if (flush) begin     // Check if reset_n or flush
+            pc = 32'd0;                 // Set PC to 0
+        end
     end
 
     // Set New PC
-    always @(posedge clk, posedge newpc) begin
+    always @(posedge clk) begin
         if (newpc != 0) begin
             pc = newpc;
         end
@@ -62,18 +62,18 @@ module hs32_fetch (
     end
 
     // Fetch instruction
-    always @(posedge clk, posedge ackm) begin
+    always @(posedge clk) begin
         if (ackm) begin               // If data is valid
             // Get instruction from memory
         end
     end
 
     // Output Instruction to Decode
-    always @(posedge clk, posedge reqd) begin
+    always @(posedge clk) begin
         if (reqd) begin               // If Decode Request Received
             // Activate Decode Input
             // Send Instruction
-        end 
+        end
         else begin
             // Deactivate Decode Input
         end
