@@ -23,7 +23,7 @@ module main (
     assign io = isout ? data_out : 16'bz;
     assign data_in = io;
 
-    EXT_SRAM ext_sram (
+    EXT_SRAM sram (
         .clk(CLK),
         // Memory requests
 
