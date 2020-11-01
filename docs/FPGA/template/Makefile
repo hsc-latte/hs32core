@@ -5,7 +5,7 @@
 # Configuration
 EXEC = hsc
 TYPE = hx8k
-PINS = iCE40-HX8K.pcf
+PINS = hsc.pcf
 VERILOG = hsc.v
 MODULE = hsc
 
