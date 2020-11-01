@@ -21,7 +21,7 @@ module EXT_SRAM (
     output  reg isout
 );
     assign dtr = din;
-    reg[2:0] fsm;
+    reg[2:0] fsm = 3'b000;
     // For waveforms and cycle names, see CPU.md
     always @(posedge clk) case(fsm)
         // T1
@@ -58,8 +58,10 @@ module EXT_SRAM (
             // No output during T3
             isout   <= 0;
         end
-        // So verilator doesn't complain
-        default: begin end
+        // So Anthony doesn't complain
+        default: begin
+            fsm <= 3'b000;
+        end
     endcase
 
     always @(negedge clk) case(fsm)
