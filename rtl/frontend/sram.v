@@ -33,7 +33,7 @@ module EXT_SRAM (
         end
         // T2
         3'b001: begin
-            fsm     <= { rw, 2'b10 };
+            fsm     <= { 3'b010 };
             // The BLE is active iff
             // we're in write mode and the LSB is zero
             dout    <= { !addri[0] & rw, addri[31:17] };
@@ -43,7 +43,7 @@ module EXT_SRAM (
         end
         // TW (wait 1 cycle)
         3'b010: begin
-            fsm     <= 3'b011;
+            fsm     <= 3'b100;
             // I/O output mode only in write mode
             isout   <= rw;
             dout    <= rw ? dtw : 16'b0;
@@ -52,7 +52,7 @@ module EXT_SRAM (
             bhe     <= addri[0] & rw;
         end
         // T3 (wait for oe_negedge)
-        3'b011: begin
+        3'b100: begin
             fsm     <= 3'b000;
             done    <= 1;
             // No output during T3
