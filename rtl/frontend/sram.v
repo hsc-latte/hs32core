@@ -33,7 +33,7 @@ module EXT_SRAM (
         end
         // T2
         3'b001: begin
-            fsm     <= { 3'b010 };
+            fsm     <= 3'b010;
             // The BLE is active iff
             // we're in write mode and the LSB is zero
             dout    <= { !addri[0] & rw, addri[31:17] };
@@ -68,7 +68,7 @@ module EXT_SRAM (
         // Before T1
         3'b000: begin
             oe_negedge   <= 0;
-            ale0_negedge <= valid;
+            ale0_negedge <= 1;
         end
         // Before T2
         3'b001: begin
@@ -77,6 +77,7 @@ module EXT_SRAM (
         end
         // Before TW
         3'b010: begin
+            ale1_negedge <= 0;
             oe_negedge   <= 0;
         end
         // So verilator doesn't complain
