@@ -21,7 +21,7 @@ module EXT_SRAM (
     output  reg isout
 );
     assign dtr = din;
-    reg[2:0] fsm = 3'b000;
+    reg[2:0] fsm = 3'd0;
     // For waveforms and cycle names, see CPU.md
     always @(posedge clk) case(fsm)
         // T1
@@ -60,7 +60,7 @@ module EXT_SRAM (
         end
         // So Anthony doesn't complain
         default: begin
-            fsm <= 3'b000;
+            fsm <= 3'd0;
         end
     endcase
 
