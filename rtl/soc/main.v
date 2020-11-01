@@ -1,5 +1,5 @@
 `include "cpu/hs32_cpu.v"
-`include "soc/bram.v"
+`include "soc/bram_ctl.v"
 
 module main (
     input   wire CLK,
@@ -17,9 +17,11 @@ module main (
         .din(dread), .dout(dwrite),
         .valid(valid), .done(done)
     );
-    soc_bram bram(
+    soc_bram_ctl #(
+        .addr_width(8)
+    ) bram_ctl(
         .clk(CLK),
-        .addr(addr), .rw(rw),
+        .addr(addr[7:0]), .rw(rw),
         .dread(dread), .dwrite(dwrite),
         .valid(valid), .done(done)
     );
