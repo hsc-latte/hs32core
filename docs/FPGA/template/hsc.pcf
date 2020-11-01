@@ -25,16 +25,16 @@ set_io --warn-no-port icerx  	P5
 # FPGA SPI Flash #
 ##################
 
-# CS Pin
+# CS Pin - Chip Select
 set_io --warn-no-port icecs  	P13
 
-# SCK Pin
+# SCK Pin - Clock
 set_io --warn-no-port icesck  	P12
 
-# SDI Pin
+# SDI Pin - Data Input
 set_io --warn-no-port icesdi  	P11
 
-# SDO Pin
+# SDO Pin - Data Output
 set_io --warn-no-port icesdo  	M11
 
 #####################
@@ -46,8 +46,8 @@ set_io --warn-no-port reset_n F3
 set_io --warn-no-port sw1 F3
 
 # MCU Reset
-set_io --warn-no-port mcu_n RST
-set_io --warn-no-port sw2 RST
+# set_io -nowarn mcu_n RESET
+# set_io -nowarn sw2 RESET
 
 # GPIO 9 SW3
 set_io --warn-no-port sw3 A7
@@ -83,7 +83,7 @@ set_io --warn-no-port gpio7 D6
 # GPIO 8
 set_io --warn-no-port gpio8 C7
 
-# GPIO 9 SW3
+# GPIO 9
 set_io --warn-no-port gpio9 A7
 
 ################
@@ -148,39 +148,49 @@ set_io --warn-no-port tx N14
 # Rx
 set_io --warn-no-port rx M12
 
-# SCK
+# SCK - Clock
 set_io --warn-no-port sck A2
 
-# MISO
+# MISO - Data Input
 set_io --warn-no-port miso B1
 
-# MOSI
+# MOSI - Data Output
 set_io --warn-no-port mosi D3
 
-# SCL 
+#######################
+# Dev Board I2C / TWI #
+#######################
+
+# SCL - Clock Line
 set_io --warn-no-port scl J12
 
-# SDA 
+# SDA - Data Line
 set_io --warn-no-port sda G12
 
 ####################
 # Dev Board Memory #
 ####################
 
-# ALE0
+# ALE0 - Address Enable Latch 0
 set_io --warn-no-port ale0 G3 
 
-# ALE1
+# ALE1 - Address Enable Latch 1
 set_io --warn-no-port ale1 H3
 
-# OE 0
+# OE 0 - Output Enable Byte 0
 set_io --warn-no-port oe0 P1
 
-# OE 1
+# OE 1 - Output Enable Byte 1
 set_io --warn-no-port oe1 L1
 
-# OE 2
+# OE 2 - Output Enable Byte 2
 set_io --warn-no-port oe2 N1
 
-# OE 3
+# OE 3 - Output Enable Byte 3
 set_io --warn-no-port oe3 J3
+
+# OE - Output Enable
+set_io --warn-no-port oe_n C4
+
+# WE - Write Enable
+set_io --warn-no-port we_n C5
