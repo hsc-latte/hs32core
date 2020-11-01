@@ -21,7 +21,7 @@ module hs32_mem (
     input   wire[31:0] din,     // Data input from memory
     output  reg [31:0] dout,    // Data output to memory
     output  reg  wvalid,        // Valid dout
-    input   wire rvalid,        // Valid din
+    input   wire done,          // Operation completed (valid din too)
 
     // Channel 0
     input   reg [31:0] addr0,   // Address request from
