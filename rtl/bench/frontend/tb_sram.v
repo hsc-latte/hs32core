@@ -1,7 +1,6 @@
+`ifdef SIM
 `include "frontend/sram.v"
-
 `timescale 1ns / 100ps
-
 module TB_EXT_SRAM;
 
   reg clk;
@@ -120,3 +119,4 @@ module TB_EXT_SRAM;
     .din(din)
   );
 endmodule
+`endif
