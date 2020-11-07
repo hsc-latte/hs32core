@@ -51,3 +51,9 @@ set_io -nowarn GPIO7    D6
 set_io -nowarn GPIO3    B14
 set_io -nowarn GPIO1    D12
 set_io -nowarn GPIO0    E12
+
+# Other OE lines
+set_io -nowarn OE_BY3_N J3
+set_io -nowarn OE_BY1_N L1
+set_io -nowarn OE_BY2_N N1
+set_io -nowarn OE_BY0_N P1

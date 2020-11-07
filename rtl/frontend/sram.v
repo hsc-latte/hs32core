@@ -29,17 +29,15 @@ module EXT_SRAM (
             fsm     <= { 2'b0, valid };
             dout    <= addri[16:1];
             isout   <= valid;
+            oe      <= 0;
             done    <= 0;
         end
         // T2
         3'b001: begin
             fsm     <= 3'b010;
-            // The BLE is active iff
-            // we're in write mode and the LSB is zero
-            dout    <= { !addri[0] & rw, addri[31:17] };
+            // BLE = 0 (active low) for now
+            dout    <= { 1'b0, addri[31:17] };
             we      <= rw;
-            // Output enable only in read mode
-            oe      <= !rw;
         end
         // TW (wait 1 cycle)
         3'b010: begin
@@ -47,16 +45,16 @@ module EXT_SRAM (
             // I/O output mode only in write mode
             isout   <= rw;
             dout    <= rw ? dtw : 16'b0;
-            // BHE is active iff
-            // we're in write mode and the LSB is one
-            bhe     <= addri[0] & rw;
+            // BHE = 1 (noninverted) for now
+            bhe     <= 1'b1;
+            // Output enable only in read mode
+            oe      <= !rw;
         end
         // T3 (wait for oe_negedge)
         3'b100: begin
             fsm     <= 3'b000;
             done    <= 1;
-            // No output during T3
-            isout   <= 0;
+            we      <= 0;
         end
         // So Anthony doesn't complain
         default: begin
@@ -78,7 +76,7 @@ module EXT_SRAM (
         // Before TW
         3'b010: begin
             ale1_negedge <= 0;
-            oe_negedge   <= 0;
+            oe_negedge   <= 1;
         end
         // So verilator doesn't complain
         default: begin end
