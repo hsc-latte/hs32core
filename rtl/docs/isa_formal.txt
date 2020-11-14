@@ -76,23 +76,23 @@ mm      Memory access request
             01      Memory read      Rd   <- MDR <- [MAR]
             10      Memory write    [MAR] <- MDR <-  Rd
 bbbb    Branch conditionals
-            bbbb
-            0000    Ignore
-            0001    Z
-            0010    ~Z
-            0011    C
-            0100    ~C
-            0101    N
-            0110    ~N
-            0111    V
-            1000    ~V
-            1001    C & ~Z
-            1010    ~C | Z
-            1011    ~(N^V)
-            1100    N^V
-            1101    ~Z & ~(N^V)
-            1110    Z | (N^V)
-            1111    Execute regardless
+            bbbb    Alias   Flag        Description
+            0000    (none)  (none)      Ignored
+            0001    eq      Z           Equal
+            0010    ne      !Z          Not equal
+            0011    cs      C           Carry set
+            0100    nc      !C          No carry
+            0101    ss      N           Sign set
+            0110    ns      !N          No sign
+            0111    ov      V           Overflow
+            1000    nv      !V          No overflow
+            1001    ab      C & !Z      Unsigned above
+            1010    be      !C | Z      Unsigned below or equal
+            1011    ge      !(N ^ V)    Signed greater than or equal
+            1100    lt      N ^ V       Signed less than
+            1101    gt      !Z & !(N^V) Signed greater than
+            1110    le      Z | (N ^ V) Signed less than or equal
+            1111    (none)  (none)      Execute regardless
 i       Request interrupt
 f       Modify ALU Flags
 w       ALU Writeback
