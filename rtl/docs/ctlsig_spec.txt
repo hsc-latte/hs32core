@@ -1,0 +1,46 @@
+dd      Destination register is Rd
+            dd
+            00  Don't touch Rd
+            01  Write ALU output to Rd
+            10  Write MDR to Rd
+sss     Input bus values
+            sss MDR T1  T2  (Clock cycle/Input bus)
+            001         imm
+            010     Rm
+            011         Rn
+            100     Rm  Rn
+            101     Rm  imm
+            110 Rd  Rm  imm
+            111 Rd  Rm  Rn
+mm      Memory access request
+            mm
+            01  Memory read      MDR  <- [MAR]
+            10  Memory write    [MAR] <-  MDR
+aa      Addressing mode
+            aa
+            00  Dont touch MAR
+            01  MAR <- Rm+imm
+            10  MAR <- Rm+Rn
+            11  MAR <- PC+imm
+bbbb    Branch conditionals
+            bbbb
+            0000    Do not branch
+            0001    Z
+            0010    ~Z
+            0011    C
+            0100    ~C
+            0101    N
+            0110    ~N
+            0111    V
+            1000    ~V
+            1001    C & ~Z
+            1010    ~C | Z
+            1011    ~(N^V)
+            1100    N^V
+            1101    ~Z & ~(N^V)
+            1110    Z | (N^V)
+            1111    Execute regardless
+i       Interrupt
+
+                    dd_sss_mm_aa_bbbb_i
+LDR Rd, [Rm+imm]    10_000_01_01_0000_0
