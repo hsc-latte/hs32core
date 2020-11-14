@@ -21,56 +21,56 @@ module hs32_decode (
     output  reg  [15:0] ctlsig  // Control signals
 );
     // Do you know what is going on hahaha
-    /*always @ (posedge clk) begin
+    always @ (posedge clk) begin
         if (ackd) begin
-            case (instd[31:28])
-               4'h0: begin
-                   // Instruction Prefix: Imm16
-                   reqd = 1;                    // Activate Execute Input
-                   aluop = instd[27:24];
-                   regdst = instd[23:20];
-                   regsrc = instd[19:16];
-                   imm16 = instd[15:0];
-               end
-               4'h1: begin
-                   // Instruction Prefix: Shift
-                   reqd = 1;                    // Activate Execute Input
-                   aluop = instd[27:24];
-                   regdst = instd[23:20];
-                   regsrc = instd[19:16];
-                   regopd = instd[15:12];
-                   imm5 = instd[11:7];
-                   ctlsig = instd[6:0];
-               end
-               4'h2: begin
-                   // Instruction Prefix: Imm24
-                   reqd = 1;                    // Activate Execute Input
-                   ctlsig = instd[27:24];
-                   imm24 = instd[23:0];
-               end
-               4'h3: begin
-                   // Instruction Prefix: Register Type
-                   reqd = 1;                    // Activate Execute Input
-                   aluop = instd[27:24];
-                   regdst = instd[23:20];
-                   regsrc = instd[19:16];
-                   regopd = instd[15:12];
-                   ctlsig = instd[11:0];
-               end
-               4'h4: begin
-                   // Instruction Prefix: Jump Type
-                   reqd = 1;                    // Activate Execute Input
-                   ctlsig = instd[27:24];
-                   regdst = instd[23:20];
-                   aluop = instd[19:16];
-                   imm16 = instd[15:0];
-               end
-               default: begin
-                   // IDK
-                   reqd = 0;                    // Deactivate Execute Input
-               end
+            casez (instd[31:28])
+                4'h0: begin
+                    // Instruction Prefix: Imm16
+                    reqd = 1;                    // Activate Execute Input
+                    aluop = instd[27:24];
+                    regdst = instd[23:20];
+                    regsrc = instd[19:16];
+                    imm16 = instd[15:0];
+                end
+                4'h1: begin
+                    // Instruction Prefix: Shift
+                    reqd = 1;                    // Activate Execute Input
+                    aluop = instd[27:24];
+                    regdst = instd[23:20];
+                    regsrc = instd[19:16];
+                    regopd = instd[15:12];
+                    imm5 = instd[11:7];
+                    ctlsig = instd[6:0];
+                end
+                4'h2: begin
+                    // Instruction Prefix: Imm24
+                    reqd = 1;                    // Activate Execute Input
+                    ctlsig = instd[27:24];
+                    imm24 = instd[23:0];
+                end
+                4'h3: begin
+                    // Instruction Prefix: Register Type
+                    reqd = 1;                    // Activate Execute Input
+                    aluop = instd[27:24];
+                    regdst = instd[23:20];
+                    regsrc = instd[19:16];
+                    regopd = instd[15:12];
+                    ctlsig = instd[11:0];
+                end
+                4'h4: begin
+                    // Instruction Prefix: Jump Type
+                    reqd = 1;                    // Activate Execute Input
+                    ctlsig = instd[27:24];
+                    regdst = instd[23:20];
+                    aluop = instd[19:16];
+                    imm16 = instd[15:0];
+                end
+                default: begin
+                    // IDK
+                    reqd = 0;                    // Deactivate Execute Input
+                end
             endcase
         end
-    end*/
+    end
 
 endmodule
