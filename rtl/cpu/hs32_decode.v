@@ -24,7 +24,7 @@ module hs32_decode (
     always @ (posedge clk) begin
         if (ackd) begin
             casez (instd[31:28])
-                4'h0: begin
+                0b0001010010000010100000: begin
                     // Instruction Prefix: Imm16
                     reqd = 1;                    // Activate Execute Input
                     aluop = instd[27:24];
