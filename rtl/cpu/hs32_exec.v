@@ -33,6 +33,5 @@ module hs32_exec (
 );
 
     reg[31:0] src, dst;
-    
 
 endmodule

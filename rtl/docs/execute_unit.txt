@@ -1,0 +1,36 @@
+ctlsigs[15:0]
+
+0       we_a (we for MAR from obus)
+1       we_w (we for DTW from obus)
+2       we_b (we for new PC into branch unit)
+3       oe_d (oe for DTR onto ibus)
+4       oe_p (oe for PC onto ibus)
+5       oe_i (oe for IMM onto ibus)
+6       oe_r (oe for REGFILE onto ibus)
+7:10    branch_cond (0000 for none, ...)
+11:13   ALU T1
+14:16   ALU T2
+18:19   RSEL READ T1 (select rd, rm, rn)
+20:21   RSEL READ T2 (select rd, rm, rn)
+22      RSEL WRITE (whether rd will be written to)
+some memory stuff...
+how to tell xu the clock cycles...
+
+Note about registers:
+- Rm, Rn are always read from
+- Rd may be written to
+- Rd may also be read from
+
+Examples:
+
+MOV Rd, imm16
+T1: put imm16 onto ibus, set alu to MOV, select Rd to write to
+W2-1-a1-a2-b--ripdbwa
+100000000000000100000
+
+LDR Rd, [Rm+sh(Rn)]
+
+
+
+STR Rd, [Rm+sh(Rn)], Rd
+
