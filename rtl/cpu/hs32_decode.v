@@ -2,6 +2,22 @@
  * Decode Cycle: Determine how to pass
  *               instruction to Execute Cycle
 */
+
+/* Include OP Codes Definitions */
+`include "hs32_opcodes.v"
+
+/* Include ALU OP Codes Definitions */
+`include "hs32_aluops.v"
+
+`define HS32_NULLI     16'b0
+`define HS32_NULLS     5'b0
+`define HS32_NULLR     4'b0
+`define HS32_SHIFT     instd[11:7]
+`define HS32_IMM       instd[15:0]
+`define HS32_REGDST    instd[23:20]
+`define HS32_REGSRC    instd[19:16]
+`define HS32_REGOPD    instd[15:12]
+
 module hs32_decode (
     input clk,                  // 12 MHz Clock
     input reset,                // Reset
@@ -20,54 +36,62 @@ module hs32_decode (
     output  reg  [3:0]  regopd, // Register Operand Rn
     output  reg  [15:0] ctlsig  // Control signals
 );
-    // Do you know what is going on hahaha
     always @ (posedge clk) begin
         if (ackd) begin
             casez (instd[31:28])
-                0b0001010010000010100000: begin
-                    // Instruction Prefix: Imm16
-                    reqd = 1;                    // Activate Execute Input
-                    aluop = instd[27:24];
-                    regdst = instd[23:20];
-                    regsrc = instd[19:16];
-                    imm16 = instd[15:0];
+                `HS32_LDRI: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_NULLS;
+                    imm = `HS32_IMM;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_NULLR;
+                    ctlsig = 14'b10_010_01_0000_001;
                 end
-                4'h1: begin
-                    // Instruction Prefix: Shift
-                    reqd = 1;                    // Activate Execute Input
-                    aluop = instd[27:24];
-                    regdst = instd[23:20];
-                    regsrc = instd[19:16];
-                    regopd = instd[15:12];
-                    imm5 = instd[11:7];
-                    ctlsig = instd[6:0];
+                `HS32_LDR: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_NULLS;
+                    imm = `HS32_NULLI;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_NULLR;
+                    ctlsig = 14'b10_010_01_0000_001;
                 end
-                4'h2: begin
-                    // Instruction Prefix: Imm24
-                    reqd = 1;                    // Activate Execute Input
-                    ctlsig = instd[27:24];
-                    imm24 = instd[23:0];
+                `HS32_LDRA: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_SHIFT;
+                    imm = `HS32_NULLI;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_REGOPD;
+                    ctlsig = 14'b10_011_01_0000_001;
                 end
-                4'h3: begin
-                    // Instruction Prefix: Register Type
-                    reqd = 1;                    // Activate Execute Input
-                    aluop = instd[27:24];
-                    regdst = instd[23:20];
-                    regsrc = instd[19:16];
-                    regopd = instd[15:12];
-                    ctlsig = instd[11:0];
+                `HS32_STRI: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_NULLS;
+                    imm = `HS32_NULLI;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_NULLR;
+                    ctlsig = 14'b11_101_10_0000_001;
                 end
-                4'h4: begin
-                    // Instruction Prefix: Jump Type
-                    reqd = 1;                    // Activate Execute Input
-                    ctlsig = instd[27:24];
-                    regdst = instd[23:20];
-                    aluop = instd[19:16];
-                    imm16 = instd[15:0];
+                `HS32_STR: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_NULLS;
+                    imm = `HS32_NULLI;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_NULLR;
+                    ctlsig = 14'b11_101_10_0000_001;
                 end
-                default: begin
-                    // IDK
-                    reqd = 0;                    // Deactivate Execute Input
+                `HS32_STRA: begin
+                    aluop = `HS32_ADD;
+                    shift = `HS32_SHIFT;
+                    imm = `HS32_NULLI;
+                    regdst = `HS32_REGDST;
+                    regsrc = `HS32_REGSRC;
+                    regopd = `HS32_REGOPD;
+                    ctlsig = 14'b11_101_10_0000_001;
                 end
             endcase
         end

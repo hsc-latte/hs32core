@@ -1,40 +1,70 @@
+================================================================================                  
+                       HS32 CPU and ISA Documentation
+                       By: Anthony Kung and Kevin Dai
+                               (c) 2020 HSC
 ================================================================================
 0. Table of Contents
     1. Instruction Encoding Specification
         1.1 Instruction Type and Bit Layout
-        1.2 Register Descriptions
+        1.2 Table for Shift Direction
+        1.3 Table for Register Banks
+        1.4 Register Descriptions
     2. ALU Instruction Table
     3. Internal Control Signals Specification
     4. Opcode Table and Instruction Decode Specification
     5. Execution Unit Overview
         5.1 Internal Busses (Input 1, 2 and Output Busses)
         5.2 Dual Port (Dual Read, Single Write) Register File
-        5.3 Control Signal and Input Values
-
+        5.3 Execution unit FSM
 ================================================================================
 1. Instruction Encoding Specification
 
 1.1 Instruction Type and Bit Layout
 
-Legend: o = opcode, d = Rd, m = Rm, n = Rm, i = imm, s = shift, x = don't care
+Legend: o = opcode, d = Rd, m = Rm, n = Rn, i = imm, s = shift, x = don't care
+        D = shift direction, b = source register bank*
 
 Type    Wire Format
 
 I-Type  oooooooo_dddd_mmmm nnnn_iiiiiiiiiiiiiiii
-R-Type  oooooooo_dddd_mmmm nnnn_sssssxxxxxxxxxxx
+R-Type  oooooooo_dddd_mmmm nnnn_sssssDDbbxxxxxxx
 J-Type  oooooooo_dddd_iiii iiii_iiiiiiiiiiiiiiii
 
-1.2 Register Descriptions
+* This field is only applicable to R-type MOV instructions
+  and will specify the bank from which Rn/Rm will come from
 
-Reg     Binary  Description
-                User    IRQ     Super
-r0      0000    General Purpose
-...     ...     ...
-r11     1011    User SP IRQ SP  Super SP
-r12     1100    General IVT
-r13     1101    General MCR
-r14     1110    User LR IRQ LR  Super LR
-r15     1111    PC
+1.2 Table for Shift Direction
+
+DD      Description
+00      Left
+01      Right
+10      Sign extend right
+11      ROR (ROR and ROL are equivalent in practice)
+
+1.3 Table for Register Banks
+
+bb      Bank name
+00      User
+01      Supervisor
+10      IRQ
+11      Flags
+
+1.4 Register Descriptions
+
+Code    User    Super   IRQ         Description
+
+0000    r0_u    r0_s    (shared)    General purpose
+...     ...     ...     ...         ...
+1011    r11_u   r11_s   (shared)    ...
+1100    r12_u   mcr_s   ivt_i       Machine Configuration/Interrupt Vector Table
+1101    sp_u    sp_s    sp_i        General purpose/Stack pointer (optional)
+1110    lr_u    lr_s    lr_i        Link register
+1111    pc_u    pc_s    (shared)    Program counter
+
+0000/11 flags   (    shared    )    Program status/flags register
+
+When no suffix is provided, it is assumed the register specified
+is of the current mode of execution.
 
 * Note PC can only take on the role of Rm (it cannot be shifted)
 
@@ -43,59 +73,56 @@ r15     1111    PC
 
 ALU Name    Operation
 
-000 LATCH   Latches input into port B
-001 MOV     
-010 ADD     NZCV...
-011 SUB     NZCV...
-100 AND     
-101 OR      
-110 XOR     
-111 NOT     
+...
+0001 MOV     
+0010 ADD     NZCV...
+0011 SUB     NZCV...
+0100 AND     
+0101 OR      
+0110 XOR     
+0111 NOT     
+...
+1010 ADC
+1011 SBC
+...
 
 ================================================================================
 3. Internal Control Signals Specification
 
 dd      Destination (write to)
-            dd
             00      Don't touch Rd
             01      Write ALU output to Rd
             10      Write DTR to Rd and ALU to MAR
             11      Write ALU output to MAR
-ss     Input bus values
-            sss     T1  T2   DTW (Clock cycle/Input bus)
-            000     Ignore
+sss    Input bus values
+                    T1  T2   DTW (Clock cycle/Input bus)
+            000     Ignored
             001         imm
             010     Rm  imm
             011     Rm  Rn
             100         Rn
             101     Rm  imm  Rd
             110     Rm  Rn   Rd
-mm      Memory access request
-            mm
-            00      Ignore
-            01      Memory read      Rd   <- MDR <- [MAR]
-            10      Memory write    [MAR] <- MDR <-  Rd
 bbbb    Branch conditionals
-            bbbb    Alias   Flag        Description
+                    Alias   Flag        Description
             0000    (none)  (none)      Ignored
-            0001    eq      Z           Equal
+            0001    eq       Z          Equal
             0010    ne      !Z          Not equal
-            0011    cs      C           Carry set
+            0011    cs       C          Carry set
             0100    nc      !C          No carry
-            0101    ss      N           Sign set
+            0101    ss       N          Sign set
             0110    ns      !N          No sign
-            0111    ov      V           Overflow
+            0111    ov       V          Overflow
             1000    nv      !V          No overflow
-            1001    ab      C & !Z      Unsigned above
+            1001    ab       C & !Z     Unsigned above
             1010    be      !C | Z      Unsigned below or equal
-            1011    ge      !(N ^ V)    Signed greater than or equal
-            1100    lt      N ^ V       Signed less than
+            1011    ge      !(N^V)      Signed greater than or equal
+            1100    lt       N^V        Signed less than
             1101    gt      !Z & !(N^V) Signed greater than
-            1110    le      Z | (N ^ V) Signed less than or equal
+            1110    le       Z | (N^V)  Signed less than or equal
             1111    (none)  (none)      Execute regardless
 i       Request interrupt
 f       Modify ALU Flags
-w       ALU Writeback
 
 ================================================================================
 4. Opcode Table and Instruction Decode Specification
@@ -111,77 +138,76 @@ The "variant" is 3 bits [2:0]
 Combined, the family and variant form the 8-bit opcode of the instruction.
 The last column specifies the control signals required for internal operation.
 
-* All binary values on the table are specified left to right, LSB to MSB
+* All binary values on the table are specified left to right, MSB to LSB
 
-Name                            Type    Family  Var     dd_sss_mm_bbbb_ifw (ctlsigs)
+Name                            Type    Family  Var     dd_sss_bbbb_if (ctlsigs)
 
-LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_010_01_0000_001 (alu = ADD)
-LDR     Rd <- [Rm]              R-Type  000 10  000     10_010_01_0000_001 (alu = ADD, imm = 0)
-LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_011_01_0000_001 (alu = ADD)
+LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_010_0000_00 (alu = ADD)
+LDR     Rd <- [Rm]              R-Type  000 10  000     10_010_0000_00 (alu = ADD, imm = 0)
+LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_011_0000_00 (alu = ADD)
 
-STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_101_10_0000_001 (alu = ADD)
-STR     [Rm] <- Rd              R-Type  001 10  000     11_101_10_0000_001 (alu = ADD, imm = 0)
-STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_10_0000_001 (alu = ADD)
+STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_101_0000_00 (alu = ADD)
+STR     [Rm] <- Rd              R-Type  001 10  000     11_101_0000_00 (alu = ADD, imm = 0)
+STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_0000_00 (alu = ADD)
 
-MOV     Rd <- imm               I-Type  001 00  100     01_001_00_0000_001
-MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_00_0000_001
-MOV     Rd <- Rm                R-Type  001 00  001     01_010_00_0000_001 (imm = 0)
-MOVT    Rd <- imm               I-Type  001 00  101     01_001_00_0000_001
+MOV     Rd <- imm               I-Type  001 00  100     01_001_0000_00
+MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_00
+MOV     Rd <- Rm                R-Type  001 00  001     01_010_0000_00 (imm = 0)
 
-ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_00_0000_011
-ADDC    Rd <- Rm + sh(Rn) + c   R-Type  010 00  001     01_011_00_0000_011
-SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_011_00_0000_011
-RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_011_00_0000_011
-SUBC    Rd <- Rm - sh(Rn) + c   R-Type  011 00  010     01_011_00_0000_011
-RSUBC   Rd <- sh(Rn) - Rm + c   R-Type  011 00  011     01_011_00_0000_011
+ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_0000_01
+ADDC    Rd <- Rm + sh(Rn) + c   R-Type  010 00  001     01_011_0000_01
+SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_011_0000_01
+RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_011_0000_01
+SUBC    Rd <- Rm - sh(Rn) + c   R-Type  011 00  010     01_011_0000_01
+RSUBC   Rd <- sh(Rn) - Rm + c   R-Type  011 00  011     01_011_0000_01
 
-ADD     Rd <- Rm + imm          I-Type  010 00  100     01_010_00_0000_011
-ADDC    Rd <- Rm + imm + c      I-Type  010 00  101     01_010_00_0000_011
-SUB     Rd <- Rm - imm          I-Type  011 00  100     01_010_00_0000_011
-RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_010_00_0000_011
-SUBC    Rd <- Rm - imm + c      I-Type  011 00  110     01_010_00_0000_011
-RSUBC   Rd <- imm - Rm + c      I-Type  011 00  111     01_010_00_0000_011
+ADD     Rd <- Rm + imm          I-Type  010 00  100     01_010_0000_01
+ADDC    Rd <- Rm + imm + c      I-Type  010 00  101     01_010_0000_01
+SUB     Rd <- Rm - imm          I-Type  011 00  100     01_010_0000_01
+RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_010_0000_01
+SUBC    Rd <- Rm - imm + c      I-Type  011 00  110     01_010_0000_01
+RSUBC   Rd <- imm - Rm + c      I-Type  011 00  111     01_010_0000_01
 
-AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_011_00_0000_011
-BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_011_00_0000_011
-OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_011_00_0000_011
-XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_011_00_0000_011
+AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_011_0000_01
+BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_011_0000_01
+OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_011_0000_01
+XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_011_0000_01
 
 * NOT is the same as BIC Rd, ~0, Rn
 
-AND     Rd <- Rm & imm          I-Type  100 00  100     01_010_00_0000_011
-BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_010_00_0000_011
-OR      Rd <- Rm | imm          I-Type  101 00  100     01_010_00_0000_011
-XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_010_00_0000_011
+AND     Rd <- Rm & imm          I-Type  100 00  100     01_010_0000_01
+BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_010_0000_01
+OR      Rd <- Rm | imm          I-Type  101 00  100     01_010_0000_01
+XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_010_0000_01
 
-CMP     Rm - Rn                 R-Type  011 01  000     00_011_00_0000_010
-CMP     Rm - imm                I-Type  011 01  100     00_010_00_0000_010
-TST     Rm & Rn                 R-Type  100 01  000     00_011_00_0000_010
-TST     Rm & imm                I-Type  100 01  100     00_010_00_0000_010
+CMP     Rm - Rn                 R-Type  011 01  000     00_011_0000_01
+CMP     Rm - imm                I-Type  011 01  100     00_010_0000_01
+TST     Rm & Rn                 R-Type  100 01  000     00_011_0000_01
+TST     Rm & imm                I-Type  100 01  100     00_010_0000_01
 
-B<c>    PC + Offset             J-Type  010 1c  ccc     00_000_00_cccc_000
-B<c>L   PC + Offset             J-Type  011 1c  ccc     00_000_00_cccc_000
+B<c>    PC + Offset             J-Type  010 1c  ccc     00_000_cccc_00
+B<c>L   PC + Offset             J-Type  011 1c  ccc     00_000_cccc_00
 
-INT     imm8                    J-Type  100 10  000     00_000_00_0000_100
+INT     imm8                    J-Type  100 10  000     00_000_0000_10
 
 ================================================================================
 5. Execution Unit Overview
 
 5.1 Internal Busses (Input 1, 2 and Output Busses)
 
-Register        Bus     Trigger     Condition
-MAR         <-  obus    we_m
-DTW         <-  ibus1   we_d
-DTR         ->  ibus    oe_d
-REGOUTA     ->  ibus1   oe_a
-REGOUTB     ->  ibus2   oe_b
-REGINP      <-  obus    we_r
-IMM         ->  ibus2   oe_i
-PC          ->  ibus1   oe_p1
-PC          <-  obus    we_p
-ALUA        <-  ibus1   always
-ALUB        <-  ibus2   always
-ALUO        ->  obus    always
+Register        Bus
+MAR         <-  obus
+DTW         <-  ibus1
+DTR         ->  obus
+REGOUTA     ->  ibus1
+REGOUTB     ->  ibus2
+REGINP      <-  obus
+IMM         ->  ibus2
+PC          ->  ibus1
+PC          <-  obus
+ALUA        <-  ibus1
+ALUB        <-  ibus2
+ALUO        ->  obus
 
 5.2 Dual Port (Dual Read, Single Write) Register File
 
@@ -192,6 +218,83 @@ REGOUTB     <-  REGFILE (read select B)
 REGWADR     ->  REGFILE (write select)
 REGINP      ->  REGFILE (write port)
 
-5.3 Control Signal and Input Values
+5.3 Execution unit FSM
 
-REGADRA     <-  IF()
+<IDLE>:
+    if request then
+        if CTL_B == 0 then
+            next <TR1>
+        else
+            next <TB1>
+    else
+        next <IDLE>
+<TB1>:
+    if branch condition is met then
+        compute and write pc+offset
+        next <TB2>
+    else
+        next <IDLE>
+<TB2>:
+    set newpc
+    set flush
+    next <IDLE>
+<TR1>:
+    if CTL_S = 110, 111 then
+        REGRADRA = Rd
+        next <TR2>
+    else if CTL_S = 001, 010, 101 then
+        REGRADRA = Rd
+        REGRADRB = imm
+        ibus1 is REGOUTA
+        ibus2 is REGOUTA
+        next <TW1>
+    else
+        REGRADRA = Rd
+        REGRADRB = Rm
+        ibus1 is REGOUTA
+        ibus2 is REGOUTA
+        next <TW1>
+<TR2>:
+    REGRADRA = Rm
+    ibus1 is REGOUTA
+    write to DTW
+    next <TW1>
+<TW1>:
+    if CTL_D is 10 then
+        obus is ALUO
+        write to MAR
+        next <TM1>
+    else if CTL_D is 11 then
+        obus is ALUO
+        write to MAR
+        next <TM2>
+    else if CTL_D is 01 then
+        obus is ALUO
+        write to Rd
+        if Rd is PC then
+            next <TB2>
+        else
+            next <IDLE>
+    else
+        next <IDLE>
+<TM1>:
+    set memory read
+    request memory
+    if ackm then
+        next <TW2>
+    else
+        next <TM1>
+<TM2>:
+    set memory write
+    request memory
+    if ackm then
+        next <IDLE>
+    else
+        next <TM1>
+<TW2>:
+    obus is DTR
+    if Rd is PC then
+        next <TB2>
+    else
+        next <IDLE>
+
