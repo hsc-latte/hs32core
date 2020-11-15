@@ -123,6 +123,7 @@ bbbb    Branch conditionals
             1111    (none)  (none)      Execute regardless
 i       Request interrupt
 f       Modify ALU Flags
+l       Link PC when branching
 
 ================================================================================
 4. Opcode Table and Instruction Decode Specification
@@ -140,55 +141,55 @@ The last column specifies the control signals required for internal operation.
 
 * All binary values on the table are specified left to right, MSB to LSB
 
-Name                            Type    Family  Var     dd_sss_bbbb_if (ctlsigs)
+Name                            Type    Family  Var     dd_sss_bbbb_ifl
 
-LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_010_0000_00 (alu = ADD)
-LDR     Rd <- [Rm]              R-Type  000 10  000     10_010_0000_00 (alu = ADD, imm = 0)
-LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_011_0000_00 (alu = ADD)
+LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_010_0000_000 (alu = ADD)
+LDR     Rd <- [Rm]              R-Type  000 10  000     10_010_0000_000 (alu = ADD, imm = 0)
+LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_011_0000_000 (alu = ADD)
 
-STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_101_0000_00 (alu = ADD)
-STR     [Rm] <- Rd              R-Type  001 10  000     11_101_0000_00 (alu = ADD, imm = 0)
-STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_0000_00 (alu = ADD)
+STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_101_0000_000 (alu = ADD)
+STR     [Rm] <- Rd              R-Type  001 10  000     11_101_0000_000 (alu = ADD, imm = 0)
+STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_0000_000 (alu = ADD)
 
-MOV     Rd <- imm               I-Type  001 00  100     01_001_0000_00
-MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_00
-MOV     Rd <- Rm                R-Type  001 00  001     01_010_0000_00 (imm = 0)
+MOV     Rd <- imm               I-Type  001 00  100     01_001_0000_000
+MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_000
+MOV     Rd <- Rm                R-Type  001 00  001     01_010_0000_000 (imm = 0)
 
-ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_0000_01
-ADDC    Rd <- Rm + sh(Rn) + c   R-Type  010 00  001     01_011_0000_01
-SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_011_0000_01
-RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_011_0000_01
-SUBC    Rd <- Rm - sh(Rn) + c   R-Type  011 00  010     01_011_0000_01
-RSUBC   Rd <- sh(Rn) - Rm + c   R-Type  011 00  011     01_011_0000_01
+ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_0000_010
+ADDC    Rd <- Rm + sh(Rn) + c   R-Type  010 00  001     01_011_0000_010
+SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_011_0000_010
+RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_011_0000_010
+SUBC    Rd <- Rm - sh(Rn) + c   R-Type  011 00  010     01_011_0000_010
+RSUBC   Rd <- sh(Rn) - Rm + c   R-Type  011 00  011     01_011_0000_010
 
-ADD     Rd <- Rm + imm          I-Type  010 00  100     01_010_0000_01
-ADDC    Rd <- Rm + imm + c      I-Type  010 00  101     01_010_0000_01
-SUB     Rd <- Rm - imm          I-Type  011 00  100     01_010_0000_01
-RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_010_0000_01
-SUBC    Rd <- Rm - imm + c      I-Type  011 00  110     01_010_0000_01
-RSUBC   Rd <- imm - Rm + c      I-Type  011 00  111     01_010_0000_01
+ADD     Rd <- Rm + imm          I-Type  010 00  100     01_010_0000_010
+ADDC    Rd <- Rm + imm + c      I-Type  010 00  101     01_010_0000_010
+SUB     Rd <- Rm - imm          I-Type  011 00  100     01_010_0000_010
+RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_010_0000_010
+SUBC    Rd <- Rm - imm + c      I-Type  011 00  110     01_010_0000_010
+RSUBC   Rd <- imm - Rm + c      I-Type  011 00  111     01_010_0000_010
 
-AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_011_0000_01
-BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_011_0000_01
-OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_011_0000_01
-XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_011_0000_01
+AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_011_0000_010
+BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_011_0000_010
+OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_011_0000_010
+XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_011_0000_010
 
 * NOT is the same as BIC Rd, ~0, Rn
 
-AND     Rd <- Rm & imm          I-Type  100 00  100     01_010_0000_01
-BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_010_0000_01
-OR      Rd <- Rm | imm          I-Type  101 00  100     01_010_0000_01
-XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_010_0000_01
+AND     Rd <- Rm & imm          I-Type  100 00  100     01_010_0000_010
+BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_010_0000_010
+OR      Rd <- Rm | imm          I-Type  101 00  100     01_010_0000_010
+XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_010_0000_010
 
-CMP     Rm - Rn                 R-Type  011 01  000     00_011_0000_01
-CMP     Rm - imm                I-Type  011 01  100     00_010_0000_01
-TST     Rm & Rn                 R-Type  100 01  000     00_011_0000_01
-TST     Rm & imm                I-Type  100 01  100     00_010_0000_01
+CMP     Rm - Rn                 R-Type  011 01  000     00_011_0000_010
+CMP     Rm - imm                I-Type  011 01  100     00_010_0000_010
+TST     Rm & Rn                 R-Type  100 01  000     00_011_0000_010
+TST     Rm & imm                I-Type  100 01  100     00_010_0000_010
 
-B<c>    PC + Offset             J-Type  010 1c  ccc     00_000_cccc_00
-B<c>L   PC + Offset             J-Type  011 1c  ccc     00_000_cccc_00
+B<c>    PC + Offset             J-Type  010 1c  ccc     00_000_cccc_000
+B<c>L   PC + Offset             J-Type  011 1c  ccc     00_000_cccc_001
 
-INT     imm8                    J-Type  100 10  000     00_000_0000_10
+INT     imm8                    J-Type  100 10  000     00_000_0000_100
 
 ================================================================================
 5. Execution Unit Overview
