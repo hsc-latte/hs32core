@@ -11,7 +11,6 @@
 
 `define HS32_NULLI     16'b0
 `define HS32_NULLS     5'b0
-`define HS32_NULLR     4'b0
 `define HS32_SHIFT     instd[15:11]
 `define HS32_SHIFTDIR  instd[10:9]
 `define HS32_BANK      instd[8:7]
@@ -48,9 +47,9 @@ module hs32_decode (
                     aluop <= `HS32_ADD;
                     shift <= `HS32_NULLS;
                     imm <= `HS32_IMM;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_NULLR;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
                     ctlsig <= { 12'b10_010_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* LDR     Rd <- [Rm] */
@@ -58,110 +57,80 @@ module hs32_decode (
                     aluop <= `HS32_ADD;
                     shift <= `HS32_NULLS;
                     imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_NULLR;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
                     ctlsig <= { 12'b10_010_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* LDR     Rd <- [Rm + sh(Rn)] */
                 `HS32_LDRA: begin
                     aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
+                    shift <= `HS32_NULLS;
                     imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b10_011_0000_000;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b10_011_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* STR     [Rm + imm] <- Rd */
                 `HS32_STRI: begin
                     aluop <= `HS32_ADD;
                     shift <= `HS32_NULLS;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_NULLR;
-                    ctlsig <= 12'b11_101_0000_000;
+                    imm <= `HS32_IMM;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b11_101_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* STR     [Rm] <- Rd */
                 `HS32_STR: begin
                     aluop <= `HS32_ADD;
                     shift <= `HS32_NULLS;
                     imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_NULLR;
-                    ctlsig <= 12'b11_101_0000_000;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b11_101_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* STR     [Rm + sh(Rn)] <- Rd */
                 `HS32_STRA: begin
                     aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
+                    shift <= `HS32_NULLS;
                     imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b11_110_0000_000;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b11_110_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* MOV     Rd <- imm */
                 `HS32_MOVI: begin
-                    aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b01_001_0000_000;
+                    aluop <= `HS32_MOV;
+                    shift <= `HS32_NULLS;
+                    imm <= `HS32_IMM;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b01_001_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
-                /* MOV     Rd <- sMOVNh(Rn) */
+                /* MOV     Rd <- sh(Rn) */
                 `HS32_MOVN: begin
-                    aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b01_100_0000_000;
-                end
-                /* MOV     Rd <- Rm */
-                `HS32_MOV: begin
-                    aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b01_010_0000_000;
-                end
-                /* ADD     Rd <- Rm + sh(Rn) */
-                `HS32_ADD: begin
-                    aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b01_011_0000_010;
-                end
-                /* ADDC    Rd <- Rm + sh(Rn) + c */
-                `HS32_ADDC: begin
-                    aluop <= `HS32_ADD;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
-                    rn <= `HS32_REGOPD;
-                    ctlsig <= 12'b01_011_0000_010;
-                end
-                /* SUB     Rd <- Rm - sh(Rn) */
-                `HS32_SUB: begin
-                    aluop <= `HS32_SUB;
+                    aluop <= `HS32_MOV;
                     shift <= `HS32_NULLS;
                     imm <= `HS32_NULLI;
-                    rd <= `HS32_REGDST;
-                    rm <= `HS32_REGSRC;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
                     rn <= `HS32_RN;
-                    ctlsig <= { 12'b10_010_0000_000, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 12'b01_100_0000_000, `HS32_SHIFTDIR, 1'b0 };
+                end
+                /* MOV     Rd <- Rm */
+                `HS32_MOVN: begin
+                    aluop <= `HS32_MOV;
+                    shift <= `HS32_NULLS;
+                    imm <= `HS32_NULLI;
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    ctlsig <= { 12'b01_010_0000_000, `HS32_SHIFTDIR, 1'b0 };
                 end
             endcase
         end
