@@ -1,4 +1,4 @@
-================================================================================                  
+================================================================================
                        HS32 CPU and ISA Documentation
                        By: Anthony Kung and Kevin Dai
                                (c) 2020 HSC
@@ -74,16 +74,16 @@ is of the current mode of execution.
 ALU     Name    Operation
 
 ...
-0001    MOV     
-0010    ADD     NZCV...
-0011    SUB     NZCV...
-0100    AND     
-0101    OR      
-0110    XOR     
-0111    NOT     
+0001 MOV     Rd     <- Rm/sh(Rn)/imm
+0010 ADD     Rd     <- Rm + sh(Rn)/imm, set NZCV
+0011 SUB     Rd     <- Rm - sh(Rn)/imm, set NZCV
+0100 AND     Rd     <- Rm & sh(Rn)/imm
+0101 OR      Rd     <- Rm | sh(Rn)/imm
+0110 XOR     Rd     <- Rm ^ sh(Rn)/imm
+0111 NOT     Rd     <- Rm ~ sh(Rn)/imm
 ...
-1010    ADC
-1011    SBC
+1010 ADC     Rd     <- Rm + sh(Rn)/imm + C, set NZCV
+1011 SBC     Rd     <- Rm - sh(Rn)/imm - C, set NZCV
 ...
 
 ================================================================================
