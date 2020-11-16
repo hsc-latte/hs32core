@@ -63,9 +63,9 @@ module hs32_cpu (
         .aluop(aluop_e),
         .imm(imm_e),
         .shift(shift_e),
-        .regdst(regdst_e),
-        .regsrc(regsrc_e),
-        .regopd(regopd_e),
+        .rd(regdst_e),
+        .rm(regsrc_e),
+        .rn(regopd_e),
         .ctlsig(ctlsig_e)
     );
 
@@ -78,13 +78,13 @@ module hs32_cpu (
         .aluop(aluop_e),
         .imm(imm_e),
         .shift(shift_e),
-        .regdst(regdst_e),
-        .regsrc(regsrc_e),
-        .regopd(regopd_e),
+        .rd(regdst_e),
+        .rm(regsrc_e),
+        .rn(regopd_e),
         .ctlsig(ctlsig_e),
         
         // Memory arbiter interface
-        .addr(addr_e), .dtr(dtr_e), .reqm(req_e), .ackm(ack_e),
+        .addr(addr_e), .dtrm(dtr_e), .reqm(req_e), .ackm(ack_e),
         
         // Interrupts
         .intrq(0), .addi(0)

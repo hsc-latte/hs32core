@@ -71,19 +71,19 @@ is of the current mode of execution.
 ================================================================================
 2. ALU Instruction Table
 
-ALU Name    Operation
+ALU     Name    Operation
 
 ...
-0001 MOV     
-0010 ADD     NZCV...
-0011 SUB     NZCV...
-0100 AND     
-0101 OR      
-0110 XOR     
-0111 NOT     
+0001    MOV     
+0010    ADD     NZCV...
+0011    SUB     NZCV...
+0100    AND     
+0101    OR      
+0110    XOR     
+0111    NOT     
 ...
-1010 ADC
-1011 SBC
+1010    ADC
+1011    SBC
 ...
 
 ================================================================================

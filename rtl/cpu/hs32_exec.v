@@ -33,7 +33,7 @@ module hs32_exec (
 
     // Memory arbiter interface
     output  reg  [31:0] addr,   // Address
-    input   wire [31:0] dtr,    // Data input
+    input   wire [31:0] dtrm,   // Data input
     output  reg  reqm,          // Valid address
     input   wire ackm,          // Valid data
 
@@ -45,7 +45,7 @@ module hs32_exec (
     wire [31:0] ibus2;
     wire [31:0] obus;
 
-    reg [31:0] dtw, dtr, pc;
+    reg [31:0] mar, dtw, dtr, pc;
 
     reg[2:0] state;
 

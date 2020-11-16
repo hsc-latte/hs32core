@@ -31,9 +31,9 @@ module hs32_decode (
     output  reg  [2:0]  aluop,  // ALU Operation
     output  reg  [4:0]  shift,  // 5-bit shift
     output  reg  [15:0] imm,    // Immediate value
-    output  reg  [3:0]  regdst, // Register Destination Rd
-    output  reg  [3:0]  regsrc, // Register Source Rm
-    output  reg  [3:0]  regopd, // Register Operand Rn
+    output  reg  [3:0]  rd,     // Register Destination Rd
+    output  reg  [3:0]  rm,     // Register Source Rm
+    output  reg  [3:0]  rn,     // Register Operand Rn
     output  reg  [15:0] ctlsig  // Control signals
 );
     always @ (posedge clk) begin
@@ -43,54 +43,54 @@ module hs32_decode (
                     aluop = `HS32_ADD;
                     shift = `HS32_NULLS;
                     imm = `HS32_IMM;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_NULLR;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_NULLR;
                     ctlsig = 14'b10_010_01_0000_001;
                 end
                 `HS32_LDR: begin
                     aluop = `HS32_ADD;
                     shift = `HS32_NULLS;
                     imm = `HS32_NULLI;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_NULLR;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_NULLR;
                     ctlsig = 14'b10_010_01_0000_001;
                 end
                 `HS32_LDRA: begin
                     aluop = `HS32_ADD;
                     shift = `HS32_SHIFT;
                     imm = `HS32_NULLI;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_REGOPD;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_REGOPD;
                     ctlsig = 14'b10_011_01_0000_001;
                 end
                 `HS32_STRI: begin
                     aluop = `HS32_ADD;
                     shift = `HS32_NULLS;
                     imm = `HS32_NULLI;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_NULLR;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_NULLR;
                     ctlsig = 14'b11_101_10_0000_001;
                 end
                 `HS32_STR: begin
                     aluop = `HS32_ADD;
                     shift = `HS32_NULLS;
                     imm = `HS32_NULLI;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_NULLR;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_NULLR;
                     ctlsig = 14'b11_101_10_0000_001;
                 end
                 `HS32_STRA: begin
                     aluop = `HS32_ADD;
                     shift = `HS32_SHIFT;
                     imm = `HS32_NULLI;
-                    regdst = `HS32_REGDST;
-                    regsrc = `HS32_REGSRC;
-                    regopd = `HS32_REGOPD;
+                    rd = `HS32_REGDST;
+                    rm = `HS32_REGSRC;
+                    rn = `HS32_REGOPD;
                     ctlsig = 14'b11_101_10_0000_001;
                 end
             endcase
