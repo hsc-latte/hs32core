@@ -9,6 +9,9 @@
 /* Include ALU OP Codes Definitions */
 `include "hs32_aluops.v"
 
+/* Include Instruction Formatting */
+`include "hs32_inst.v"
+
 `define HS32_NULLI     16'b0
 `define HS32_NULLS     5'b0
 `define HS32_NULLR     4'b0
