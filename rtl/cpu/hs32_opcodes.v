@@ -34,9 +34,6 @@
 /* MOV     Rd <- Rm */
 `define HS32_MOV      8'b001_00_001
 
-/* MOVT    Rd <- imm */
-`define HS32_MOVIT    8'b001_00_101
-
 /* ADD     Rd <- Rm + sh(Rn) */
 `define HS32_ADD      8'b010_00_000
 
