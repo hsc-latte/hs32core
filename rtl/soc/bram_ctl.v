@@ -64,9 +64,7 @@ module soc_bram_ctl (
             end
             done <= 0;
         end
-        1: begin
-            state <= 2;
-        end
+        1: state <= 2;
         2: begin
             state <= 0;
             done <= 1;
@@ -104,28 +102,36 @@ module soc_bram_ctl (
     );
 
     /** FORMAL METHODS **/
+
 `ifdef FORMAL
     // $past gaurd
     reg f_past_valid;
     initial f_past_valid = 0;
     always @(posedge clk)
         f_past_valid <= 1;
-    // 0. Always assume data valid
+    
+    // 1. Always assume data valid
     always @(*) begin
         assume(valid);
     end
 
+    // 2. Formal bus interface contract
     always @(posedge clk)
-    if(!$fell(done)) begin
-        assume($stable(addr) && $stable(dwrite) && $stable(rw));
-    end
+    if(f_past_valid)
+        if(!$fell(done))
+            assume($stable(addr) && $stable(dwrite) && $stable(rw));
 
-    // 1. Check if done resets
+    // 3. Cover checks if done resets
     always @(posedge clk)
     if(f_past_valid)
         cover($fell(done));
 
-    // 2. Random data and address
+    // 4. Formal contract
+    // -- if write bytes [1234] to a
+    // -> then read a   == [1234]
+    // -> then read a+1 == [?123]
+    // -> then read a+2 == [??12]
+    // -> then read a+3 == [???1]
     (* anyconst *) reg[addr_width-1:0] f_addr;
     (* anyconst *) reg[31:0] f_data;
     reg[2:0] f_state;
@@ -136,40 +142,41 @@ module soc_bram_ctl (
         0: if(rw && f_addr == addr && f_data == dwrite)
             f_state <= 1;
         // 2. Read from same address
-        1: if(done && f_addr == addr)
-            f_state <= rw ? 0 : 2;
+        1: if(done)
+            f_state <= !rw && f_addr == addr ? 2 : 0;
         // 3. Read from a+1
-        2: if(done && f_addr == addr+1)
-            f_state <= rw ? 0 : 3;
+        2: if(done)
+            f_state <= !rw && f_addr == addr+1 ? 3 : 0;
         // 4. Read from a+2
-        3: if(done && f_addr == addr+2)
-            f_state <= rw ? 0 : 4;
+        3: if(done)
+            f_state <= !rw && f_addr == addr+2 ? 4 : 0;
         // 5. Read from a+3
-        4: if(done && f_addr == addr+2)
-            f_state <= rw ? 0 : 5;
+        4: if(done)
+            f_state <= !rw && f_addr == addr+3 ? 5 : 0;
         // Good job!
-        5: if(done) f_state <= 0;
+        5: if(done) f_state <= 6;
+        6: f_state <= 0;
     endcase
 
-    // 3. Check if we read the same data back
+    // 2. Check if we read the same data back
     always @(posedge clk)
     if(f_state == 2 && done) begin
         assert(f_data == dread);
     end
 
-    // 4. a+1 (check byte addressing)
+    // 3. a+1 (check byte addressing)
     always @(posedge clk)
     if(f_state == 3 && done) begin
         assert(f_data[31:8] == dread[23:0]);
     end
 
-    // 5. a+2
+    // 4. a+2
     always @(posedge clk)
     if(f_state == 4 && done) begin
         assert(f_data[31:16] == dread[15:0]);
     end
 
-    // 6. a+3
+    // 5. a+3
     always @(posedge clk)
     if(f_state == 5 && done) begin
         assert(f_data[31:24] == dread[7:0]);
