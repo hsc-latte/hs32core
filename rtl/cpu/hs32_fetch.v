@@ -38,42 +38,5 @@ module hs32_fetch (
     always @(*) fill = wp - rp;
     always @(*) full = fill == { 1'b1, {(PBITS) {1'b0}} };
 
-    // Reset
-    always @ (posedge clk) begin
-        if (flush) begin     // Check if reset_n or flush
-            pc = 32'd0;      // Set PC to 0
-        end
-    end
-
-    // Set New PC
-    always @(posedge clk) begin
-        if (newpc != 0) begin
-            pc = newpc;
-        end
-    end
-
-    // Request Instruction
-    always @(posedge clk) begin
-        reqm = 1'd1;
-        addr = pc;
-        pc++;
-    end
-
-    // Fetch instruction
-    always @(posedge clk) begin
-        if (ackm) begin               // If data is valid
-            // Get instruction from memory
-        end
-    end
-
-    // Output Instruction to Decode
-    always @(posedge clk) begin
-        if (reqd) begin               // If Decode Request Received
-            // Activate Decode Input
-            // Send Instruction
-        end
-        else begin
-            // Deactivate Decode Input
-        end
-    end
+    
 endmodule

@@ -27,11 +27,11 @@ module hs32_reg (
         $dumpvars(1, regs[0], regs[1]);
 `endif
     end
-    always @(posedge clk) if(we) begin
+    always @(negedge clk) if(we) begin
         regs[wadr] <= din;
     end
 
-    always @(posedge clk) if(!we) begin
+    always @(negedge clk) if(!we) begin
         dout1 <= regs[radr1];
         dout2 <= regs[radr2];
     end
