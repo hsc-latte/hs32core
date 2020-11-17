@@ -1,0 +1,15 @@
+[options]
+mode bmc
+depth 30
+expect fail
+
+[engines]
+smtbmc
+
+[script]
+read -formal bram_ctl.v
+prep -top soc_bram_ctl
+
+[files]
+soc/bram_ctl.v
+soc/bram.v

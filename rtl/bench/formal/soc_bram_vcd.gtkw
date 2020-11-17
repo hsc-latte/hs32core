@@ -1,0 +1,48 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Tue Nov 17 22:11:31 2020
+[*]
+[dumpfile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\formal\trace.vcd"
+[savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\formal\soc_bram_vcd.gtkw"
+[timestart] 0
+[size] 1536 801
+[pos] -61 -61
+*-4.589243 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] soc_bram_ctl.
+[sst_width] 197
+[signals_width] 185
+[sst_expanded] 1
+[sst_vpaned_height] 224
+@28
+soc_bram_ctl.clk
+soc_bram_ctl.done
+soc_bram_ctl.rw
+soc_bram_ctl.valid
+@22
+soc_bram_ctl.addr[7:0]
+soc_bram_ctl.dwrite[31:0]
+soc_bram_ctl.dread[31:0]
+@200
+-
+@28
+soc_bram_ctl.state[1:0]
+@22
+soc_bram_ctl.a0[5:0]
+soc_bram_ctl.a1[5:0]
+soc_bram_ctl.a2[5:0]
+soc_bram_ctl.a3[5:0]
+@29
+soc_bram_ctl.we
+@22
+soc_bram_ctl.dbuf[31:0]
+soc_bram_ctl.wbuf[31:0]
+@200
+-
+@22
+soc_bram_ctl.f_addr[7:0]
+soc_bram_ctl.f_data[31:0]
+@28
+soc_bram_ctl.f_past_valid
+soc_bram_ctl.f_state[2:0]
+[pattern_trace] 1
+[pattern_trace] 0

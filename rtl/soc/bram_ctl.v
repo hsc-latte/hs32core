@@ -1,4 +1,8 @@
-`include "soc/bram.v"
+`ifdef FORMAL
+    `include "bram.v"
+`else
+    `include "soc/bram.v"
+`endif
 
 module soc_bram_ctl (
     input   wire clk,
@@ -10,6 +14,7 @@ module soc_bram_ctl (
     output  reg  done
 );
     parameter addr_width = 8;
+    initial done = 0;
 
     // 4 addresses for each bram
     // Selects between current dword and next dword
@@ -34,7 +39,8 @@ module soc_bram_ctl (
     // dbuf will always be in the form of [0123]
     // So, an address ending in 11 should be [3012]
     //
-    wire [31:0] dbuf, wbuf;
+    wire[31:0] dread_wire;
+    wire[31:0] dbuf, wbuf;
     assign dread =
         (addr[1:0] == 2'b00) ? { dbuf[31:0] } :
         (addr[1:0] == 2'b01) ? { dbuf[ 7:0], dbuf[31:8 ] } :
@@ -58,7 +64,9 @@ module soc_bram_ctl (
             end
             done <= 0;
         end
-        1: state <= 2;
+        1: begin
+            state <= 2;
+        end
         2: begin
             state <= 0;
             done <= 1;
@@ -70,28 +78,101 @@ module soc_bram_ctl (
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram0(
-        .clk(clk), .we(we),
+        .clk(clk), .we(we), 
         .addr(a0), .din(wbuf[7:0]), .dout(dbuf[7:0])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram1(
-        .clk(clk), .we(we),
+        .clk(clk), .we(we), 
         .addr(a1), .din(wbuf[15:8]), .dout(dbuf[15:8])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram2(
-        .clk(clk), .we(we),
+        .clk(clk), .we(we), 
         .addr(a2), .din(wbuf[23:16]), .dout(dbuf[23:16])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram3(
-        .clk(clk), .we(we),
+        .clk(clk), .we(we), 
         .addr(a3), .din(wbuf[31:24]), .dout(dbuf[31:24])
     );
+
+    /** FORMAL METHODS **/
+`ifdef FORMAL
+    // $past gaurd
+    reg f_past_valid;
+    initial f_past_valid = 0;
+    always @(posedge clk)
+        f_past_valid <= 1;
+    // 0. Always assume data valid
+    always @(*) begin
+        assume(valid);
+    end
+
+    always @(posedge clk)
+    if(!$fell(done)) begin
+        assume($stable(addr) && $stable(dwrite) && $stable(rw));
+    end
+
+    // 1. Check if done resets
+    always @(posedge clk)
+    if(f_past_valid)
+        cover($fell(done));
+
+    // 2. Random data and address
+    (* anyconst *) reg[addr_width-1:0] f_addr;
+    (* anyconst *) reg[31:0] f_data;
+    reg[2:0] f_state;
+    initial f_state = 0;
+    always @(posedge clk)
+    case(f_state)
+        // 1. Write to address
+        0: if(rw && f_addr == addr && f_data == dwrite)
+            f_state <= 1;
+        // 2. Read from same address
+        1: if(done && f_addr == addr)
+            f_state <= rw ? 0 : 2;
+        // 3. Read from a+1
+        2: if(done && f_addr == addr+1)
+            f_state <= rw ? 0 : 3;
+        // 4. Read from a+2
+        3: if(done && f_addr == addr+2)
+            f_state <= rw ? 0 : 4;
+        // 5. Read from a+3
+        4: if(done && f_addr == addr+2)
+            f_state <= rw ? 0 : 5;
+        // Good job!
+        5: if(done) f_state <= 0;
+    endcase
+
+    // 3. Check if we read the same data back
+    always @(posedge clk)
+    if(f_state == 2 && done) begin
+        assert(f_data == dread);
+    end
+
+    // 4. a+1 (check byte addressing)
+    always @(posedge clk)
+    if(f_state == 3 && done) begin
+        assert(f_data[31:8] == dread[23:0]);
+    end
+
+    // 5. a+2
+    always @(posedge clk)
+    if(f_state == 4 && done) begin
+        assert(f_data[31:16] == dread[15:0]);
+    end
+
+    // 6. a+3
+    always @(posedge clk)
+    if(f_state == 5 && done) begin
+        assert(f_data[31:24] == dread[7:0]);
+    end
+`endif
 endmodule

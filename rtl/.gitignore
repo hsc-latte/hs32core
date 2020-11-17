@@ -12,3 +12,5 @@ hardware.*
 # random stuff
 log.txt
 *.dot
+
+bench/formal/*/
