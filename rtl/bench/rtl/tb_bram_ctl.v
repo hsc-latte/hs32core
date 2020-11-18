@@ -19,7 +19,21 @@ module tb_soc_bram_ctl ();
 `ifdef SIM
         $dumpfile("tb_bram_ctl.vcd");
         $dumpvars(0, bram_ctl, f_state);
-        #(PERIOD*8)
+        
+        rw <= 1;
+        addr <= 32;
+        dwrite <= 32'h1122_3344;
+        #(PERIOD*3)
+
+        rw <= 1;
+        addr <= 36;
+        dwrite <= 32'h5566_7788;
+        #(PERIOD*3)
+
+        rw <= 0;
+        addr <= 36;
+        #(PERIOD*3)
+        
         $finish;
 `endif
     end
@@ -30,7 +44,7 @@ module tb_soc_bram_ctl ();
     reg[31:0] f_data = 32'h1122_3344;
     reg[2:0] f_state;
     initial f_state = 0;
-    always @(posedge clk)
+    /*always @(posedge clk)
     case(f_state)
         // First, write to address
         0: begin
@@ -41,13 +55,13 @@ module tb_soc_bram_ctl ();
         end
         // Second, read from same address
         1: if(done) begin
-            addr <= f_addr+2;
+            addr <= f_addr+1;
             rw <= 0;
             f_state <= 2;
         end
         2: if(done) f_state <= 3;
         3: f_state <= 0;
-    endcase
+    endcase*/
 
     soc_bram_ctl #(
         .addr_width(8)

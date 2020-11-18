@@ -43,9 +43,9 @@ module soc_bram_ctl (
     wire[31:0] dbuf, wbuf;
     assign dread =
         (addr[1:0] == 2'b00) ? { dbuf[31:0] } :
-        (addr[1:0] == 2'b01) ? { dbuf[ 7:0], dbuf[31:8 ] } :
+        (addr[1:0] == 2'b01) ? { dbuf[23:0], dbuf[31:24] } :
         (addr[1:0] == 2'b10) ? { dbuf[15:0], dbuf[31:16] } :
-                               { dbuf[23:0], dbuf[31:24] } ;
+                               { dbuf[ 7:0], dbuf[31:8] } ;
     assign wbuf =
         (addr[1:0] == 2'b00) ? { dwrite[31:0] } :
         (addr[1:0] == 2'b01) ? { dwrite[ 7:0], dwrite[31:8 ] } :
@@ -77,28 +77,28 @@ module soc_bram_ctl (
         .data_width(8)
     ) ice40_bram0(
         .clk(clk), .we(we), 
-        .addr(a0), .din(wbuf[7:0]), .dout(dbuf[7:0])
+        .addr(a3), .din(wbuf[7:0]), .dout(dbuf[7:0])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram1(
         .clk(clk), .we(we), 
-        .addr(a1), .din(wbuf[15:8]), .dout(dbuf[15:8])
+        .addr(a2), .din(wbuf[15:8]), .dout(dbuf[15:8])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram2(
         .clk(clk), .we(we), 
-        .addr(a2), .din(wbuf[23:16]), .dout(dbuf[23:16])
+        .addr(a1), .din(wbuf[23:16]), .dout(dbuf[23:16])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram3(
         .clk(clk), .we(we), 
-        .addr(a3), .din(wbuf[31:24]), .dout(dbuf[31:24])
+        .addr(a0), .din(wbuf[31:24]), .dout(dbuf[31:24])
     );
 
     /** FORMAL METHODS **/
@@ -127,11 +127,11 @@ module soc_bram_ctl (
         cover($fell(done));
 
     // 4. Formal contract
-    // -- if write bytes [1234] to a
+    // -- if write bytes [1234] to a (BE)
     // -> then read a   == [1234]
-    // -> then read a+1 == [?123]
-    // -> then read a+2 == [??12]
-    // -> then read a+3 == [???1]
+    // -> then read a+1 == [234?]
+    // -> then read a+2 == [34??]
+    // -> then read a+3 == [4???]
     (* anyconst *) reg[addr_width-1:0] f_addr;
     (* anyconst *) reg[31:0] f_data;
     reg[2:0] f_state;
@@ -146,13 +146,13 @@ module soc_bram_ctl (
             f_state <= !rw && f_addr == addr ? 2 : 0;
         // 3. Read from a+1
         2: if(done)
-            f_state <= !rw && f_addr == addr+1 ? 3 : 0;
+            f_state <= !rw && f_addr+1 == addr ? 3 : 0;
         // 4. Read from a+2
         3: if(done)
-            f_state <= !rw && f_addr == addr+2 ? 4 : 0;
+            f_state <= !rw && f_addr+2 == addr ? 4 : 0;
         // 5. Read from a+3
         4: if(done)
-            f_state <= !rw && f_addr == addr+3 ? 5 : 0;
+            f_state <= !rw && f_addr+3 == addr ? 5 : 0;
         // Good job!
         5: if(done) f_state <= 6;
         6: f_state <= 0;
@@ -167,19 +167,19 @@ module soc_bram_ctl (
     // 3. a+1 (check byte addressing)
     always @(posedge clk)
     if(f_state == 3 && done) begin
-        assert(f_data[31:8] == dread[23:0]);
+        assert(dread[31:8] == f_data[23:0]);
     end
 
     // 4. a+2
     always @(posedge clk)
     if(f_state == 4 && done) begin
-        assert(f_data[31:16] == dread[15:0]);
+        assert(dread[31:16] == f_data[15:0]);
     end
 
     // 5. a+3
     always @(posedge clk)
     if(f_state == 5 && done) begin
-        assert(f_data[31:24] == dread[7:0]);
+        assert(dread[31:24] == f_data[7:0]);
     end
 `endif
 endmodule
