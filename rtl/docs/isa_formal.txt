@@ -26,7 +26,7 @@ Legend: o = opcode, d = Rd, m = Rm, n = Rn, i = imm, s = shift, x = don't care
 
 Type    Wire Format
 
-I-Type  oooo_oooo_dddd_mmmm nnnn_iiii_iiii_iiii
+I-Type  oooo_oooo_dddd_mmmm xxxx_iiii_iiii_iiii
 R-Type  oooo_oooo_dddd_mmmm nnnn_ssss_sDDb_bxxx
 J-Type  oooo_oooo_dddd_iiii iiii_iiii_iiii_iiii
 
