@@ -26,9 +26,9 @@ Legend: o = opcode, d = Rd, m = Rm, n = Rn, i = imm, s = shift, x = don't care
 
 Type    Wire Format
 
-I-Type  oooooooo_dddd_mmmm nnnn_iiiiiiiiiiiiiiii
-R-Type  oooooooo_dddd_mmmm nnnn_sssssDDbbxxxxxxx
-J-Type  oooooooo_dddd_iiii iiii_iiiiiiiiiiiiiiii
+I-Type  oooo_oooo_dddd_mmmm iiii_iiii_iiii_iiii
+R-Type  oooo_oooo_dddd_mmmm nnnn_ssss_sDDb_bxxx
+J-Type  oooo_oooo_dddd_iiii iiii_iiii_iiii_iiii
 
 * This field is only applicable to R-type MOV instructions
   and will specify the bank from which Rn/Rm will come from
