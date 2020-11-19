@@ -1,0 +1,70 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Thu Nov 19 02:29:11 2020
+[*]
+[dumpfile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\formal\hs32_fetch_proof\engine_0\trace_induct.vcd"
+[dumpfile_mtime] "Thu Nov 19 02:26:55 2020"
+[dumpfile_size] 10878
+[savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\formal\hs32_fetch.gtkw"
+[timestart] 0
+[size] 1536 801
+[pos] -1 -1
+*-5.606946 151 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[sst_width] 197
+[signals_width] 215
+[sst_expanded] 1
+[sst_vpaned_height] 224
+@28
+hs32_fetch.clk
+hs32_fetch.flush
+@22
+hs32_fetch.newpc[31:0]
+@28
+[color] 3
+hs32_fetch.reqd
+[color] 3
+hs32_fetch.rdyd
+@22
+hs32_fetch.instd[31:0]
+@28
+[color] 3
+hs32_fetch.reqm
+[color] 3
+hs32_fetch.rdym
+@22
+hs32_fetch.addr[31:0]
+hs32_fetch.dtr[31:0]
+@200
+-
+@22
+hs32_fetch.pc[31:0]
+@28
+hs32_fetch.full
+hs32_fetch.fill[2:0]
+hs32_fetch.rp[2:0]
+hs32_fetch.wp[2:0]
+@200
+-
+@22
+hs32_fetch.fifo<0>[31:0]
+hs32_fetch.fifo<1>[31:0]
+@200
+-
+@28
+hs32_fetch.f_past_valid
+hs32_fetch.f_size[2:0]
+@22
+hs32_fetch.f_instd1[31:0]
+@23
+hs32_fetch.f_instd2[31:0]
+@28
+hs32_fetch.f_wp1[2:0]
+@22
+hs32_fetch.f_pc1[31:0]
+hs32_fetch.f_state[3:0]
+@200
+-
+@420
+smt_step
+[pattern_trace] 1
+[pattern_trace] 0

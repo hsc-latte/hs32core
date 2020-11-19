@@ -1,0 +1,18 @@
+[tasks]
+proof
+
+[options]
+proof: mode prove
+proof: depth 10
+
+expect pass
+
+[engines]
+proof: smtbmc yices
+
+[script]
+proof: read -formal hs32_mem.v
+proof: prep -top hs32_mem
+
+[files]
+cpu/hs32_mem.v

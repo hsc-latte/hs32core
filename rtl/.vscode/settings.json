@@ -1,0 +1,32 @@
+{
+    "psi-header.templates": [
+        {
+            "language": "verilog",
+            "template": [
+                "Copyright (c) <<year>> The HSC Core Authors",
+                "",
+                "This program is free software; you can redistribute it and/or modify",
+                "it under the terms of the GNU General Public License as published by",
+                "the Free Software Foundation, either version 3 of the License, or",
+                "any later version. See LICENSE or <http://www.gnu.org/licenses/>.",
+                "",
+                "@file   <<filename>>",
+                "@author <<author>> <<<authoremail>>>",
+                "@date   Created on <<filecreated('MMMM DD YYYY, h:mm A')>>",
+            ]
+        }
+    ],
+    "psi-header.config": {
+        "forceToTop": true
+    },
+    "psi-header.lang-config": [
+        {
+            "language": "verilog",
+            "begin": "/**",
+            "prefix": " * ",
+            "end": " */",
+            "blankLinesAfter": 1,
+            "forceToTop": true
+        }
+    ]
+}

@@ -4,13 +4,13 @@ cover
 
 [options]
 proof: mode prove
-proof: depth 25
+proof: depth 15
 cover: mode cover
-cover: depth 35
-expect fail
+cover: depth 20
+expect pass
 
 [engines]
-smtbmc boolector
+smtbmc yices
 
 [script]
 read -formal bram_ctl.v

@@ -1,7 +1,7 @@
 `ifdef SIM
 `include "frontend/sram.v"
 `timescale 1ns / 100ps
-module TB_EXT_SRAM;
+module tb_sram;
 
   reg clk;
   reg valid;          // Valid

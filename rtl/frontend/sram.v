@@ -1,5 +1,5 @@
 module EXT_SRAM (
-    input clk,
+    input clk, input reset,
 
     // Request interface
     output  reg  done,
@@ -26,7 +26,7 @@ module EXT_SRAM (
     always @(posedge clk) case(fsm)
         // T1
         3'b000: begin
-            fsm     <= { 2'b0, valid };
+            fsm     <= { 2'b0, valid && !reset };
             dout    <= addri[16:1];
             isout   <= valid;
             oe      <= 0;
@@ -34,14 +34,14 @@ module EXT_SRAM (
         end
         // T2
         3'b001: begin
-            fsm     <= 3'b010;
+            fsm     <= reset ? 0 : 3'b010;
             // BLE = 0 (active low) for now
             dout    <= { 1'b0, addri[31:17] };
             we      <= rw;
         end
         // TW (wait 1 cycle)
         3'b010: begin
-            fsm     <= 3'b100;
+            fsm     <= reset ? 0 : 3'b100;
             // I/O output mode only in write mode
             isout   <= rw;
             dout    <= rw ? dtw : 16'b0;
@@ -53,7 +53,7 @@ module EXT_SRAM (
         // T3 (wait for oe_negedge)
         3'b100: begin
             fsm     <= 3'b000;
-            done    <= 1;
+            done    <= !reset;
             we      <= 0;
         end
         // So Anthony doesn't complain

@@ -11,10 +11,10 @@ module soc_bram_ctl (
     input   wire[31:0] dwrite,
     input   wire rw,
     input   wire valid,
-    output  reg  done
+    output  reg  ready
 );
     parameter addr_width = 8;
-    initial done = 0;
+    initial ready = 0;
 
     // 4 addresses for each bram
     // Selects between current dword and next dword
@@ -39,9 +39,9 @@ module soc_bram_ctl (
     // dbuf will always be in the form of [0123]
     // So, an address ending in 11 should be [3012]
     //
-    wire[31:0] dread_wire;
+    wire[31:0] dout;
     wire[31:0] dbuf, wbuf;
-    assign dread =
+    assign dout =
         (addr[1:0] == 2'b00) ? { dbuf[31:0] } :
         (addr[1:0] == 2'b01) ? { dbuf[23:0], dbuf[31:24] } :
         (addr[1:0] == 2'b10) ? { dbuf[15:0], dbuf[31:16] } :
@@ -62,12 +62,12 @@ module soc_bram_ctl (
             if(valid) begin
                 state <= 1;
             end
-            done <= 0;
+            ready <= 1;
+            dread <= dout;
         end
-        1: state <= 2;
-        2: begin
+        1: begin
             state <= 0;
-            done <= 1;
+            ready <= 0;
         end
     endcase
 
@@ -76,32 +76,30 @@ module soc_bram_ctl (
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram0(
-        .clk(clk), .we(we), 
+        .clk(clk), .we(we),
         .addr(a3), .din(wbuf[7:0]), .dout(dbuf[7:0])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram1(
-        .clk(clk), .we(we), 
+        .clk(clk), .we(we),
         .addr(a2), .din(wbuf[15:8]), .dout(dbuf[15:8])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram2(
-        .clk(clk), .we(we), 
+        .clk(clk), .we(we),
         .addr(a1), .din(wbuf[23:16]), .dout(dbuf[23:16])
     );
     soc_bram #(
         .addr_width(addr_width-2),
         .data_width(8)
     ) ice40_bram3(
-        .clk(clk), .we(we), 
+        .clk(clk), .we(we),
         .addr(a0), .din(wbuf[31:24]), .dout(dbuf[31:24])
     );
-
-    /** FORMAL METHODS **/
 
 `ifdef FORMAL
     // $past gaurd
@@ -118,68 +116,90 @@ module soc_bram_ctl (
     // 2. Formal bus interface contract
     always @(posedge clk)
     if(f_past_valid)
-        if(!$fell(done))
+        if(!$rose(ready))
             assume($stable(addr) && $stable(dwrite) && $stable(rw));
 
-    // 3. Cover checks if done resets
+    // 3. Cover checks if ready resets
     always @(posedge clk)
     if(f_past_valid)
-        cover($fell(done));
+        cover($fell(ready));
 
     // 4. Formal contract
-    // -- if write bytes [1234] to a (BE)
+    // -- if write bytes [1234][5678] to a (BE)
     // -> then read a   == [1234]
-    // -> then read a+1 == [234?]
-    // -> then read a+2 == [34??]
-    // -> then read a+3 == [4???]
+    // -> then read a+1 == [2345]
+    // -> then read a+2 == [3456]
+    // -> then read a+3 == [4567]
     (* anyconst *) reg[addr_width-1:0] f_addr;
-    (* anyconst *) reg[31:0] f_data;
-    reg[2:0] f_state;
+    (* anyconst *) reg[31:0] f_data1;
+    (* anyconst *) reg[31:0] f_data2;
+    reg[5:0] f_state;
     initial f_state = 0;
     always @(posedge clk)
     case(f_state)
-        // 1. Write to address
-        0: if(rw && f_addr == addr && f_data == dwrite)
-            f_state <= 1;
+        // 1. Write to address (conscutive bytes)
+        0: if(rw && f_addr == addr+0 && f_data1 == dwrite)
+            f_state <= 1;        
+        1: if(ready) begin
+            if(rw && f_addr+4 == addr && f_data2 == dwrite)
+                f_state <= 2;
+            else
+                f_state <= 0;
+        end
         // 2. Read from same address
-        1: if(done)
-            f_state <= !rw && f_addr == addr ? 2 : 0;
+        2: if(ready) begin
+            if(!rw && f_addr+0 == addr)
+                f_state <= 3;
+            else
+                f_state <= 0;
+        end
         // 3. Read from a+1
-        2: if(done)
-            f_state <= !rw && f_addr+1 == addr ? 3 : 0;
+        3: if(ready) begin
+            if(!rw && f_addr+1 == addr)
+                f_state <= 4;
+            else
+                f_state <= 0;
+        end
         // 4. Read from a+2
-        3: if(done)
-            f_state <= !rw && f_addr+2 == addr ? 4 : 0;
+        4: if(ready) begin
+            if(!rw && f_addr+2 == addr)
+                f_state <= 5;
+            else
+                f_state <= 0;
+        end
         // 5. Read from a+3
-        4: if(done)
-            f_state <= !rw && f_addr+3 == addr ? 5 : 0;
-        // Good job!
-        5: if(done) f_state <= 6;
-        6: f_state <= 0;
+        5: if(ready) begin
+            if(!rw && f_addr+3 == addr)
+                f_state <= 6;
+            else
+                f_state <= 0;
+        end
+        // Finished
+        6: if(ready) f_state <= 0;
     endcase
 
     // 2. Check if we read the same data back
     always @(posedge clk)
-    if(f_state == 2 && done) begin
-        assert(f_data == dread);
+    if(f_state == 3 && ready) begin
+        assert(dread == f_data1);
     end
 
-    // 3. a+1 (check byte addressing)
+    // 3. a+1 = 2345
     always @(posedge clk)
-    if(f_state == 3 && done) begin
-        assert(dread[31:8] == f_data[23:0]);
+    if(f_state == 4 && ready) begin
+        assert(dread == { f_data1[23:0], f_data2[31:24] });
     end
 
-    // 4. a+2
+    // 4. a+2 = 3456
     always @(posedge clk)
-    if(f_state == 4 && done) begin
-        assert(dread[31:16] == f_data[15:0]);
+    if(f_state == 5 && ready) begin
+        assert(dread == { f_data1[15:0], f_data2[31:16] });
     end
 
-    // 5. a+3
+    // 5. a+3 = 4567
     always @(posedge clk)
-    if(f_state == 5 && done) begin
-        assert(dread[31:24] == f_data[7:0]);
+    if(f_state == 6 && ready) begin
+        assert(dread == { f_data1[7:0], f_data2[31:8] });
     end
 `endif
 endmodule
