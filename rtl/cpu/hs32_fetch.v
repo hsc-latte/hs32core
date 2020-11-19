@@ -93,9 +93,9 @@ module hs32_fetch (
         f_past_valid <= 1;
     
     // 0. Assume we never flush
-`ifdef NOFLUSH
-    always @(*) assume(!flush);
-`endif
+    `ifdef NOFLUSH
+        always @(*) assume(!flush);
+    `endif
 
     // 0.1 Assume every reqm will have a rdym
     always @(posedge clk)
@@ -135,7 +135,7 @@ module hs32_fetch (
     // -- Instructions must leave the prefetch in the order they entered
     // -> Then i1 at t1, i2 at t2 must leave i1 at tn and i2 at tn+x with
     //    no other instructions leaving in between.
-`ifdef NOFLUSH
+    // -- If we flush, we must bail and restart
     reg[3:0] f_state;
     initial f_state = 0;
     (* anyconst *) reg[31:0] f_addr;
@@ -145,13 +145,15 @@ module hs32_fetch (
     reg[PREFETCH_SIZE:0] f_wp1, f_wp2, f_wp1_correct;
     always @(posedge clk)
     case(f_state)
-        0: if(rdym && reqm && !reqd && dtr == f_instd1 && addr == f_addr) begin
+        0: if(flush) begin
+            f_state <= 0;
+        end else if(rdym && reqm && !reqd && dtr == f_instd1 && addr == f_addr) begin
             f_state <= 1;
             f_pc1 <= addr+4;
             f_pc_next <= addr+4*((1<<PREFETCH_SIZE)-1);
             f_wp1 <= wp;
         end
-        1: if(reqd) begin
+        1: if(reqd || flush) begin
             f_state <= 0;
         end else begin
             if(rdym && reqm && dtr == f_instd2 && addr == f_pc1) begin
@@ -161,19 +163,22 @@ module hs32_fetch (
                 f_state <= 0;
             end
         end
-        2: if(rdyd && reqd && rp == f_wp1) begin
+        2: if(flush) begin
+            f_state <= 0;
+        end else if(rdyd && reqd && rp == f_wp1) begin
             f_state <= 3;
             f_wp1_correct <= f_wp1+1;
             assert(instd == f_instd1);
         end
-        3: if(rdyd && reqd) begin
+        3: if(flush) begin
+            f_state <= 0;
+        end else if(rdyd && reqd) begin
             f_state <= 0;
             assert(instd == f_instd2);
             assert(rp == f_wp2);
             assert(f_wp2 == f_wp1_correct);
         end
     endcase
-`endif
 
     // 6. Cover conditions
     // - Ensure reset always is flushed
@@ -189,5 +194,5 @@ module hs32_fetch (
         if(flush)
             assert property(s_eventually $fell(reset));
     end
-`endif
+    `endif
 endmodule

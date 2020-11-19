@@ -1,7 +1,6 @@
 [tasks]
 cover
 proof
-proof_flush
 
 [options]
 proof: mode prove
@@ -10,25 +9,15 @@ proof: depth 30
 cover: mode cover
 cover: depth 20
 
-proof_flush: mode prove
-proof_flush: depth 30
-
 expect pass
 
 [engines]
 proof: abc pdr
 cover: smtbmc yices
-proof_flush: abc pdr
 
 [script]
-proof: read -formal -DNOFLUSH hs32_fetch.v
-proof: prep -top hs32_fetch
-
-cover: read -formal hs32_fetch.v
-cover: prep -top hs32_fetch
-
-proof_flush: read -formal hs32_fetch.v
-proof_flush: prep -top hs32_fetch
+read -formal hs32_fetch.v
+prep -top hs32_fetch
 
 [files]
 cpu/hs32_fetch.v
