@@ -31,9 +31,9 @@ R-Type  oooo_oooo_dddd_mmmm nnnn_ssss_sDDb_bxxx
 J-Type  oooo_oooo_dddd_iiii iiii_iiii_iiii_iiii
 
 * Bank field is only applicable to Rm variants of the R-Type
-  MOV instructions varient 001 and 010, if nothing defined
+  MOV instructions varient 001 and 010, and will specify the
+  bank from which Rn/Rm will come from. If nothing defined
   CPU default to Rn variant with code 000 and ignore the field
-  and will specify the bank from which Rn/Rm will come from
 
 1.2 Table for Shift Direction
 
@@ -75,17 +75,17 @@ is of the current mode of execution.
 
 ALU     Name    Operation
 
-...
+0000 LATCH   NOP
 0001 MOV     obus   <- ibus1
-0010 ADD     Rd     <- ibus1 + ibus2, set NZCV
-0011 SUB     Rd     <- ibus1 - ibus2, set NZCV
-0100 AND     Rd     <- ibus1 & ibus2
-0101 OR      Rd     <- ibus1 | ibus2
-0110 XOR     Rd     <- ibus1 ^ ibus2
-0111 NOT     Rd     <- ibus1 ~ ibus2
+0010 ADD     obus   <- ibus1 + ibus2, set NZCV
+0011 SUB     obus   <- ibus1 - ibus2, set NZCV
+0100 AND     obus   <- ibus1 & ibus2
+0101 OR      obus   <- ibus1 | ibus2
+0110 XOR     obus   <- ibus1 ^ ibus2
+0111 NOT     obus   <- ibus1 ~ ibus2
 ...
-1010 ADC     Rd     <- ibus1 + ibus2 + C, set NZCV
-1011 SBC     Rd     <- ibus1 - ibus2 - C, set NZCV
+1010 ADC     obus   <- ibus1 + ibus2 + C, set NZCV
+1011 SBC     obus   <- ibus1 - ibus2 - C, set NZCV
 ...
 
 ================================================================================
@@ -96,6 +96,14 @@ dd      Destination (write to)
             01      Write ALU output to Rd
             10      Write DTR to Rd and ALU to MAR
             11      Write ALU output to MAR
+
+r      Reverse Bus
+             0      No Reverse          Rd  <- Rm - sh(Rn)
+             1      Reverse Operand     Rd  <- sh(Rn) - Rm
+
+* Applicable to SUB variants only, used for indicating
+  operand reversal
+
 sss    Input bus values
                     T1  T2   DTW (Clock cycle/Input bus)
             000     Ignored
@@ -105,6 +113,7 @@ sss    Input bus values
             100         Rn
             101     Rm  imm  Rd
             110     Rm  Rn   Rd
+
 bbbb    Branch conditionals
                     Alias   Flag        Description
             0000    (none)  (none)      Ignored
@@ -123,7 +132,14 @@ bbbb    Branch conditionals
             1101    gt      !Z & !(N^V) Signed greater than
             1110    le       Z | (N^V)  Signed less than or equal
             1111    (none)  (none)      Execute regardless
-i       Request interrupt
+
+i       Bank Register Indicator
+             0      Rm_b
+             1      Rd_b
+
+* Applicable to MOV Rm variants only
+  Used to indicate bank register
+
 f       Modify ALU Flags
 l       Link PC when branching
 DD      Shift mode
@@ -145,56 +161,56 @@ The last column specifies the control signals required for internal operation.
 
 * All binary values on the table are specified left to right, MSB to LSB
 
-Name                            Type    Family  Var     dd_sss_bbbb_ifl_DDB
+Name                            Type    Family  Var     dd_r_sss_bbbb_ifl_DDB
 
-LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_010_0000_000_000 (alu = ADD)
-LDR     Rd <- [Rm]              R-Type  000 10  000     10_010_0000_000_DD0 (alu = ADD, imm = 0)
-LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_011_0000_000_DD0 (alu = ADD)
+LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_0_010_0000_000_000 (alu = ADD)
+LDR     Rd <- [Rm]              R-Type  000 10  000     10_0_010_0000_000_000 (alu = ADD, imm = 0)
+LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_0_011_0000_000_DD0 (alu = ADD)
 
-STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_101_0000_000_000 (alu = ADD)
-STR     [Rm] <- Rd              R-Type  001 10  000     11_101_0000_000_DD0 (alu = ADD, imm = 0)
-STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_0000_000_DD0 (alu = ADD)
+STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_0_101_0000_000_000 (alu = ADD)
+STR     [Rm] <- Rd              R-Type  001 10  000     11_0_101_0000_000_000 (alu = ADD, imm = 0)
+STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_0_110_0000_000_DD0 (alu = ADD)
 
-MOV     Rd <- imm               I-Type  001 00  100     01_001_0000_000_000
-MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_000_DD0
-MOV     Rd <- Rm_b              R-Type  001 00  001     01_010_0000_000_DD1 (imm = 0)
-MOV     Rd_b <- Rm              R-Type  001 00  010     01_010_0000_000_DD1 (imm = 0)
+MOV     Rd <- imm               I-Type  001 00  100     01_0_001_0000_000_000
+MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_0_100_0000_000_DD0
+MOV     Rd <- Rm_b              R-Type  001 00  001     01_0_010_0000_000_001 (imm = 0)
+MOV     Rd_b <- Rm              R-Type  001 00  010     01_0_010_0000_100_001 (imm = 0)
 
-ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_0000_010_DD0
-ADDC    Rd <- Rm + sh(Rn) + C   R-Type  010 00  001     01_011_0000_010_DD0
-SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_011_0000_010_DD0
-RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_011_0000_010_DD0
-SUBC    Rd <- Rm - sh(Rn) - C   R-Type  011 00  010     01_011_0000_010_DD0
-RSUBC   Rd <- sh(Rn) - Rm - C   R-Type  011 00  011     01_011_0000_010_DD0
+ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_0_011_0000_010_DD0
+ADDC    Rd <- Rm + sh(Rn) + C   R-Type  010 00  001     01_0_011_0000_010_DD0
+SUB     Rd <- Rm - sh(Rn)       R-Type  011 00  000     01_0_011_0000_010_DD0
+RSUB    Rd <- sh(Rn) - Rm       R-Type  011 00  001     01_1_011_0000_010_DD0
+SUBC    Rd <- Rm - sh(Rn) - C   R-Type  011 00  010     01_0_011_0000_010_DD0
+RSUBC   Rd <- sh(Rn) - Rm - C   R-Type  011 00  011     01_1_011_0000_010_DD0
 
-ADD     Rd <- Rm + imm          I-Type  010 00  100     01_010_0000_010_000
-ADDC    Rd <- Rm + imm + C      I-Type  010 00  101     01_010_0000_010_000
-SUB     Rd <- Rm - imm          I-Type  011 00  100     01_010_0000_010_000
-RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_010_0000_010_000
-SUBC    Rd <- Rm - imm - C      I-Type  011 00  110     01_010_0000_010_000
-RSUBC   Rd <- imm - Rm - C      I-Type  011 00  111     01_010_0000_010_000
+ADD     Rd <- Rm + imm          I-Type  010 00  100     01_0_010_0000_010_000
+ADDC    Rd <- Rm + imm + C      I-Type  010 00  101     01_0_010_0000_010_000
+SUB     Rd <- Rm - imm          I-Type  011 00  100     01_0_010_0000_010_000
+RSUB    Rd <- imm - Rm          I-Type  011 00  101     01_1_010_0000_010_000
+SUBC    Rd <- Rm - imm - C      I-Type  011 00  110     01_0_010_0000_010_000
+RSUBC   Rd <- imm - Rm - C      I-Type  011 00  111     01_1_010_0000_010_000
 
-AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_011_0000_010_DD0
-BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_011_0000_010_DD0
-OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_011_0000_010_DD0
-XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_011_0000_010_DD0
+AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_0_011_0000_010_DD0
+BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_0_011_0000_010_DD0
+OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_0_011_0000_010_DD0
+XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_0_011_0000_010_DD0
 
 * NOT is the same as BIC Rd, ~0, Rn
 
-AND     Rd <- Rm & imm          I-Type  100 00  100     01_010_0000_010_000
-BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_010_0000_010_000
-OR      Rd <- Rm | imm          I-Type  101 00  100     01_010_0000_010_000
-XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_010_0000_010_000
+AND     Rd <- Rm & imm          I-Type  100 00  100     01_0_010_0000_010_000
+BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_0_010_0000_010_000
+OR      Rd <- Rm | imm          I-Type  101 00  100     01_0_010_0000_010_000
+XOR     Rd <- Rm ^ imm          I-Type  110 00  100     01_0_010_0000_010_000
 
-CMP     Rm - Rn                 R-Type  011 01  000     00_011_0000_010_DD0
-CMP     Rm - imm                I-Type  011 01  100     00_010_0000_010_000
-TST     Rm & Rn                 R-Type  100 01  000     00_011_0000_010_DD0
-TST     Rm & imm                I-Type  100 01  100     00_010_0000_010_000
+CMP     Rm - sh(Rn)             R-Type  011 01  000     00_0_011_0000_010_DD0
+CMP     Rm - imm                I-Type  011 01  100     00_0_010_0000_010_000
+TST     Rm & sh(Rn)             R-Type  100 01  000     00_0_011_0000_010_DD0
+TST     Rm & imm                I-Type  100 01  100     00_0_010_0000_010_000
 
-B<c>    PC + Offset             J-Type  010 1c  ccc     00_000_cccc_000_000
-B<c>L   PC + Offset             J-Type  011 1c  ccc     00_000_cccc_001_000
+B<c>    PC + Offset             J-Type  010 1c  ccc     00_0_000_cccc_000_000
+B<c>L   PC + Offset             J-Type  011 1c  ccc     00_0_000_cccc_001_000
 
-INT     imm8                    J-Type  100 10  000     00_000_0000_100_000
+INT     imm8                    J-Type  100 10  000     00_0_000_0000_100_000
 
 ================================================================================
 5. Execution Unit Overview
@@ -303,4 +319,3 @@ REGINP      ->  REGFILE (write port)
         next <TB2>
     else
         next <IDLE>
-
