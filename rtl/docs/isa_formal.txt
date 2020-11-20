@@ -76,17 +76,20 @@ is of the current mode of execution.
 ALU     Name    Operation
 
 0000 LATCH   NOP
-0001 MOV     obus   <- ibus1
-0010 ADD     obus   <- ibus1 + ibus2, set NZCV
-0011 SUB     obus   <- ibus1 - ibus2, set NZCV
-0100 AND     obus   <- ibus1 & ibus2
-0101 OR      obus   <- ibus1 | ibus2
-0110 XOR     obus   <- ibus1 ^ ibus2
-0111 NOT     obus   <- ibus1 ~ ibus2
+0001 MOV     obus   <- ibus1, set NZCV
+0010 ADD     obus   <- ibus1 + ibus2, store NZCV
+0011 SUB     obus   <- ibus1 - ibus2, store NZCV
+0100 AND     obus   <- ibus1 & ibus2, set NZCV
+0101 OR      obus   <- ibus1 | ibus2, set NZCV
+0110 XOR     obus   <- ibus1 ^ ibus2, set NZCV
+0111 NOT     obus   <- ibus1 ~ ibus2, set NZCV
 ...
-1010 ADC     obus   <- ibus1 + ibus2 + C, set NZCV
-1011 SBC     obus   <- ibus1 - ibus2 - C, set NZCV
+1010 ADC     obus   <- ibus1 + ibus2 + C, store NZCV
+1011 SBC     obus   <- ibus1 - ibus2 - C, store NZCV
 ...
+
+* ALL ALU Operations will set the NZCV flags but only
+  those marked with store will actually store them
 
 ================================================================================
 3. Internal Control Signals Specification
