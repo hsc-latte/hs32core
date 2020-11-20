@@ -7,7 +7,7 @@
 `ifndef HS32_ALUOPS
 `define HS32_ALUOPS
 
-
+`define HS32A_NOP       4'b0000
 `define HS32A_MOV       4'b0001
 `define HS32A_ADD       4'b0010
 `define HS32A_SUB       4'b0011
