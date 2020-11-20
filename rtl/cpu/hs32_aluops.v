@@ -7,13 +7,17 @@
 `ifndef HS32_ALUOPS
 `define HS32_ALUOPS
 
-`define HS32_LATCH     3'b000
-`define HS32_MOV       3'b001
-`define HS32_ADD       3'b010
-`define HS32_SUB       3'b011
-`define HS32_AND       3'b100
-`define HS32_OR        3'b101
-`define HS32_XOR       3'b110
-`define HS32_NOT       3'b111
+
+`define HS32_MOV       4'b0001
+`define HS32_ADD       4'b0010
+`define HS32_SUB       4'b0011
+`define HS32_AND       4'b0100
+`define HS32_OR        4'b0101
+`define HS32_XOR       4'b0110
+`define HS32_NOT       4'b0111
+
+
+`define HS32_ADC       4'b1010
+`define HS32_SBC       4'b1011
 
 `endif
