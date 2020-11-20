@@ -30,7 +30,9 @@ I-Type  oooo_oooo_dddd_mmmm iiii_iiii_iiii_iiii
 R-Type  oooo_oooo_dddd_mmmm nnnn_ssss_sDDb_bxxx
 J-Type  oooo_oooo_dddd_iiii iiii_iiii_iiii_iiii
 
-* This field is only applicable to R-type MOV instructions
+* Bank field is only applicable to Rm variants of the R-Type
+  MOV instructions varient 001 and 010, if nothing defined
+  CPU default to Rn variant with code 000 and ignore the field
   and will specify the bank from which Rn/Rm will come from
 
 1.2 Table for Shift Direction
@@ -76,14 +78,14 @@ ALU     Name    Operation
 ...
 0001 MOV     obus   <- ibus1
 0010 ADD     Rd     <- ibus1 + ibus2, set NZCV
-0011 SUB     Rd     <- Rm - sh(Rn)/imm, set NZCV
-0100 AND     Rd     <- Rm & sh(Rn)/imm
-0101 OR      Rd     <- Rm | sh(Rn)/imm
-0110 XOR     Rd     <- Rm ^ sh(Rn)/imm
-0111 NOT     Rd     <- Rm ~ sh(Rn)/imm
+0011 SUB     Rd     <- ibus1 - ibus2, set NZCV
+0100 AND     Rd     <- ibus1 & ibus2
+0101 OR      Rd     <- ibus1 | ibus2
+0110 XOR     Rd     <- ibus1 ^ ibus2
+0111 NOT     Rd     <- ibus1 ~ ibus2
 ...
-1010 ADC     Rd     <- Rm + sh(Rn)/imm + C, set NZCV
-1011 SBC     Rd     <- Rm - sh(Rn)/imm - C, set NZCV
+1010 ADC     Rd     <- ibus1 + ibus2 + C, set NZCV
+1011 SBC     Rd     <- ibus1 - ibus2 - C, set NZCV
 ...
 
 ================================================================================
@@ -154,8 +156,9 @@ STR     [Rm] <- Rd              R-Type  001 10  000     11_101_0000_000_DD0 (alu
 STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_110_0000_000_DD0 (alu = ADD)
 
 MOV     Rd <- imm               I-Type  001 00  100     01_001_0000_000_000
-MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_000_DD1
-MOV     Rd <- Rm                R-Type  001 00  001     01_010_0000_000_DD1 (imm = 0)
+MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_100_0000_000_DD0
+MOV     Rd <- Rm_b              R-Type  001 00  001     01_010_0000_000_DD1 (imm = 0)
+MOV     Rd_b <- Rm              R-Type  001 00  010     01_010_0000_000_DD1 (imm = 0)
 
 ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_011_0000_010_DD0
 ADDC    Rd <- Rm + sh(Rn) + C   R-Type  010 00  001     01_011_0000_010_DD0
