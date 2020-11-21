@@ -92,12 +92,7 @@ module hs32_fetch (
     always @(posedge clk)
         f_past_valid <= 1;
     
-    // 0. Assume we never flush
-    `ifdef NOFLUSH
-        always @(*) assume(!flush);
-    `endif
-
-    // 0.1 Assume every reqm will have a rdym
+    // 0. Assume every reqm will have a rdym
     always @(posedge clk)
     if(reqm)
         assume property (s_eventually rdym);
@@ -190,9 +185,14 @@ module hs32_fetch (
     end
 
     // 7. Reset assertions
+    // - Assume when we flush, we will eventually stop flushing
+    // - Check if reset will fall then
+    always @(posedge clk)
+    if(flush)
+        assume property (s_eventually !flush);
     always @(posedge clk) begin
         if(flush)
-            assert property(s_eventually $fell(reset));
+            assert property(s_eventually !reset_latch || $fell(reset));
     end
-    `endif
+`endif
 endmodule
