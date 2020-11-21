@@ -322,3 +322,14 @@ REGINP      ->  REGFILE (write port)
         next <TB2>
     else
         next <IDLE>
+
+5.4 Special Purpose Registers
+
+5.4.1 Contents of MCR
+
+[31:16] 
+[2:1]   CPU Mode bits
+        - 00 supervisor
+        - 01 interrupt
+        - 1x user
+[0]     INT Interrupt enable

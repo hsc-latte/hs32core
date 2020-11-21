@@ -18,7 +18,7 @@ module hs32_reg (
     parameter addr_width = 4;
     parameter data_width = 32;
 
-    reg[data_width-1:0] regs[(1<<addr_width)-1:0];
+    reg[data_width-1:0] regs[15:0];
     integer i;
     initial begin
         for(i = 0; i < (1<<addr_width); i++)

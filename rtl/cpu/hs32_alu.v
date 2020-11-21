@@ -1,26 +1,23 @@
-/**
- * ALU Module
- */
+`include "cpu/hs32_aluops.v"
 
 module hs32_alu (
-    // ALU Operators
-    input wire [2:0] aluop,          // ALU Operation
-    input wire [15:0] imm16,         // Immidiate 16 bits
-    input wire [15:0] imm5,          // Immidiate 5 bits
-    input wire [15:0] imm24,         // Immidiate 24 bits
-    input wire [3:0] rm,
-    input wire [3:0] rn,
-    output reg [3:0] rd,
-
-    // Register File
-    input enable_n,                  // Active Low Enable
-    input wire [3:0] rsrc,           // Source Register
-    input wire [3:0] rdst,           // Destination Register
-    input rw,                        // Read or Write
-    input wire [31:0] din,           // Write Data
-    output reg [31:0] dout,          // Read Data
+    input  wire [31:0] a_i,
+    input  wire [31:0] b_i,
+    input  wire [3:0] op_i,
+    output wire [31:0] r_o,
+    input  wire [3:0] fl_i, // nzcv in
+    output wire [3:0] fl_o  // nzcv out
 );
-
-
-
+    // Assign output
+    wire carry;
+    assign { carry, r_o } =
+        (op_i == `HS32A_ADD) ? a_i + b_i :
+        (op_i == `HS32A_SUB) ? { 1'b0, a_i } - { 1'b0, b_i } :
+        { fl_i[1], a_i };
+    
+    // Compute output flags
+    assign fl_o[3] = r_o[31] == 1 && (op_i == `HS32A_SUB);
+    assign fl_o[2] = ~(|r_o);
+    assign fl_o[1] = carry;
+    assign fl_o[0] = { carry, r_o[31] } == 2'b01; // TODO: Calculate carry
 endmodule

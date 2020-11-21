@@ -1,106 +1,279 @@
 /**
-
-
-
-*/
+ * Copyright (c) 2020 The HSC Core Authors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @file   hs32_exec.v
+ * @author Kevin Dai <kevindai02@outlook.com>
+ * @date   Created on October 24 2020, 10:33 PM
+ */
 
 `include "./cpu/hs32_reg.v"
-
-// Control signals
-`define CTL_D   12:11
-`define CTL_S   10:8
-`define CTL_M   7:6
-`define CTL_B   5:2
-`define CTL_I   1
-`define CTL_F   0
-
-// FSM States
-`define IDLE    0
-`define TB1     1
-`define TB2     2
-`define TR1     3
-`define TR2     4
-`define TW1     5
-`define TM1     6
-`define TM2     7
-`define TW2     8
+`include "./cpu/hs32_alu.v"
+`include "./cpu/hs32_xuconst.v"
 
 module hs32_exec (
-    input clk,                  // 12 MHz Clock
-    input reset,                // Active Low Reset
-    input req,                  // Request line
+    input  wire clk,            // 12 MHz Clock
+    input  wire reset,          // Active Low Reset
+    input  wire req,            // Request line
+    output wire rdy,            // Output ready
 
     // Fetch
     output  reg [31:0] newpc,   // New program
     output  reg flush,          // Flush
 
     // Decode
-    input wire  [2:0]  aluop,   // ALU Operation
+    input wire  [3:0]  aluop,   // ALU Operation
     input wire  [4:0]  shift,   // 5-bit shift
     input wire  [15:0] imm,     // Immediate value
     input wire  [3:0]  rd,      // Register Destination Rd
     input wire  [3:0]  rm,      // Register Source Rm
     input wire  [3:0]  rn,      // Register Operand Rn
     input wire  [15:0] ctlsig,  // Control signals
+    input wire  [1:0]  bank,    // Input bank
 
     // Memory arbiter interface
     output  reg  [31:0] addr,   // Address
     input   wire [31:0] dtrm,   // Data input
     output  reg  reqm,          // Valid address
-    input   wire ackm,          // Valid data
+    input   wire rdym,          // Valid data
+    output  reg  rw_mem,
 
     // Interrupts
     input   wire intrq,         // Interrupt signal
     input   wire [31:0] addi    // Interrupt address
 );
+    //===============================//
+    // Initial values
+    //===============================//
+    initial reqm = 0;
+    initial rw_mem = 0;
+    initial flush = 0;
+    
+    initial mar = 0;
+    initial dtw = 0;
+    initial dtr = 0;
+    initial pc_u = 0;
+    initial pc_s = 0;
+    initial lr_i = 0;
+    initial sp_i = 0;
+    initial mcr_s = 0;
+    initial reg_we = 0;
+    initial state = 0;
+
+    // Three internal busses
     wire [31:0] ibus1, ibus2, obus;
-    reg  [31:0] mar, dtw, dtr, pc, ivt, mcr;
+    // Memory address and data registers
+    reg  [31:0] mar, dtw, dtr;
+    
+    //===============================//
+    // Banked registers control logic
+    //===============================//
 
-    wire reg_we;
-    wire [31:0] regouta, regoutb, reginp;
-    wire [3:0] regadra, regadrb, regwadr;
+    // Special banked registers
+    reg  [31:0] pc_u, pc_s, lr_i, sp_i, mcr_s;
+    // Register file control signals
+    wire [31:0] reginp;
+    wire [3:0]  regwadr, regadra, regadrb;
+    // User bank
+    wire reg_we_u;
+    wire [31:0] regouta_u, regoutb_u;
+    // Supervisor bank
+    wire reg_we_s;
+    wire [31:0] regouta_s, regoutb_s;
+    // General access switching
+    reg reg_we;
+    wire[31:0] regouta, regoutb;
+    assign reg_we_u = `IS_USR || `BANK_U ? reg_we : 0;
+    assign reg_we_s = !(`IS_USR || `BANK_U) ? reg_we : 0;
+    assign regouta =
+        `IS_USR || `BANK_U ? regouta_u :
+        (`IS_INT || `BANK_I) && regadra == 4'b1110 ? lr_i : regouta_s;
+    assign regoutb =
+        `IS_USR || `BANK_U ? regoutb_u :
+        (`IS_INT || `BANK_I) && regadra == 4'b1110 ? lr_i : regouta_s;
+    // Register select
+    assign regadra =
+        state == `TR1 ?
+        (`CTL_s == `CTL_s_mid || `CTL_s == `CTL_s_mnd ?
+            rd : rm)
+        : rm;
+    assign regadrb = rn;
 
-    reg[2:0] state;
+    //===============================//
+    // Bus assignments
+    //===============================//
 
+    assign ibus1 = regadra == 4'b1111 ? pc_u : regouta;
+    assign ibus2 =
+        (`CTL_s == `CTL_s_xix ||
+         `CTL_s == `CTL_s_mix ||
+         `CTL_s == `CTL_s_mid) ? { 16'b0, imm } : regoutb;
+    assign obus = state == `TW2 ? dtr : aluout;
+    
+    //===============================//
+    // FSM
+    //===============================//
+
+    // State transitions only
+    reg[3:0] state;
     always @(posedge clk) case(state)
-        `IDLE:
-        if(req) begin
-            state <= `TR1;
+        `IDLE: begin
+            state <= req ? (`CTL_b == 0) ? `TB1 : `TR1 : `IDLE;
         end
-        
-        `TR1:
-        if(ctlsig[`CTL_S] == 3'b110 || ctlsig[`CTL_S] == 3'b111) begin
-            state <= `TR2;
-        end else begin
+        `TB1: begin
+            
+        end
+        `TB2: begin
+            state <= `IDLE;
+        end
+        `TR1: case(`CTL_s)
+            `CTL_s_mid, `CTL_s_mnd:
+                state <= `TR2;
+            default:
+                state <= `TW1;
+        endcase
+        `TR2: begin
             state <= `TW1;
         end
-
-        `TW1:
-        if(ctlsig[`CTL_D] == 2'b01) begin
+        `TW1: case(`CTL_d)
+            `CTL_d_none:
+                state <= `IDLE;
+            `CTL_d_rd: begin
+                state <= (rd == 4'b1111) ? `TB2 : `IDLE;
+            end
+            `CTL_d_dt_ma:
+                state <= `TM1;
+            `CTL_d_ma:
+                state <= `TM2;
+        endcase
+        `TM1: begin
+            if(reqm && rdym) begin
+                reqm <= 0;
+                state <= `TW2;
+            end else begin
+                reqm <= 1;
+                rw_mem <= 0;
+                state <= `TM1;
+            end
+        end
+        `TM2: begin
+            if(reqm && rdym) begin
+                reqm <= 0;
+                state <= `TW2;
+            end else begin
+                reqm <= 1;
+                rw_mem <= 1;
+                state <= `TM1;
+            end
+        end
+        `TW2: begin
             state <= `IDLE;
+        end
+        // ...
+    endcase
+
+    //===============================//
+    // State processes
+    //===============================//
+
+    // Write to Rd
+    always @(posedge clk) case(state)
+        `IDLE: begin
+            reg_we <= 0;
+        end
+        `TW1: case(`CTL_d)
+            `CTL_d_rd: case(rd)
+                default: reg_we <= 1;
+                4'b1100: if(`IS_SUP)
+                    mcr_s <= obus;
+                else
+                    reg_we <= 1;
+                4'b1101: if(`IS_INT || (!`IS_USR && `BANK_I))
+                    sp_i <= obus;
+                else 
+                    reg_we <= 1;
+                4'b1110: if(`IS_INT || (!`IS_USR && `BANK_I))
+                    lr_i <= obus;
+                else
+                    reg_we <= 1;
+                4'b1111: begin end           
+            endcase
+            default: begin end
+        endcase
+        `TW2: begin
+            reg_we <= 1;
         end
     endcase
 
-    assign ibus1 = regouta;
-    assign ibus2 =
-        ctlsig[`CTL_S] == 3'b001
-        || ctlsig[`CTL_S] == 3'b010
-        || ctlsig[`CTL_S] == 3'b101
-        ? { 16'b0, imm } : regoutb;
-    assign reginp = obus;
-    assign regadra =
-        state == `TR1 && (ctlsig[`CTL_S] == 3'b110 || ctlsig[`CTL_S] == 3'b111)
-        ? rd : rm;
-    assign regadrb = rn;
-    assign regwadr = rd;
-    assign reg_we = (state == `TW1 && ctlsig[`CTL_D] == 2'b01);
+    // Write to MAR
+    always @(posedge clk) case(state)
+        `TR2: dtw <= ibus1;
+        `TW1: case(`CTL_d)
+            `CTL_d_dt_ma, `CTL_d_ma:
+                mar <= obus;
+            default: begin end
+        endcase
+    endcase
 
-    hs32_reg regfile (
+    // Branch
+    always @(posedge clk) case(state)
+        `IDLE: begin
+            if(`IS_USR || `BANK_U)
+                pc_u <= pc_u+4;
+            else
+                pc_s <= pc_s+4;
+            flush <= 0;
+        end
+        `TB2: begin
+            newpc <= obus;
+            if(`IS_USR || `BANK_U)
+                pc_u <= obus;
+            else
+                pc_s <= obus;
+            flush <= 1;
+        end
+    endcase
+
+    //===============================//
+    // Register files
+    //===============================//
+
+    hs32_reg regfile_u (
         .clk(clk), .reset(reset),
-        .we(reg_we),
+        .we(reg_we_u),
         .wadr(regwadr), .din(reginp),
-        .dout1(regouta), .radr1(regadra),
-        .dout2(regoutb), .radr2(regadrb)
+        .dout1(regouta_u), .radr1(regadra),
+        .dout2(regoutb_u), .radr2(regadrb)
+    );
+
+    hs32_reg regfile_s (
+        .clk(clk), .reset(reset),
+        .we(reg_we_s),
+        .wadr(regwadr), .din(reginp),
+        .dout1(regouta_s), .radr1(regadra),
+        .dout2(regoutb_s), .radr2(regadrb)
+    );
+
+    //===============================//
+    // ALU
+    //===============================//
+
+    wire [31:0] aluout;
+    hs32_alu alu (
+        .a_i(ibus1), .b_i(ibus2),
+        .op_i(aluop), .r_o(aluout),
+        .fl_i(), .fl_o()
     );
 
 endmodule
