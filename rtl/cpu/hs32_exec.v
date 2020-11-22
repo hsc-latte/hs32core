@@ -18,6 +18,8 @@
  * @date   Created on October 24 2020, 10:33 PM
  */
 
+`default_nettype none
+
 `include "./cpu/hs32_reg.v"
 `include "./cpu/hs32_alu.v"
 `include "./cpu/hs32_xuconst.v"
@@ -54,25 +56,13 @@ module hs32_exec (
     input   wire intrq,         // Interrupt signal
     input   wire [31:0] addi    // Interrupt address
 );
-    //===============================//
-    // Initial values
-    //===============================//
-    initial reqm = 0;
-    initial rw_mem = 0;
-    initial flush = 0;
+    // Assign ready signal (only when IDLE)
     assign rdy = state == `IDLE;
 
-    initial mar = 0;
-    initial dtw = 0;
-    initial pc_u = 0;
-    initial pc_s = 0;
-    initial lr_i = 0;
-    initial sp_i = 0;
-    initial mcr_s = 0;
-    initial reg_we = 0;
-    initial state = 0;
+    //===============================//
+    // Busses
+    //===============================//
 
-    // Three internal busses
     wire [31:0] ibus1, ibus2, obus;
     // Memory address and data registers
     reg  [31:0] mar, dtw;
@@ -84,7 +74,7 @@ module hs32_exec (
     //===============================//
 
     // Special banked registers
-    reg  [31:0] pc_u, pc_s, lr_i, sp_i, mcr_s;
+    reg  [31:0] pc_u, pc_s, lr_i, sp_i, mcr_s, flags;
     // Register file control signals
     wire [3:0]  regadra, regadrb;
     // User bank
@@ -127,14 +117,23 @@ module hs32_exec (
     // FSM
     //===============================//
 
-    // State transitions only
+    // State transitions only (drive: state)
     reg[3:0] state;
-    always @(posedge clk) case(state)
-        `IDLE: begin
-            state <= req ? (`CTL_b == 0) ? `TR1 : `TB1 : `IDLE;
+    always @(posedge clk)
+    if(reset) begin
+        state <= 0;
+    end else case(state)
+        `IDLE: if(req) begin
+            state <=
+                // All states (except branch) start with `TR1
+                (`CTL_b == 0) ? `TR1 :
+                // Decide whether to branch or not
+                (flags[{ 1'b0, `CTL_b }] == 1'b1) ? `TB1 :
+                // No branch taken
+                `IDLE;
         end
         `TB1: begin
-            
+            state <= `TB2;
         end
         `TB2: begin
             state <= `IDLE;
@@ -165,27 +164,19 @@ module hs32_exec (
                 state <= `TM2;
         endcase
         `TM1: begin
-            if(reqm && rdym) begin
-                reqm <= 0;
+            if(reqm && rdym)
                 state <= `TW2;
-            end else begin
-                reqm <= 1;
-                rw_mem <= 0;
+            else
                 state <= `TM1;
-            end
         end
         `TM2: begin
-            if(reqm && rdym) begin
-                reqm <= 0;
+            if(reqm && rdym)
                 state <= `TW2;
-            end else begin
-                reqm <= 1;
-                rw_mem <= 1;
+            else
                 state <= `TM1;
-            end
         end
         `TW2: begin
-            state <= `IDLE;
+            state <= (rd == 4'b1111) ? `TB2 : `IDLE;
         end
     endcase
 
@@ -193,8 +184,14 @@ module hs32_exec (
     // State processes
     //===============================//
 
-    // Write to Rd
-    always @(posedge clk) case(state)
+    // Write to Rd (drive: reg_we, mcr_s, sp_i, lr_i)
+    always @(posedge clk)
+    if(reset) begin
+        lr_i <= 0;
+        sp_i <= 0;
+        mcr_s <= 0;
+        reg_we <= 0;
+    end else case(state)
         `IDLE: reg_we <= 0;
         // On TR1, then we haven't written to MAR yet if CTL_s is mid/mnd.
         //         so we must check for CTL_d and CTL_s
@@ -222,8 +219,12 @@ module hs32_exec (
         endcase
     endcase
 
-    // Write to MAR
-    always @(posedge clk) case(state)
+    // Write to MAR (drive: mar, dtw)
+    always @(posedge clk)
+    if(reset) begin
+        mar <= 0;
+        dtw <= 0;
+    end else case(state)
         `TR2: dtw <= ibus1;
         `TR1, `TW1: case(`CTL_d)
             `CTL_d_dt_ma, `CTL_d_ma:
@@ -232,24 +233,81 @@ module hs32_exec (
         endcase
     endcase
 
-    // Branch
-    always @(posedge clk) case(state)
-        `IDLE: begin
-            if(`IS_USR || `BANK_U)
-                pc_u <= pc_u+4;
-            else
-                pc_s <= pc_s+4;
-            flush <= 0;
+    // Memory requests (drive: reqm, rw_mem)
+    always @(posedge clk)
+    if(reset) begin
+        reqm <= 0;
+        rw_mem <= 0;
+    end else case(state)
+        // Read from memory
+        `TM1: begin
+            if(reqm && rdym) begin
+                reqm <= 0;
+            end else begin
+                reqm <= 1;
+                rw_mem <= 0;
+            end
         end
-        `TB2: begin
+        // Write to memory
+        `TM2: begin
+            if(reqm && rdym) begin
+                reqm <= 0;
+            end else begin
+                reqm <= 1;
+                rw_mem <= 1;
+            end
+        end
+    endcase
+
+    // Branch (drive: flush, pc_u, pc_s)
+    always @(posedge clk)
+    if(reset) begin
+        flush <= 0;
+        pc_u <= 0;
+        pc_s <= 0;
+    end else case(state)
+        `IDLE: begin
+            flush <= 0;
+            if(req) begin
+                // Increment PC before we change states
+                if(`IS_USR)
+                    pc_u <= pc_u+4;
+                else
+                    pc_s <= pc_s+4;
+            end
+        end
+        // Update PC since we take the branch
+        `TB1: begin
+            newpc <= { 16'b0, imm } + (`IS_USR ? pc_u : pc_s);
+            flush <= 1;
+            if(`IS_USR)
+                pc_u <= { 16'b0, imm } + pc_u;
+            else
+                pc_s <= { 16'b0, imm } + pc_s;
+        end
+        `TB2: begin end
+        // Update the PC from a Rd instruction (see "write to Rd")
+        `TW2, `TR1: if(
+            ((state == `TR1 && `CTL_s != `CTL_s_mid && `CTL_s != `CTL_s_mnd && `CTL_d == `CTL_d_rd) ||
+            (state == `TW2)) && rd == 4'b1111
+        ) begin
             newpc <= obus;
+            flush <= 1;
             if(`IS_USR || `BANK_U)
                 pc_u <= obus;
             else
                 pc_s <= obus;
-            flush <= 1;
         end
     endcase
+
+    // Write to flags on `TR1 cycles only (drive: flags)
+    always @(posedge clk) begin
+        if(reset) begin
+            flags <= 0;
+        end else if(state == `TR1 && `CTL_d == `CTL_d_rd && `CTL_f == 1'b1) begin
+            flags <= { alu_nzcv, 12'b0, branch_conds };
+        end
+    end
 
     //===============================//
     // Register files
@@ -276,10 +334,31 @@ module hs32_exec (
     //===============================//
 
     wire [31:0] aluout;
+    wire [3:0] alu_nzcv, alu_nzcv_out;
+    assign alu_nzcv = `CTL_f ? alu_nzcv_out : flags[31:28];
     hs32_alu alu (
-        .a_i(ibus1), .b_i(ibus2),
-        .op_i(aluop), .r_o(aluout),
-        .fl_i(0), .fl_o()
+        .i_a(ibus1), .i_b(ibus2),
+        .i_op(aluop), .o_r(aluout),
+        .i_fl(0), .o_fl(alu_nzcv_out)
     );
+    wire [15:0] branch_conds;
+    assign branch_conds = {
+        1'b1, // Always true
+        `ALU_Z | (`ALU_N ^ `ALU_V),     // LE
+        !`ALU_Z & !(`ALU_N ^ `ALU_V),   // GT
+        `ALU_N ^ `ALU_V,                // LT
+        !(`ALU_N ^ `ALU_V),             // GE
+        !`ALU_C | `ALU_Z,               // BE
+        `ALU_C | !`ALU_Z,               // AB
+        !`ALU_V,                        // NV
+        `ALU_V,                         // OV
+        !`ALU_N,                        // NS
+        `ALU_N,                         // SS
+        !`ALU_C,                        // NC
+        `ALU_C,                         // CS
+        !`ALU_Z,                        // NE
+        `ALU_Z,                         // EQ
+        1'b1  // Always true
+    };
 
 endmodule

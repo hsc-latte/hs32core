@@ -1,23 +1,44 @@
+/**
+ * Copyright (c) 2020 The HSC Core Authors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @file   hs32_alu.v
+ * @author Anthony Kung <hi@anth.dev>
+ * @author Kevin Dai <kevindai02@outlook.com>
+ * @date   Created on October 31 2020, 12:13 PM
+ */
+
 `include "cpu/hs32_aluops.v"
 
 module hs32_alu (
-    input  wire [31:0] a_i,
-    input  wire [31:0] b_i,
-    input  wire [3:0] op_i,
-    output wire [31:0] r_o,
-    input  wire [3:0] fl_i, // nzcv in
-    output wire [3:0] fl_o  // nzcv out
+    input  wire [31:0] i_a,
+    input  wire [31:0] i_b,
+    input  wire [3:0] i_op,
+    output wire [31:0] o_r,
+    input  wire [3:0] i_fl, // nzcv in
+    output wire [3:0] o_fl  // nzcv out
 );
     // Assign output
     wire carry;
-    assign { carry, r_o } =
-        (op_i == `HS32A_ADD) ? a_i + b_i :
-        (op_i == `HS32A_SUB) ? { 1'b0, a_i } - { 1'b0, b_i } :
-        { fl_i[1], b_i };
+    assign { carry, o_r } =
+        (i_op == `HS32A_ADD) ? i_a + i_b :
+        (i_op == `HS32A_SUB) ? { 1'b0, i_a } - { 1'b0, i_b } :
+        { i_fl[1], i_b };
     
     // Compute output flags
-    assign fl_o[3] = r_o[31] == 1 && (op_i == `HS32A_SUB);
-    assign fl_o[2] = ~(|r_o);
-    assign fl_o[1] = carry;
-    assign fl_o[0] = { carry, r_o[31] } == 2'b01; // TODO: Calculate carry
+    assign o_fl[3] = o_r[31] == 1 && (i_op == `HS32A_SUB);
+    assign o_fl[2] = ~(|o_r);
+    assign o_fl[1] = carry;
+    assign o_fl[0] = { carry, o_r[31] } == 2'b01; // TODO: Calculate carry
 endmodule
