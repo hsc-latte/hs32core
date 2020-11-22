@@ -1,18 +1,35 @@
 /**
- * Internal Memory Arbiter (IMA):
- * Schedules and arbitrates memory requests.
- *
- * Note: channel0 gets priority over channel1
- * When channel0 wants access, it drives req0 HIGH.
- * When channel1 wants access, it drives req1 HIGH.
- *
- * IMA will then drive the respective ack0 or ack1 high
- * when the operation is COMPLETE. The module on each channel
- * only needs to wait for the ack0/ack1 signals.
- *
- * >> MODULE OUTPUTS MUST REMAIN VALID UNTIL THE ACK SIGNAL <<
- *
-*/
+ * Copyright (c) 2020 The HSC Core Authors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @file   hs32_mem.v
+ * @author Kevin Dai <kevindai02@outlook.com>
+ * @date   Created on October 24 2020, 10:09 PM
+ */
+
+// Internal Memory Arbiter (IMA):
+// Schedules and arbitrates memory requests.
+//
+// Note: channel0 gets priority over channel1
+// When channel0 wants access, it drives req0 HIGH.
+// When channel1 wants access, it drives req1 HIGH.
+//
+// IMA will then drive the respective rdy high
+// when the operation is COMPLETE. The module on each channel
+// only needs to wait for the rdy signals.
+//
+// >> MODULE OUTPUTS MUST REMAIN VALID UNTIL THE RDY SIGNAL <<
 
 module hs32_mem (
     // External interface

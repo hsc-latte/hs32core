@@ -21,7 +21,13 @@ module EXT_SRAM (
     output  reg isout
 );
     assign dtr = din;
-    reg[2:0] fsm = 3'd0;
+    reg[2:0] fsm;
+
+    always @(posedge clk)
+        if(reset) begin
+            fsm <= 0;
+        end
+
     // For waveforms and cycle names, see CPU.md
     always @(posedge clk) case(fsm)
         // T1
