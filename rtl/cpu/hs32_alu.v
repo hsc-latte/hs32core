@@ -13,7 +13,7 @@ module hs32_alu (
     assign { carry, r_o } =
         (op_i == `HS32A_ADD) ? a_i + b_i :
         (op_i == `HS32A_SUB) ? { 1'b0, a_i } - { 1'b0, b_i } :
-        { fl_i[1], a_i };
+        { fl_i[1], b_i };
     
     // Compute output flags
     assign fl_o[3] = r_o[31] == 1 && (op_i == `HS32A_SUB);

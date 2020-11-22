@@ -33,21 +33,22 @@ module hs32_exec (
     output  reg flush,          // Flush
 
     // Decode
-    input wire  [3:0]  aluop,   // ALU Operation
-    input wire  [4:0]  shift,   // 5-bit shift
-    input wire  [15:0] imm,     // Immediate value
-    input wire  [3:0]  rd,      // Register Destination Rd
-    input wire  [3:0]  rm,      // Register Source Rm
-    input wire  [3:0]  rn,      // Register Operand Rn
-    input wire  [15:0] ctlsig,  // Control signals
-    input wire  [1:0]  bank,    // Input bank
+    input   wire [3:0]  aluop,  // ALU Operation
+    input   wire [4:0]  shift,  // 5-bit shift
+    input   wire [15:0] imm,    // Immediate value
+    input   wire [3:0]  rd,     // Register Destination Rd
+    input   wire [3:0]  rm,     // Register Source Rm
+    input   wire [3:0]  rn,     // Register Operand Rn
+    input   wire [15:0] ctlsig, // Control signals
+    input   wire [1:0]  bank,   // Input bank
 
     // Memory arbiter interface
-    output  reg  [31:0] addr,   // Address
+    output  wire [31:0] addr,   // Address
     input   wire [31:0] dtrm,   // Data input
+    output  wire [31:0] dtwm,   // Data output
     output  reg  reqm,          // Valid address
     input   wire rdym,          // Valid data
-    output  reg  rw_mem,
+    output  reg  rw_mem,        // Read write
 
     // Interrupts
     input   wire intrq,         // Interrupt signal
@@ -59,10 +60,10 @@ module hs32_exec (
     initial reqm = 0;
     initial rw_mem = 0;
     initial flush = 0;
-    
+    assign rdy = state == `IDLE;
+
     initial mar = 0;
     initial dtw = 0;
-    initial dtr = 0;
     initial pc_u = 0;
     initial pc_s = 0;
     initial lr_i = 0;
@@ -74,7 +75,9 @@ module hs32_exec (
     // Three internal busses
     wire [31:0] ibus1, ibus2, obus;
     // Memory address and data registers
-    reg  [31:0] mar, dtw, dtr;
+    reg  [31:0] mar, dtw;
+    assign addr = mar;
+    assign dtwm = dtw;
     
     //===============================//
     // Banked registers control logic
@@ -83,8 +86,7 @@ module hs32_exec (
     // Special banked registers
     reg  [31:0] pc_u, pc_s, lr_i, sp_i, mcr_s;
     // Register file control signals
-    wire [31:0] reginp;
-    wire [3:0]  regwadr, regadra, regadrb;
+    wire [3:0]  regadra, regadrb;
     // User bank
     wire reg_we_u;
     wire [31:0] regouta_u, regoutb_u;
@@ -119,8 +121,8 @@ module hs32_exec (
         (`CTL_s == `CTL_s_xix ||
          `CTL_s == `CTL_s_mix ||
          `CTL_s == `CTL_s_mid) ? { 16'b0, imm } : regoutb;
-    assign obus = state == `TW2 ? dtr : aluout;
-    
+    assign obus = state == `TW2 ? dtrm : aluout;
+
     //===============================//
     // FSM
     //===============================//
@@ -129,7 +131,7 @@ module hs32_exec (
     reg[3:0] state;
     always @(posedge clk) case(state)
         `IDLE: begin
-            state <= req ? (`CTL_b == 0) ? `TB1 : `TR1 : `IDLE;
+            state <= req ? (`CTL_b == 0) ? `TR1 : `TB1 : `IDLE;
         end
         `TB1: begin
             
@@ -140,18 +142,23 @@ module hs32_exec (
         `TR1: case(`CTL_s)
             `CTL_s_mid, `CTL_s_mnd:
                 state <= `TR2;
-            default:
-                state <= `TW1;
+            default: case(`CTL_d)
+                `CTL_d_none:
+                    state <= `IDLE;
+                `CTL_d_rd:
+                    state <= (rd == 4'b1111) ? `TB2 : `IDLE;
+                `CTL_d_dt_ma:
+                    state <= `TM1;
+                `CTL_d_ma:
+                    state <= `TM2;
+            endcase
         endcase
         `TR2: begin
             state <= `TW1;
         end
         `TW1: case(`CTL_d)
-            `CTL_d_none:
+            default:
                 state <= `IDLE;
-            `CTL_d_rd: begin
-                state <= (rd == 4'b1111) ? `TB2 : `IDLE;
-            end
             `CTL_d_dt_ma:
                 state <= `TM1;
             `CTL_d_ma:
@@ -180,7 +187,6 @@ module hs32_exec (
         `TW2: begin
             state <= `IDLE;
         end
-        // ...
     endcase
 
     //===============================//
@@ -189,37 +195,37 @@ module hs32_exec (
 
     // Write to Rd
     always @(posedge clk) case(state)
-        `IDLE: begin
-            reg_we <= 0;
-        end
-        `TW1: case(`CTL_d)
-            `CTL_d_rd: case(rd)
-                default: reg_we <= 1;
-                4'b1100: if(`IS_SUP)
-                    mcr_s <= obus;
-                else
-                    reg_we <= 1;
-                4'b1101: if(`IS_INT || (!`IS_USR && `BANK_I))
-                    sp_i <= obus;
-                else 
-                    reg_we <= 1;
-                4'b1110: if(`IS_INT || (!`IS_USR && `BANK_I))
-                    lr_i <= obus;
-                else
-                    reg_we <= 1;
-                4'b1111: begin end           
-            endcase
-            default: begin end
+        `IDLE: reg_we <= 0;
+        // On TR1, then we haven't written to MAR yet if CTL_s is mid/mnd.
+        //         so we must check for CTL_d and CTL_s
+        // On TW2, then we finished memory access and we just write.
+        //         Since TW2 is only for LDR, we don't need to check ctlsigs
+        `TW2, `TR1: if(
+            (state == `TR1 && `CTL_s != `CTL_s_mid && `CTL_s != `CTL_s_mnd && `CTL_d == `CTL_d_rd) ||
+            (state == `TW2)
+        ) case(rd)
+            // Deal with register bankings
+            default: reg_we <= 1;
+            4'b1100: if(`IS_SUP)
+                mcr_s <= obus;
+            else
+                reg_we <= 1;
+            4'b1101: if(`IS_INT || (!`IS_USR && `BANK_I))
+                sp_i <= obus;
+            else 
+                reg_we <= 1;
+            4'b1110: if(`IS_INT || (!`IS_USR && `BANK_I))
+                lr_i <= obus;
+            else
+                reg_we <= 1;
+            4'b1111: begin end
         endcase
-        `TW2: begin
-            reg_we <= 1;
-        end
     endcase
 
     // Write to MAR
     always @(posedge clk) case(state)
         `TR2: dtw <= ibus1;
-        `TW1: case(`CTL_d)
+        `TR1, `TW1: case(`CTL_d)
             `CTL_d_dt_ma, `CTL_d_ma:
                 mar <= obus;
             default: begin end
@@ -252,7 +258,7 @@ module hs32_exec (
     hs32_reg regfile_u (
         .clk(clk), .reset(reset),
         .we(reg_we_u),
-        .wadr(regwadr), .din(reginp),
+        .wadr(rd), .din(obus),
         .dout1(regouta_u), .radr1(regadra),
         .dout2(regoutb_u), .radr2(regadrb)
     );
@@ -260,7 +266,7 @@ module hs32_exec (
     hs32_reg regfile_s (
         .clk(clk), .reset(reset),
         .we(reg_we_s),
-        .wadr(regwadr), .din(reginp),
+        .wadr(rd), .din(obus),
         .dout1(regouta_s), .radr1(regadra),
         .dout2(regoutb_s), .radr2(regadrb)
     );
@@ -273,7 +279,7 @@ module hs32_exec (
     hs32_alu alu (
         .a_i(ibus1), .b_i(ibus2),
         .op_i(aluop), .r_o(aluout),
-        .fl_i(), .fl_o()
+        .fl_i(0), .fl_o()
     );
 
 endmodule

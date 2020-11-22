@@ -1,0 +1,108 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sun Nov 22 05:09:19 2020
+[*]
+[dumpfile] "c:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\build\dump.vcd"
+[dumpfile_mtime] "Sun Nov 22 05:01:16 2020"
+[dumpfile_size] 4007
+[savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\rtl\tb_exec.gtkw"
+[timestart] 0
+[size] 1536 801
+[pos] -35 -35
+*-2.641711 20 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_exec.
+[treeopen] tb_exec.exec.
+[sst_width] 197
+[signals_width] 225
+[sst_expanded] 1
+[sst_vpaned_height] 224
+@28
+tb_exec.exec.clk
+tb_exec.exec.reset
+tb_exec.exec.req
+tb_exec.exec.rdy
+@22
+tb_exec.exec.state[3:0]
+@200
+-
+@c00200
+-Module I/O
+@28
+tb_exec.exec.flush
+@22
+tb_exec.exec.newpc[31:0]
+@200
+-
+@22
+tb_exec.exec.aluop[3:0]
+tb_exec.exec.shift[4:0]
+tb_exec.exec.imm[15:0]
+tb_exec.exec.rd[3:0]
+tb_exec.exec.rm[3:0]
+tb_exec.exec.rn[3:0]
+@28
+tb_exec.exec.ctlsig[15:0]
+tb_exec.exec.bank[1:0]
+@200
+-
+@22
+tb_exec.exec.addr[31:0]
+tb_exec.exec.dtrm[31:0]
+tb_exec.exec.dtwm[31:0]
+@28
+tb_exec.exec.reqm
+tb_exec.exec.rdym
+tb_exec.exec.rw_mem
+@200
+-
+@28
+tb_exec.exec.intrq
+@22
+tb_exec.exec.addi[31:0]
+@1401200
+-Module I/O
+@c00200
+-Internal Bus
+@22
+tb_exec.exec.ibus1[31:0]
+tb_exec.exec.ibus2[31:0]
+tb_exec.exec.obus[31:0]
+tb_exec.exec.aluout[31:0]
+@1401200
+-Internal Bus
+@c00200
+-Special Registers
+@22
+tb_exec.exec.dtw[31:0]
+tb_exec.exec.mar[31:0]
+tb_exec.exec.pc_s[31:0]
+tb_exec.exec.pc_u[31:0]
+tb_exec.exec.lr_i[31:0]
+tb_exec.exec.sp_i[31:0]
+tb_exec.exec.mcr_s[31:0]
+@1401200
+-Special Registers
+@c00200
+-Register Control
+@28
+tb_exec.exec.reg_we
+tb_exec.exec.reg_we_s
+tb_exec.exec.reg_we_u
+@200
+-
+@22
+tb_exec.exec.regadra[3:0]
+tb_exec.exec.regouta[31:0]
+tb_exec.exec.regouta_s[31:0]
+tb_exec.exec.regouta_u[31:0]
+@200
+-
+@22
+tb_exec.exec.regadrb[3:0]
+tb_exec.exec.regoutb[31:0]
+tb_exec.exec.regoutb_s[31:0]
+tb_exec.exec.regoutb_u[31:0]
+@1401200
+-Register Control
+[pattern_trace] 1
+[pattern_trace] 0

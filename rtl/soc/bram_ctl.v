@@ -7,7 +7,7 @@
 module soc_bram_ctl (
     input   wire clk,
     input   wire[addr_width-1:0] addr,
-    output  wire[31:0] dread,
+    output  reg [31:0] dread,
     input   wire[31:0] dwrite,
     input   wire rw,
     input   wire valid,

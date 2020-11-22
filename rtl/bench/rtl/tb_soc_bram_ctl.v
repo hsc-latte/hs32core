@@ -69,6 +69,6 @@ module tb_soc_bram_ctl ();
         .clk(clk),
         .addr(addr), .rw(rw),
         .dread(dread), .dwrite(dwrite),
-        .valid(valid), .done(done)
+        .valid(valid), .ready(done)
     );
 endmodule
