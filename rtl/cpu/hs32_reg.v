@@ -43,7 +43,8 @@ module hs32_reg (
         for(i = 0; i < (1<<addr_width); i++)
             regs[i] = 0;
 `ifdef SIM
-        $dumpvars(1, regs[0], regs[1]);
+    for(i = 0; i < (1<<addr_width); i++)
+        $dumpvars(1, regs[i]);
 `endif
     end
     always @(posedge clk) if(we) begin

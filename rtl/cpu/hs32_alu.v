@@ -34,6 +34,7 @@ module hs32_alu (
     assign { carry, o_r } =
         (i_op == `HS32A_ADD) ? i_a + i_b :
         (i_op == `HS32A_SUB) ? { 1'b0, i_a } - { 1'b0, i_b } :
+        (i_op == `HS32A_REVMOV) ? { i_fl[1], i_a } :
         { i_fl[1], i_b };
     
     // Compute output flags

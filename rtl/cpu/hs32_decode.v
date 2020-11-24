@@ -1,16 +1,35 @@
 /**
+ * Copyright (c) 2020 The HSC Core Authors
+ * 
+ * Licensed under the Apache License, Version 2.0 (the "License");
+ * you may not use this file except in compliance with the License.
+ * You may obtain a copy of the License at
+ * 
+ *     https://www.apache.org/licenses/LICENSE-2.0
+ * 
+ * Unless required by applicable law or agreed to in writing, software
+ * distributed under the License is distributed on an "AS IS" BASIS,
+ * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+ * See the License for the specific language governing permissions and
+ * limitations under the License.
+ * 
+ * @file   hs32_decode.v
+ * @author Anthony Kung <hi@anth.dev>
+ * @date   Created on October 24 2020, 10:34 PM
+ */
+
+/**
  * Decode Cycle: Determine how to pass
  *               instruction to Execute Cycle
 */
 
 /* Include OP Codes Definitions */
-`include "hs32_opcodes.v"
+`include "cpu/hs32_opcodes.v"
 
 /* Include ALU OP Codes Definitions */
-`include "hs32_aluops.v"
+`include "cpu/hs32_aluops.v"
 
 `define HS32_NULLI     16'b0
-`define HS32_SHIFT     5'b0
 `define HS32_SHIFT     instd[15:11]
 `define HS32_SHIFTDIR  instd[10:9]
 `define HS32_BANK      instd[8:7]
@@ -24,8 +43,8 @@ module hs32_decode (
     input reset,                // Reset
 
     // Fetch
-    input   wire [31:0] instd,  // Next instruction
-    output  reg  reqd,          // Valid
+    input   wire [31:0] instf,  // Next instruction
+    output  wire reqd,          // Valid
     input   wire rdyd,          // Ready
 
     // Execute
@@ -36,12 +55,33 @@ module hs32_decode (
     output  reg  [3:0]  rm,     // Register Source Rm
     output  reg  [3:0]  rn,     // Register Operand Rn
     output  reg  [1:0]  bank,   // Bank (bb)
-    output  reg  [15:0] ctlsig  // Control signals
+    output  reg  [15:0] ctlsig, // Control signals
+    
+    // Execute pipeline logic
+    output reg reqe,
+    input  wire rdye
 );
+    reg [31:0] instd;
+    assign reqd = rdye;
 
-    always @ (posedge clk) begin
+    always @(posedge clk)
+    if(reset) begin
+        reqe <= 0;
+    end else begin
+        if(rdyd && reqd) begin
+            instd   <= instf;
+            reqe    <= 1;
+            ctlsig  <= 0;
+            aluop   <= 0;
+            shift   <= 0;
+            imm     <= 0;
+            rd      <= 0;
+            rm      <= 0;
+            rn      <= 0;
+            bank    <= 0;
+        end
         /* If Ready Received */
-        if (rdyd) begin
+        if (rdye && reqe) begin
             /* ISA OP Code Decoding */
 
             /*************************************************************************/
@@ -51,6 +91,7 @@ module hs32_decode (
             /* Critical fields are marked with comments and indicate required values */
             /*************************************************************************/
             casez (instd[31:24])
+                default: begin end
 
                 /**************/
                 /*    LDR     */
@@ -65,7 +106,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b10_0_010_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b10_0_010_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
                 end
                 /* LDR     Rd <- [Rm] */
                 `HS32_LDR: begin
@@ -76,7 +117,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b10_0_010_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b10_0_010_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
                 end
                 /* LDR     Rd <- [Rm + sh(Rn)] */
                 `HS32_LDRA: begin
@@ -87,7 +128,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b10_0_011_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
+                    ctlsig <= { 13'b10_0_011_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
                 end
 
                 /**************/
@@ -103,7 +144,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b11_0_101_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b11_0_101_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
                 end
                 /* STR     [Rm] <- Rd */
                 `HS32_STR: begin
@@ -114,7 +155,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b11_0_101_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b11_0_101_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
                 end
                 /* STR     [Rm + sh(Rn)] <- Rd */
                 `HS32_STRA: begin
@@ -125,7 +166,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b11_0_110_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
+                    ctlsig <= { 13'b11_0_110_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
                 end
 
                 /**************/
@@ -141,7 +182,7 @@ module hs32_decode (
                     rm <= `HS32_RM;         // [IGNORED] Rm
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_001_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b01_0_001_0000_000, `HS32_SHIFTDIR, 1'b0 };    // [IGNORED] SHIFTDIR
                 end
                 /* MOV     Rd <- sh(Rn) */
                 `HS32_MOVN: begin
@@ -152,7 +193,7 @@ module hs32_decode (
                     rm <= `HS32_RM;         // [IGNORED] Rm
                     rn <= `HS32_RN;         // Rn
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_100_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
+                    ctlsig <= { 13'b01_0_100_0000_000, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
                 end
                 /* MOV     Rd <- Rm_b */
                 `HS32_MOV: begin
@@ -163,7 +204,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // Bank
-                    ctlsig <= { 12'b01_0_010_0000_000, `HS32_SHIFTDIR, 1'b1 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b01_0_010_0000_000, `HS32_SHIFTDIR, 1'b1 };    // [IGNORED] SHIFTDIR
                 end
                 /* MOV     Rd_b <- Rm */
                 `HS32_MOVR: begin
@@ -174,7 +215,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;         // [IGNORED] Rn
                     bank <= `HS32_BANK;     // Bank
-                    ctlsig <= { 12'b01_0_010_0000_100, `HS32_SHIFTDIR, 1'b1 };    // [IGNORED] SHIFTDIR
+                    ctlsig <= { 13'b01_0_010_0000_100, `HS32_SHIFTDIR, 1'b1 };    // [IGNORED] SHIFTDIR
                 end
 
                 /**************/
@@ -190,7 +231,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
                 end
                 /* ADDC    Rd <- Rm + sh(Rn) + C */
                 `HS32_ADDC: begin
@@ -201,7 +242,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* SUB     Rd <- Rm - sh(Rn) */
                 `HS32_SUB: begin
@@ -212,7 +253,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* RSUB    Rd <- sh(Rn) - Rm */
                 `HS32_RSUB: begin
@@ -223,7 +264,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_1_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_1_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* SUBC    Rd <- Rm - sh(Rn) - C */
                 `HS32_SUBC: begin
@@ -234,7 +275,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* RSUBC   Rd <- sh(Rn) - Rm - C */
                 `HS32_RSUBC: begin
@@ -245,7 +286,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_1_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_1_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -261,7 +302,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* ADDC    Rd <- Rm + imm + C */
                 `HS32_ADDIC: begin
@@ -272,7 +313,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* SUB     Rd <- Rm - imm */
                 `HS32_SUBI: begin
@@ -283,7 +324,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* RSUB    Rd <- imm - Rm */
                 `HS32_RSUBI: begin
@@ -294,7 +335,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_1_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_1_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* SUBC    Rd <- Rm - imm - C */
                 `HS32_SUBIC: begin
@@ -305,7 +346,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* RSUBC   Rd <- imm - Rm - C */
                 `HS32_RSUBIC: begin
@@ -316,7 +357,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_1_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_1_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -332,7 +373,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* BIC     Rd <- Rm & ~sh(Rn) */
                 `HS32_BIC: begin
@@ -343,7 +384,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* OR      Rd <- Rm | sh(Rn) */
                 `HS32_OR: begin
@@ -354,7 +395,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* XOR     Rd <- Rm ^ sh(Rn) */
                 `HS32_XOR: begin
@@ -365,7 +406,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -381,7 +422,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* BIC     Rd <- Rm & ~imm */
                 `HS32_BICI: begin
@@ -392,7 +433,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* OR      Rd <- Rm | imm */
                 `HS32_ORI: begin            // Halo are the Ori >:]
@@ -403,7 +444,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* XOR     Rd <- Rm ^ imm */
                 `HS32_XORI: begin
@@ -414,7 +455,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b01_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -430,7 +471,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b00_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* CMP     Rm - imm */
                 `HS32_CMPI: begin
@@ -441,7 +482,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b00_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* TST     Rm & sh(Rn) */
                 `HS32_TST: begin
@@ -452,7 +493,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b00_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* TST     Rm & imm */
                 `HS32_TSTI: begin
@@ -463,7 +504,7 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b00_0_010_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -474,23 +515,23 @@ module hs32_decode (
                 `HS32_BRCH: begin
                     aluop <= `HS32A_ADD;
                     shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
+                    imm <= `HS32_IMM;
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_000, instd[27:24], 000, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 6'b00_0_000, instd[27:24], 3'b00, `HS32_SHIFTDIR, 1'b0 };
                 end
                 /* B<c>L   PC + Offset */
                 `HS32_BRCL: begin
-                    aluop <= `HS32A_ADD;
+                    aluop <= `HS32A_REVMOV;
                     shift <= `HS32_SHIFT;
-                    imm <= `HS32_NULLI;
+                    imm <= `HS32_IMM;
                     rd <= `HS32_RD;
-                    rm <= `HS32_RM;
+                    rm <= `HS32_RN;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_000, instd[27:24], 001, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 6'b01_0_010, instd[27:24], 3'b000, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/
@@ -506,13 +547,9 @@ module hs32_decode (
                     rm <= `HS32_RM;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 12'b00_0_000_0000_100, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 13'b00_0_000_0000_100, `HS32_SHIFTDIR, 1'b0 };
                 end
             endcase
-            reqd <= 1;
-        end
-        else begin
-            reqd <= 0;
         end
     end
 endmodule

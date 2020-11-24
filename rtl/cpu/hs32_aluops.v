@@ -33,7 +33,7 @@
 `define HS32A_XOR       4'b0110
 `define HS32A_NOT       4'b0111
 
-
+`define HS32A_REVMOV    4'b1001
 `define HS32A_ADC       4'b1010
 `define HS32A_SBC       4'b1011
 

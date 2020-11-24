@@ -1,0 +1,21 @@
+[tasks]
+cover
+proof
+
+[options]
+proof: mode prove
+cover: mode cover
+cover: depth 20
+
+expect pass
+
+[engines]
+proof: abc pdr
+cover: smtbmc yices
+
+[script]
+read -formal hs32_exec.v
+prep -top hs32_exec
+
+[files]
+cpu/hs32_exec.v

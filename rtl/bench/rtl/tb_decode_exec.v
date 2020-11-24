@@ -13,30 +13,34 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  * 
- * @file   tb_exec.v
+ * @file   tb_decode_exec.v
  * @author Kevin Dai <kevindai02@outlook.com>
- * @date   Created on November 21 2020, 11:29 PM
+ * @date   Created on November 23 2020, 10:26 PM
  */
 
 `ifdef SIM
 `include "cpu/hs32_aluops.v"
 `include "cpu/hs32_exec.v"
+`include "cpu/hs32_decode.v"
 `include "soc/bram_ctl.v"
 
 `timescale 1ns / 1ns
-module tb_exec;
+module tb_decode;
     parameter PERIOD = 2;
+
+    reg[31:0] instd = 32'h242x_4321;
 
     reg clk = 0;
     reg reset = 1;
-    reg [3:0]  aluop    = `HS32A_REVMOV;
-    reg [4:0]  shift    = 0;
-    reg [15:0] imm      = 1;
-    reg [3:0]  rd       = 4'b1110;
-    reg [3:0]  rm       = 4'b1111;
-    reg [3:0]  rn       = 0;
-    reg [15:0] ctlsig   = 16'b01_0_010_1111_001_000;
-    reg [1:0]  bank     = 0;
+    wire reqe, rdye;
+    wire [3:0]  aluop ;
+    wire [4:0]  shift ;
+    wire [15:0] imm   ;
+    wire [3:0]  rd    ;
+    wire [3:0]  rm    ;
+    wire [3:0]  rn    ;
+    wire [15:0] ctlsig;
+    wire [1:0]  bank  ;
 
     wire[31:0] addr, dtw;
     reg [31:0] dtr = 32'hCAFEBABE;
@@ -46,8 +50,8 @@ module tb_exec;
     always #(PERIOD/2) clk=~clk;
 
     initial begin
-        $dumpfile("tb_exec.vcd");
-        $dumpvars(0, exec);
+        $dumpfile("tb_exec_decode.vcd");
+        $dumpvars(0, decode, exec);
         // Initialize some registers
         exec.regfile_s.regs[0] = 32'hAAAA_0000;
         exec.regfile_s.regs[1] = 32'hBBBB_BBBB;
@@ -63,8 +67,8 @@ module tb_exec;
     hs32_exec exec(
         .clk(clk),
         .reset(reset),
-        .req(1),
-        .rdy(),
+        .req(reqe),
+        .rdy(rdye),
 
         .flush(),
         .newpc(),
@@ -87,6 +91,24 @@ module tb_exec;
 
         .intrq(0),
         .addi(0)
+    );
+
+    hs32_decode decode(
+        .clk(clk),
+        .reset(reset),
+        .instf(instd),
+        .reqd(),
+        .rdyd(1),
+        .aluop(aluop),
+        .shift(shift),
+        .imm(imm),
+        .rd(rd),
+        .rm(rm),
+        .rn(rn),
+        .bank(bank),
+        .ctlsig(ctlsig),
+        .reqe(reqe),
+        .rdye(rdye)
     );
 
     /*soc_bram_ctl #(

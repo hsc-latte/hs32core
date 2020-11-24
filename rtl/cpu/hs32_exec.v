@@ -106,12 +106,19 @@ module hs32_exec (
     // Bus assignments
     //===============================//
 
-    assign ibus1 = regadra == 4'b1111 ? pc_u : regouta;
+    assign ibus1 =
+        regadra == 4'b1111 ?
+        (`IS_USR || `BANK_U ? pc_u : pc_s)
+        : regouta;
     assign ibus2 =
         (`CTL_s == `CTL_s_xix ||
          `CTL_s == `CTL_s_mix ||
          `CTL_s == `CTL_s_mid) ? { 16'b0, imm } : regoutb;
-    assign obus = state == `TW2 ? dtrm : aluout;
+    assign obus =
+        state == `TW2 ? dtrm :
+        state == `IDLE ?
+            (`CTL_d == `CTL_d_dt_ma ? dtrm : aluout)
+        : aluout;
 
     //===============================//
     // FSM
@@ -133,7 +140,7 @@ module hs32_exec (
                 `IDLE;
         end
         `TB1: begin
-            state <= `TB2;
+            state <= `TR1;
         end
         `TB2: begin
             state <= `IDLE;
@@ -148,21 +155,14 @@ module hs32_exec (
                     state <= (rd == 4'b1111) ? `TB2 : `IDLE;
                 `CTL_d_dt_ma:
                     state <= `TM1;
-                `CTL_d_ma:
-                    state <= `TM2;
+                `CTL_d_ma: begin
+                    // TODO: Error
+                end
             endcase
         endcase
         `TR2: begin
-            state <= `TW1;
+            state <= `TM2;
         end
-        `TW1: case(`CTL_d)
-            default:
-                state <= `IDLE;
-            `CTL_d_dt_ma:
-                state <= `TM1;
-            `CTL_d_ma:
-                state <= `TM2;
-        endcase
         `TM1: begin
             if(reqm && rdym)
                 state <= `TW2;
@@ -171,9 +171,9 @@ module hs32_exec (
         end
         `TM2: begin
             if(reqm && rdym)
-                state <= `TW2;
+                state <= `IDLE;
             else
-                state <= `TM1;
+                state <= `TM2;
         end
         `TW2: begin
             state <= (rd == 4'b1111) ? `TB2 : `IDLE;
@@ -225,12 +225,11 @@ module hs32_exec (
         mar <= 0;
         dtw <= 0;
     end else case(state)
-        `TR2: dtw <= ibus1;
-        `TR1, `TW1: case(`CTL_d)
-            `CTL_d_dt_ma, `CTL_d_ma:
-                mar <= obus;
-            default: begin end
-        endcase
+        `TR1: if(`CTL_d == `CTL_d_ma)
+            dtw <= ibus1;
+        else if(`CTL_d == `CTL_d_dt_ma)
+            mar <= obus;
+        `TR2: mar <= obus;
     endcase
 
     // Memory requests (drive: reqm, rw_mem)
@@ -303,7 +302,7 @@ module hs32_exec (
     // Write to flags on `TR1 cycles only (drive: flags)
     always @(posedge clk) begin
         if(reset) begin
-            flags <= 0;
+            flags <= { 16'b0, 16'h8001 };
         end else if(state == `TR1 && `CTL_d == `CTL_d_rd && `CTL_f == 1'b1) begin
             flags <= { alu_nzcv, 12'b0, branch_conds };
         end
@@ -361,4 +360,15 @@ module hs32_exec (
         1'b1  // Always true
     };
 
+`ifdef FORMAL
+    // $past gaurd
+    reg f_past_valid;
+    initial f_past_valid = 0;
+    always @(posedge clk)
+        f_past_valid <= 1;
+
+    // 0. 
+
+    `include "cpu/hs32_exec_proof.v"
+`endif
 endmodule

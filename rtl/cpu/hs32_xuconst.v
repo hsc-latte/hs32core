@@ -53,7 +53,6 @@
 `define TB2         2
 `define TR1         3
 `define TR2         4
-`define TW1         5
 `define TM1         6
 `define TM2         7
 `define TW2         8

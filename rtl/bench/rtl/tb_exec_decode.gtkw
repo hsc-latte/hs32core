@@ -1,0 +1,184 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Tue Nov 24 03:39:27 2020
+[*]
+[dumpfile] "c:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\build\dump.vcd"
+[dumpfile_mtime] "Tue Nov 24 03:38:33 2020"
+[dumpfile_size] 11163
+[savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\rtl\tb_exec_decode.gtkw"
+[timestart] 0
+[size] 1536 801
+[pos] -1 -1
+*-3.675658 5 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_decode.
+[treeopen] tb_decode.exec.
+[sst_width] 197
+[signals_width] 269
+[sst_expanded] 1
+[sst_vpaned_height] 328
+@28
+tb_decode.exec.clk
+tb_decode.exec.reset
+tb_decode.exec.req
+tb_decode.exec.rdy
+@22
+tb_decode.exec.state[3:0]
+@200
+-
+@201
+-Execute
+@c00200
+-Module I/O
+@28
+tb_decode.exec.flush
+@22
+tb_decode.exec.newpc[31:0]
+@200
+-
+@22
+tb_decode.exec.aluop[3:0]
+tb_decode.exec.shift[4:0]
+tb_decode.exec.imm[15:0]
+tb_decode.exec.rd[3:0]
+tb_decode.exec.rm[3:0]
+tb_decode.exec.rn[3:0]
+@28
+tb_decode.exec.ctlsig[15:0]
+tb_decode.exec.bank[1:0]
+@200
+-
+@22
+tb_decode.exec.addr[31:0]
+tb_decode.exec.dtrm[31:0]
+tb_decode.exec.dtwm[31:0]
+@28
+tb_decode.exec.reqm
+tb_decode.exec.rdym
+tb_decode.exec.rw_mem
+@200
+-
+@28
+tb_decode.exec.intrq
+@22
+tb_decode.exec.addi[31:0]
+@1401200
+-Module I/O
+@c00200
+-Internal Bus
+@22
+tb_decode.exec.ibus1[31:0]
+tb_decode.exec.ibus2[31:0]
+tb_decode.exec.obus[31:0]
+tb_decode.exec.aluout[31:0]
+@1401200
+-Internal Bus
+@c00200
+-Special Registers
+@22
+tb_decode.exec.dtw[31:0]
+tb_decode.exec.mar[31:0]
+tb_decode.exec.pc_s[31:0]
+tb_decode.exec.pc_u[31:0]
+tb_decode.exec.lr_i[31:0]
+tb_decode.exec.sp_i[31:0]
+tb_decode.exec.mcr_s[31:0]
+@1401200
+-Special Registers
+@c00200
+-Register Control
+@28
+tb_decode.exec.reg_we
+tb_decode.exec.reg_we_s
+tb_decode.exec.reg_we_u
+@200
+-
+@22
+tb_decode.exec.regadra[3:0]
+tb_decode.exec.regouta[31:0]
+tb_decode.exec.regouta_s[31:0]
+tb_decode.exec.regouta_u[31:0]
+@200
+-
+@22
+tb_decode.exec.regadrb[3:0]
+tb_decode.exec.regoutb[31:0]
+tb_decode.exec.regoutb_s[31:0]
+tb_decode.exec.regoutb_u[31:0]
+@1401200
+-Register Control
+@c00200
+-Supervisor Regfile
+@22
+tb_decode.exec.regfile_s.\regs[0][31:0]
+tb_decode.exec.regfile_s.\regs[1][31:0]
+tb_decode.exec.regfile_s.\regs[2][31:0]
+tb_decode.exec.regfile_s.\regs[3][31:0]
+tb_decode.exec.regfile_s.\regs[4][31:0]
+tb_decode.exec.regfile_s.\regs[5][31:0]
+tb_decode.exec.regfile_s.\regs[6][31:0]
+tb_decode.exec.regfile_s.\regs[7][31:0]
+tb_decode.exec.regfile_s.\regs[8][31:0]
+tb_decode.exec.regfile_s.\regs[9][31:0]
+tb_decode.exec.regfile_s.\regs[10][31:0]
+tb_decode.exec.regfile_s.\regs[11][31:0]
+tb_decode.exec.regfile_s.\regs[12][31:0]
+tb_decode.exec.regfile_s.\regs[13][31:0]
+tb_decode.exec.regfile_s.\regs[14][31:0]
+tb_decode.exec.regfile_s.\regs[15][31:0]
+@1401200
+-Supervisor Regfile
+@c00200
+-User Regfile
+@22
+tb_decode.exec.regfile_u.\regs[0][31:0]
+tb_decode.exec.regfile_u.\regs[1][31:0]
+tb_decode.exec.regfile_u.\regs[2][31:0]
+tb_decode.exec.regfile_u.\regs[3][31:0]
+tb_decode.exec.regfile_u.\regs[4][31:0]
+tb_decode.exec.regfile_u.\regs[5][31:0]
+tb_decode.exec.regfile_u.\regs[6][31:0]
+tb_decode.exec.regfile_u.\regs[7][31:0]
+tb_decode.exec.regfile_u.\regs[8][31:0]
+tb_decode.exec.regfile_u.\regs[9][31:0]
+tb_decode.exec.regfile_u.\regs[10][31:0]
+tb_decode.exec.regfile_u.\regs[11][31:0]
+tb_decode.exec.regfile_u.\regs[12][31:0]
+tb_decode.exec.regfile_u.\regs[13][31:0]
+tb_decode.exec.regfile_u.\regs[14][31:0]
+tb_decode.exec.regfile_u.\regs[15][31:0]
+@1401200
+-User Regfile
+@200
+-
+-Decode
+@c00200
+-Decode
+@28
+tb_decode.decode.clk
+tb_decode.decode.reset
+tb_decode.decode.reqd
+tb_decode.decode.rdyd
+tb_decode.decode.reqe
+tb_decode.decode.rdye
+@200
+-
+@22
+tb_decode.decode.instd[31:0]
+tb_decode.decode.instf[31:0]
+@200
+-
+@22
+tb_decode.decode.aluop[3:0]
+@28
+tb_decode.decode.bank[1:0]
+@22
+tb_decode.decode.ctlsig[15:0]
+tb_decode.decode.imm[15:0]
+tb_decode.decode.rd[3:0]
+tb_decode.decode.rm[3:0]
+tb_decode.decode.rn[3:0]
+tb_decode.decode.shift[4:0]
+@1401200
+-Decode
+[pattern_trace] 1
+[pattern_trace] 0

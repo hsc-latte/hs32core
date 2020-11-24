@@ -144,7 +144,7 @@ i       Bank Register Indicator
   Used to indicate bank register
 
 f       Modify ALU Flags
-l       Link PC when branching
+?       Unused
 DD      Shift mode
 B       0 to ignore supplied register source bank information
 
@@ -164,20 +164,23 @@ The last column specifies the control signals required for internal operation.
 
 * All binary values on the table are specified left to right, MSB to LSB
 
-Name                            Type    Family  Var     dd_r_sss_bbbb_ifl_DDB
+Name                            Type    Family  Var     dd_r_sss_bbbb_if?_DDB
 
-LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_0_010_0000_000_000 (alu = ADD)
-LDR     Rd <- [Rm]              R-Type  000 10  000     10_0_010_0000_000_000 (alu = ADD, imm = 0)
-LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_0_011_0000_000_DD0 (alu = ADD)
+LDR     Rd <- [Rm + imm]        I-Type  000 10  100     10_0_010_0000_000_000
+LDR     Rd <- [Rm]              R-Type  000 10  000     10_0_010_0000_000_000
+LDR     Rd <- [Rm + sh(Rn)]     R-Type  000 10  001     10_0_011_0000_000_DD0
+* ctlsig: For LDR, set alu to ADD and imm to 0 (for variant 000 only)
 
-STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_0_101_0000_000_000 (alu = ADD)
-STR     [Rm] <- Rd              R-Type  001 10  000     11_0_101_0000_000_000 (alu = ADD, imm = 0)
-STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_0_110_0000_000_DD0 (alu = ADD)
+STR     [Rm + imm] <- Rd        I-Type  001 10  100     11_0_101_0000_000_000
+STR     [Rm] <- Rd              R-Type  001 10  000     11_0_101_0000_000_000
+STR     [Rm + sh(Rn)] <- Rd     R-Type  001 10  001     11_0_110_0000_000_DD0
+* ctlsig: For STR, set alu to ADD and imm to 0 (for variant 000 only)
 
 MOV     Rd <- imm               I-Type  001 00  100     01_0_001_0000_000_000
 MOV     Rd <- sh(Rn)            R-Type  001 00  000     01_0_100_0000_000_DD0
-MOV     Rd <- Rm_b              R-Type  001 00  001     01_0_010_0000_000_001 (imm = 0)
-MOV     Rd_b <- Rm              R-Type  001 00  010     01_0_010_0000_100_001 (imm = 0)
+MOV     Rd <- Rm_b              R-Type  001 00  001     01_0_010_0000_000_001
+MOV     Rd_b <- Rm              R-Type  001 00  010     01_0_010_0000_100_001
+* ctlsig: Set imm to 0 for variants 001 and 010
 
 ADD     Rd <- Rm + sh(Rn)       R-Type  010 00  000     01_0_011_0000_010_DD0
 ADDC    Rd <- Rm + sh(Rn) + C   R-Type  010 00  001     01_0_011_0000_010_DD0
@@ -197,8 +200,7 @@ AND     Rd <- Rm & sh(Rn)       R-Type  100 00  000     01_0_011_0000_010_DD0
 BIC     Rd <- Rm & ~sh(Rn)      R-Type  100 00  001     01_0_011_0000_010_DD0
 OR      Rd <- Rm | sh(Rn)       R-Type  101 00  000     01_0_011_0000_010_DD0
 XOR     Rd <- Rm ^ sh(Rn)       R-Type  110 00  000     01_0_011_0000_010_DD0
-
-* NOT is the same as BIC Rd, ~0, Rn
+* assembly: NOT is the same as BIC Rd, ~0, Rn
 
 AND     Rd <- Rm & imm          I-Type  100 00  100     01_0_010_0000_010_000
 BIC     Rd <- Rm & ~imm         I-Type  100 00  101     01_0_010_0000_010_000
@@ -210,10 +212,11 @@ CMP     Rm - imm                I-Type  011 01  100     00_0_010_0000_010_000
 TST     Rm & sh(Rn)             R-Type  100 01  000     00_0_011_0000_010_DD0
 TST     Rm & imm                I-Type  100 01  100     00_0_010_0000_010_000
 
-B<c>    PC + Offset             J-Type  010 1c  ccc     00_0_000_cccc_000_000
-B<c>L   PC + Offset             J-Type  011 1c  ccc     00_0_000_cccc_001_000
+B<c>    PC + Offset             I-Type  010 1c  ccc     00_0_000_cccc_000_000
+B<c>L   PC + Offset             I-Type  011 1c  ccc     01_0_010_cccc_000_000
+* ctlsig: For branching + link, set Rd = LR, Rm = PC, imm = offset
 
-INT     imm8                    J-Type  100 10  000     00_0_000_0000_100_000
+INT     imm8                    I-Type  100 10  000     00_0_000_0000_100_000
 
 ================================================================================
 5. Execution Unit Overview
@@ -245,83 +248,47 @@ REGINP      ->  REGFILE (write port)
 
 5.3 Execution unit FSM
 
-<IDLE>:
-    if request then
-        if CTL_B == 0 then
-            next <TR1>
-        else
-            next <TB1>
-    else
-        next <IDLE>
-<TB1>:
-    if branch condition is met then
-        compute and write pc+offset
-        next <TB2>
-    else
-        next <IDLE>
-<TB2>:
-    set newpc
-    set flush
-    next <IDLE>
-<TR1>:
-    if CTL_S = 110, 111 then
-        REGRADRA = Rd
-        next <TR2>
-    else if CTL_S = 001, 010, 101 then
-        REGRADRA = Rm
-        REGRADRB = imm
-        ibus1 is REGOUTA
-        ibus2 is REGOUTA
-        next <TW1>
-    else
-        REGRADRA = Rm
-        REGRADRB = Rn
-        ibus1 is REGOUTA
-        ibus2 is REGOUTA
-        next <TW1>
-<TR2>:
-    REGRADRA = Rm
-    ibus1 is REGOUTA
-    write to DTW
-    next <TW1>
-<TW1>:
-    if CTL_D is 10 then
-        obus is ALUO
-        write to MAR
-        next <TM1>
-    else if CTL_D is 11 then
-        obus is ALUO
-        write to MAR
-        next <TM2>
-    else if CTL_D is 01 then
-        obus is ALUO
-        write to Rd
-        if Rd is PC then
-            next <TB2>
-        else
-            next <IDLE>
-    else
-        next <IDLE>
-<TM1>:
-    set memory read
-    request memory
-    if ackm then
-        next <TW2>
-    else
-        next <TM1>
-<TM2>:
-    set memory write
-    request memory
-    if ackm then
-        next <IDLE>
-    else
-        next <TM1>
-<TW2>:
-    obus is DTR
-    if Rd is PC then
-        next <TB2>
-    else
-        next <IDLE>
+== Summary ==
+Memory Read:    IDLE -> TR1 -> TM1 -> TW2 -> IDLE
+Memory Read PC: IDLE -> TR1 -> TM1 -> TW2 -> TB2 -> IDLE
+Memory Write:   IDLE -> TR1 -> TR2 -> TM2 -> IDLE
+Register op:    IDLE -> TR1 -> IDLE
+Register op PC: IDLE -> TR1 -> TB2 -> IDLE
+B+L:            IDLE -> TB1 -> TR1 -> IDLE
+B:              IDLE -> TB1 -> TR1 -> IDLE
+
+== State transitions ==
+
+Memory Read (w PC):
+    IDLE
+    (Read and compute address)
+    -> TR1
+    (Store address to mar)
+    -> TM1
+    (Request and wait)
+    -> TW2
+    (Write address to Rd, if Rd == PC, then TB2)
+    (-> TB2)
+    -> IDLE
+
+Memory Write:
+    IDLE
+    (Read address to ibus2, ibus1 Rd)
+    -> TR1
+    (Store ibus1 to dtw)
+    (Read address to ibus1, the address is computed)
+    -> TR2
+    (Store address to mar)
+    -> TM2
+    (Request and wait)
+    -> IDLE
+
+Register operation (w PC):
+    IDLE
+    (Read to ibus, compute)
+    -> TR1
+    (Store result)
+    -> IDLE
 
 5.4 Special Purpose Registers
 

@@ -1,21 +1,21 @@
 [*]
 [*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
-[*] Sun Nov 22 05:09:19 2020
+[*] Mon Nov 23 06:02:56 2020
 [*]
 [dumpfile] "c:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\build\dump.vcd"
-[dumpfile_mtime] "Sun Nov 22 05:01:16 2020"
-[dumpfile_size] 4007
+[dumpfile_mtime] "Mon Nov 23 06:01:42 2020"
+[dumpfile_size] 14185
 [savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\rtl\tb_exec.gtkw"
 [timestart] 0
 [size] 1536 801
-[pos] -35 -35
-*-2.641711 20 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[pos] -1 -1
+*-3.606946 9 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
 [treeopen] tb_exec.
 [treeopen] tb_exec.exec.
 [sst_width] 197
-[signals_width] 225
+[signals_width] 269
 [sst_expanded] 1
-[sst_vpaned_height] 224
+[sst_vpaned_height] 328
 @28
 tb_exec.exec.clk
 tb_exec.exec.reset
@@ -104,5 +104,47 @@ tb_exec.exec.regoutb_s[31:0]
 tb_exec.exec.regoutb_u[31:0]
 @1401200
 -Register Control
+@c00200
+-Supervisor Regfile
+@22
+tb_exec.exec.regfile_s.\regs[0][31:0]
+tb_exec.exec.regfile_s.\regs[1][31:0]
+tb_exec.exec.regfile_s.\regs[2][31:0]
+tb_exec.exec.regfile_s.\regs[3][31:0]
+tb_exec.exec.regfile_s.\regs[4][31:0]
+tb_exec.exec.regfile_s.\regs[5][31:0]
+tb_exec.exec.regfile_s.\regs[6][31:0]
+tb_exec.exec.regfile_s.\regs[7][31:0]
+tb_exec.exec.regfile_s.\regs[8][31:0]
+tb_exec.exec.regfile_s.\regs[9][31:0]
+tb_exec.exec.regfile_s.\regs[10][31:0]
+tb_exec.exec.regfile_s.\regs[11][31:0]
+tb_exec.exec.regfile_s.\regs[12][31:0]
+tb_exec.exec.regfile_s.\regs[13][31:0]
+tb_exec.exec.regfile_s.\regs[14][31:0]
+tb_exec.exec.regfile_s.\regs[15][31:0]
+@1401200
+-Supervisor Regfile
+@c00200
+-User Regfile
+@22
+tb_exec.exec.regfile_u.\regs[0][31:0]
+tb_exec.exec.regfile_u.\regs[1][31:0]
+tb_exec.exec.regfile_u.\regs[2][31:0]
+tb_exec.exec.regfile_u.\regs[3][31:0]
+tb_exec.exec.regfile_u.\regs[4][31:0]
+tb_exec.exec.regfile_u.\regs[5][31:0]
+tb_exec.exec.regfile_u.\regs[6][31:0]
+tb_exec.exec.regfile_u.\regs[7][31:0]
+tb_exec.exec.regfile_u.\regs[8][31:0]
+tb_exec.exec.regfile_u.\regs[9][31:0]
+tb_exec.exec.regfile_u.\regs[10][31:0]
+tb_exec.exec.regfile_u.\regs[11][31:0]
+tb_exec.exec.regfile_u.\regs[12][31:0]
+tb_exec.exec.regfile_u.\regs[13][31:0]
+tb_exec.exec.regfile_u.\regs[14][31:0]
+tb_exec.exec.regfile_u.\regs[15][31:0]
+@1401200
+-User Regfile
 [pattern_trace] 1
 [pattern_trace] 0
