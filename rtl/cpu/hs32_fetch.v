@@ -19,6 +19,8 @@
  * @date   Created on October 24 2020, 10:34 PM
  */
 
+`default_nettype none
+
 // Fetches instructions from the memory arbiter and holds
 // them in an internal queue/fifo.
 
@@ -52,17 +54,7 @@ module hs32_fetch (
     reg [PREFETCH_SIZE:0] wp, rp, fill;
     reg full;
     reg[31:0] fifo[(1<<PREFETCH_SIZE)-1:0];
-
-    // Init fifo
-    integer i;
-    initial begin
-        wp = 0;
-        rp = 0;
-        pc = 0;
-        reset_latch = 0;
-        for(i = 0; i < (1<<PREFETCH_SIZE); i++)
-            fifo[i] = 0;
-    end
+    integer i; // For flush
 
     // Combinatorial logic to update the values of fill and full
     always @(*) fill = wp - rp;

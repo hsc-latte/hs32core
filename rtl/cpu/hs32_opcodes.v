@@ -73,6 +73,9 @@
 /* RSUBC   Rd <- imm - Rm + c */
 `define HS32_RSUBIC    8'b011_00_111
 
+/* MUL     Rd <- Rm * sh(Rn) */
+`define HS32_MUL       8'b010_00_010
+
 /* AND     Rd <- Rm & sh(Rn) */
 `define HS32_AND       8'b100_00_000
 

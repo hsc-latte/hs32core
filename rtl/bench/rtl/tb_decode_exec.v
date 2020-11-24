@@ -28,7 +28,7 @@
 module tb_decode;
     parameter PERIOD = 2;
 
-    reg[31:0] instd = 32'h242x_4321;
+    reg[31:0] instd = 32'h2420_4321;
 
     reg clk = 0;
     reg reset = 1;

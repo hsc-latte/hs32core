@@ -31,9 +31,9 @@
 `define HS32A_AND       4'b0100
 `define HS32A_OR        4'b0101
 `define HS32A_XOR       4'b0110
-`define HS32A_NOT       4'b0111
+`define HS32A_BIC       4'b0111
 
-`define HS32A_REVMOV    4'b1001
+`define HS32A_MUL       4'b1000
 `define HS32A_ADC       4'b1010
 `define HS32A_SBC       4'b1011
 

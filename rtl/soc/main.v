@@ -29,13 +29,25 @@ module main (
     output  wire LEDG_N
 );
     wire[31:0] addr, dread, dwrite;
-    wire rw, valid, done;
+    wire rw, valid, ready;
+    reg por, state;
+    initial por = 0;
+    initial state = 0;
+
+    always @(posedge CLK) begin
+        if(!state) begin
+            por <= 1;
+            state <= 1;
+        end
+        else por <= 0;
+    end
+
     hs32_cpu cpu(
-        .clk(CLK), .reset(0),
+        .clk(CLK), .reset(por),
         // External interface
         .addr(addr), .rw(rw),
         .din(dread), .dout(dwrite),
-        .valid(valid), .done(done)
+        .valid(valid), .ready(ready)
     );
     soc_bram_ctl #(
         .addr_width(8)
@@ -43,6 +55,6 @@ module main (
         .clk(CLK),
         .addr(addr[7:0]), .rw(rw),
         .dread(dread), .dwrite(dwrite),
-        .valid(valid), .done(done)
+        .valid(valid), .ready(ready)
     );
 endmodule

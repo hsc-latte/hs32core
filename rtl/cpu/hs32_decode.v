@@ -18,10 +18,12 @@
  * @date   Created on October 24 2020, 10:34 PM
  */
 
-/**
- * Decode Cycle: Determine how to pass
- *               instruction to Execute Cycle
-*/
+`default_nettype none
+
+//
+// Decode Cycle: Determine how to pass
+//               instruction to Execute Cycle
+//
 
 /* Include OP Codes Definitions */
 `include "cpu/hs32_opcodes.v"
@@ -289,6 +291,20 @@ module hs32_decode (
                     ctlsig <= { 13'b01_1_011_0000_010, `HS32_SHIFTDIR, 1'b0 };
                 end
 
+`ifdef IMUL
+                /* MUL     Rd <- Rm * sh(Rn) */
+                `HS32_MUL: begin
+                    aluop <= `HS32A_MUL;
+                    shift <= `HS32_SHIFT;
+                    imm <= `HS32_NULLI;     // [IGNORED]
+                    rd <= `HS32_RD;
+                    rm <= `HS32_RM;
+                    rn <= `HS32_RN;
+                    bank <= `HS32_BANK;     // [IGNORED] Bank
+                    ctlsig <= { 13'b01_0_011_0000_010, `HS32_SHIFTDIR, 1'b0 };    // SHIFTDIR
+                end
+`endif
+
                 /**************/
                 /*  MATH IMM  */
                 /**************/
@@ -377,7 +393,7 @@ module hs32_decode (
                 end
                 /* BIC     Rd <- Rm & ~sh(Rn) */
                 `HS32_BIC: begin
-                    aluop <= `HS32A_NOT;
+                    aluop <= `HS32A_BIC;
                     shift <= `HS32_SHIFT;
                     imm <= `HS32_NULLI;
                     rd <= `HS32_RD;
@@ -426,7 +442,7 @@ module hs32_decode (
                 end
                 /* BIC     Rd <- Rm & ~imm */
                 `HS32_BICI: begin
-                    aluop <= `HS32A_NOT;
+                    aluop <= `HS32A_BIC;
                     shift <= `HS32_SHIFT;
                     imm <= `HS32_IMM;
                     rd <= `HS32_RD;
@@ -524,14 +540,14 @@ module hs32_decode (
                 end
                 /* B<c>L   PC + Offset */
                 `HS32_BRCL: begin
-                    aluop <= `HS32A_REVMOV;
+                    aluop <= `HS32A_MOV;
                     shift <= `HS32_SHIFT;
                     imm <= `HS32_IMM;
                     rd <= `HS32_RD;
                     rm <= `HS32_RN;
                     rn <= `HS32_RN;
                     bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 6'b01_0_010, instd[27:24], 3'b000, `HS32_SHIFTDIR, 1'b0 };
+                    ctlsig <= { 6'b01_1_010, instd[27:24], 3'b000, `HS32_SHIFTDIR, 1'b0 };
                 end
 
                 /**************/

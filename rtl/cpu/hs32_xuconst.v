@@ -47,6 +47,12 @@
 `define CTL_d_dt_ma 2'b10
 `define CTL_d_ma    2'b11
 
+// Shift directions
+`define CTL_D_shl   2'b00
+`define CTL_D_shr   2'b01
+`define CTL_D_ssr   2'b10
+`define CTL_D_ror   2'b11
+
 // FSM States
 `define IDLE        0
 `define TB1         1

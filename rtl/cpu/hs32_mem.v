@@ -18,6 +18,8 @@
  * @date   Created on October 24 2020, 10:09 PM
  */
 
+ `default_nettype none
+
 // Internal Memory Arbiter (IMA):
 // Schedules and arbitrates memory requests.
 //

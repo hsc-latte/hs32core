@@ -19,6 +19,8 @@
  * @date   Created on October 24 2020, 11:35 PM
  */
 
+`default_nettype none
+
 // Dual-Port Register File
 
 module hs32_reg (
@@ -38,15 +40,14 @@ module hs32_reg (
     parameter data_width = 32;
 
     reg[data_width-1:0] regs[(1<<addr_width)-1:0];
-    integer i;
+
+`ifdef SIM
     initial begin
         for(i = 0; i < (1<<addr_width); i++)
-            regs[i] = 0;
-`ifdef SIM
-    for(i = 0; i < (1<<addr_width); i++)
-        $dumpvars(1, regs[i]);
-`endif
+            $dumpvars(1, regs[i]);
     end
+`endif
+
     always @(posedge clk) if(we) begin
         regs[wadr] <= din;
     end

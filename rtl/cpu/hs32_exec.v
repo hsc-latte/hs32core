@@ -63,7 +63,7 @@ module hs32_exec (
     // Busses
     //===============================//
 
-    wire [31:0] ibus1, ibus2, obus;
+    wire [31:0] ibus1, ibus2, ibus2_sh, obus;
     // Memory address and data registers
     reg  [31:0] mar, dtw;
     assign addr = mar;
@@ -119,6 +119,17 @@ module hs32_exec (
         state == `IDLE ?
             (`CTL_d == `CTL_d_dt_ma ? dtrm : aluout)
         : aluout;
+`ifdef BARREL_SHIFTER
+    // Barrel shifter
+    assign ibus2_sh =
+        shift == 0 ? ibus2 :
+        `CTL_d == `CTL_D_shl ? ibus2 << shift :
+        `CTL_d == `CTL_D_shr ? ibus2 >> shift :
+        `CTL_d == `CTL_D_ssr ? ibus2 >>> shift :
+        ibus2 << shift | ibus2 >> (32-shift);
+`else
+    assign ibus2_sh = ibus2;
+`endif
 
     //===============================//
     // FSM
@@ -336,7 +347,8 @@ module hs32_exec (
     wire [3:0] alu_nzcv, alu_nzcv_out;
     assign alu_nzcv = `CTL_f ? alu_nzcv_out : flags[31:28];
     hs32_alu alu (
-        .i_a(ibus1), .i_b(ibus2),
+        .i_a(`CTL_r ? ibus2_sh : ibus1),
+        .i_b(`CTL_r ? ibus1 : ibus2_sh),
         .i_op(aluop), .o_r(aluout),
         .i_fl(0), .o_fl(alu_nzcv_out)
     );

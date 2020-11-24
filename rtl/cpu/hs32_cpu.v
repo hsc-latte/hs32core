@@ -19,6 +19,8 @@
  * @date   Created on October 23 2020, 1:36 AM
  */
 
+`default_nettype none
+
 `include "cpu/hs32_mem.v"
 `include "cpu/hs32_fetch.v"
 `include "cpu/hs32_exec.v"
@@ -26,7 +28,7 @@
 
 // NO LATCHES ALLOWED!
 module hs32_cpu (
-    input clk, input reset,
+    input wire clk, input wire reset,
 
     // External interface
     output  wire [31:0] addr,
@@ -34,66 +36,78 @@ module hs32_cpu (
     input   wire[31:0] din,
     output  wire[31:0] dout,
     output  wire valid,
-    input   wire done
+    input   wire ready
 );
+    parameter PREFETCH_SIZE = 3; // Depth of 2^PREFETCH_SIZE instructions
+
+    wire flush;
+    wire[31:0] newpc;
+
     wire[31:0] addr_e, dtr_e, dtw_e;
-    wire req_e, ack_e, rw_e;
+    wire req_e, rdy_e, rw_e;
 
     wire[31:0] addr_f, dtr_f;
-    wire req_f, ack_f;
+    wire req_f, rdy_f;
     hs32_mem MEM(
         // External interface
         .addr(addr), .rw(rw), .din(din), .dout(dout),
-        .valid(valid), .done(done),
+        .valid(valid), .ready(ready),
         
         // Channel 0 (Execute)
         .addr0(addr_e), .dtr0(dtr_e), .dtw0(dtw_e),
-        .rw0(rw_e), .req0(req_e), .ack0(ack_e),
+        .rw0(rw_e), .req0(req_e), .rdy0(rdy_e),
 
         // Channel 1 (Fetch)
         .addr1(addr_f), .dtr1(dtr_f), .dtw1(0),
-        .rw1(0), .req1(req_f), .ack1(ack_f)
+        .rw1(0), .req1(req_f), .rdy1(rdy_f)
     );
 
     wire[31:0] inst_d;
-    wire req_d, ack_d;
-    hs32_fetch FETCH(
+    wire req_d, rdy_d;
+    hs32_fetch #(
+        .PREFETCH_SIZE(PREFETCH_SIZE)
+    ) FETCH(
         .clk(clk),
         // Memory arbiter interface
-        .addr(addr_f), .dtr(dtr_f), .reqm(req_f), .ackm(ack_f),
+        .addr(addr_f), .dtr(dtr_f), .reqm(req_f), .rdym(rdy_f),
         // Decode
-        .instd(inst_d), .reqd(req_d), .ackd(ack_d),
-        // TODO: Pipeline controller
-        .newpc(0), .flush(0)
+        .instd(inst_d), .reqd(req_d), .rdyd(rdy_d),
+        // Pipeline controller
+        .newpc(newpc), .flush(flush | reset)
     );
 
-    wire [2:0]  aluop_e;
+    wire [3:0]  aluop_e;
     wire [4:0]  shift_e;
     wire [15:0] imm_e;
     wire [3:0]  regdst_e;
     wire [3:0]  regsrc_e;
     wire [3:0]  regopd_e;
+    wire [1:0]  bank_e;
     wire [15:0] ctlsig_e;
     hs32_decode DECODE(
-        .clk(clk), .reset(0),
-        
+        .clk(clk), .reset(reset | flush),
         // Fetch
-        .instd(inst_d), .reqd(req_d), .ackd(ack_d),
+        .instf(inst_d), .reqd(req_d), .rdyd(rdy_d),
 
         // Execute
+        .reqe(req_ed),
+        .rdye(rdy_ed),
         .aluop(aluop_e),
         .imm(imm_e),
         .shift(shift_e),
         .rd(regdst_e),
         .rm(regsrc_e),
         .rn(regopd_e),
-        .ctlsig(ctlsig_e)
+        .ctlsig(ctlsig_e),
+        .bank(bank_e)
     );
 
+    wire req_ed, rdy_ed;
     hs32_exec EXEC(
-        .clk(clk), .reset(0),
-        // TODO: Pipeline controller
-        .newpc(), .flush(),
+        .clk(clk), .reset(reset),
+        // Pipeline controller
+        .newpc(newpc), .flush(flush),
+        .req(req_ed), .rdy(rdy_ed),
 
         // Decode
         .aluop(aluop_e),
@@ -103,11 +117,15 @@ module hs32_cpu (
         .rm(regsrc_e),
         .rn(regopd_e),
         .ctlsig(ctlsig_e),
+        .bank(bank_e),
         
         // Memory arbiter interface
-        .addr(addr_e), .dtrm(dtr_e), .reqm(req_e), .ackm(ack_e),
+        .reqm(req_e), .rdym(rdy_e),
+        .addr(addr_e),
+        .dtrm(dtr_e), .dtwm(dtw_e),
+        .rw_mem(rw_e),
         
-        // Interrupts
+        // TODO: Interrupts
         .intrq(0), .addi(0)
     );
 endmodule
