@@ -28,7 +28,8 @@
 
 // NO LATCHES ALLOWED!
 module hs32_cpu (
-    input wire clk, input wire reset,
+    input wire i_clk,
+    input wire reset,
 
     // External interface
     output  wire [31:0] addr,
@@ -67,7 +68,7 @@ module hs32_cpu (
     hs32_fetch #(
         .PREFETCH_SIZE(PREFETCH_SIZE)
     ) FETCH(
-        .clk(clk),
+        .clk(i_clk),
         // Memory arbiter interface
         .addr(addr_f), .dtr(dtr_f), .reqm(req_f), .rdym(rdy_f),
         // Decode
@@ -85,7 +86,7 @@ module hs32_cpu (
     wire [1:0]  bank_e;
     wire [15:0] ctlsig_e;
     hs32_decode DECODE(
-        .clk(clk), .reset(reset | flush),
+        .clk(i_clk), .reset(reset | flush),
         // Fetch
         .instf(inst_d), .reqd(req_d), .rdyd(rdy_d),
 
@@ -104,7 +105,7 @@ module hs32_cpu (
 
     wire req_ed, rdy_ed;
     hs32_exec EXEC(
-        .clk(clk), .reset(reset),
+        .clk(i_clk), .reset(reset),
         // Pipeline controller
         .newpc(newpc), .flush(flush),
         .req(req_ed), .rdy(rdy_ed),

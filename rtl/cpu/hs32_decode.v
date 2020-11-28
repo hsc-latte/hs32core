@@ -32,9 +32,9 @@
 `include "cpu/hs32_aluops.v"
 
 `define HS32_NULLI     16'b0
-`define HS32_SHIFT     instd[15:11]
-`define HS32_SHIFTDIR  instd[10:9]
-`define HS32_BANK      instd[8:7]
+`define HS32_SHIFT     instd[11:7]
+`define HS32_SHIFTDIR  instd[6:5]
+`define HS32_BANK      instd[4:3]
 `define HS32_IMM       instd[15:0]
 `define HS32_RD        instd[23:20]
 `define HS32_RM        instd[19:16]

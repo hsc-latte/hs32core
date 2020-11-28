@@ -42,6 +42,7 @@ module hs32_reg (
     reg[data_width-1:0] regs[(1<<addr_width)-1:0];
 
 `ifdef SIM
+    integer i;
     initial begin
         for(i = 0; i < (1<<addr_width); i++)
             $dumpvars(1, regs[i]);

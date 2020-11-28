@@ -18,6 +18,9 @@
  * @date   Created on November 23 2020, 10:26 PM
  */
 
+`define IMUL
+`define BARREL_SHIFTER
+
 `ifdef SIM
 `include "cpu/hs32_aluops.v"
 `include "cpu/hs32_exec.v"
@@ -28,7 +31,7 @@
 module tb_decode;
     parameter PERIOD = 2;
 
-    reg[31:0] instd = 32'h2420_4321;
+    reg[31:0] instd = 32'h4200_1000;
 
     reg clk = 0;
     reg reset = 1;
@@ -53,8 +56,8 @@ module tb_decode;
         $dumpfile("tb_exec_decode.vcd");
         $dumpvars(0, decode, exec);
         // Initialize some registers
-        exec.regfile_s.regs[0] = 32'hAAAA_0000;
-        exec.regfile_s.regs[1] = 32'hBBBB_BBBB;
+        exec.regfile_s.regs[0] = 32'h6;
+        exec.regfile_s.regs[1] = 32'h2;
 
         // Power on reset, no touchy >:[
         #PERIOD

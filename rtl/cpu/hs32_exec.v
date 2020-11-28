@@ -93,7 +93,7 @@ module hs32_exec (
         (`IS_INT || `BANK_I) && regadra == 4'b1110 ? lr_i : regouta_s;
     assign regoutb =
         `IS_USR || `BANK_U ? regoutb_u :
-        (`IS_INT || `BANK_I) && regadra == 4'b1110 ? lr_i : regouta_s;
+        (`IS_INT || `BANK_I) && regadrb == 4'b1110 ? lr_i : regoutb_s;
     // Register select
     assign regadra =
         state == `TR1 ?
