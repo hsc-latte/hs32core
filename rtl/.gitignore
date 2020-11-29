@@ -14,4 +14,9 @@ log.txt
 *.dot
 
 bench/formal/*/
-openlane/*/runs/*/
+openlane/*/runs/
+gds/
+lef/
+mag/
+def/
+spi/

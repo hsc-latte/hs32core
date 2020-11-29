@@ -1,6 +1,6 @@
 `define MPRJ_IO_PADS 38
 
-module user_proj_hs32 #(
+module hs32_user_proj #(
     parameter BITS = 32
 )(
     inout vdda1,	// User area 1 3.3V supply
