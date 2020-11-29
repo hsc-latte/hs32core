@@ -89,7 +89,9 @@ ALU     Name    Operation
 ...
 
 * ALL ALU Operations will set the NZCV flags but only
-  those marked with store will actually store them
+  those marked with store will actually store them in
+  the Flag register, otherwise, setting will only expose
+  the flags internally.
 
 ================================================================================
 3. Internal Control Signals Specification
