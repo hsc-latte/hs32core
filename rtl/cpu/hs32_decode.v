@@ -39,6 +39,7 @@
 `define HS32_RD        instd[23:20]
 `define HS32_RM        instd[19:16]
 `define HS32_RN        instd[15:12]
+`define HS32_IVT       instd[6:0]
 
 module hs32_decode (
     input clk,                  // 12 MHz Clock
@@ -58,10 +59,14 @@ module hs32_decode (
     output  reg  [3:0]  rn,     // Register Operand Rn
     output  reg  [1:0]  bank,   // Bank (bb)
     output  reg  [15:0] ctlsig, // Control signals
-    
+
     // Execute pipeline logic
     output reg reqe,
-    input  wire rdye
+    input  wire rdye,
+
+    // Interrupts
+    output reg activate,
+    output reg [23:0] int
 );
     reg [31:0] instd;
     assign reqd = rdye;
@@ -69,6 +74,7 @@ module hs32_decode (
     always @(posedge clk)
     if(reset) begin
         reqe <= 0;
+        activate <= 0;
     end else begin
         if(rdyd && reqd) begin
             instd   <= instf;
@@ -81,6 +87,8 @@ module hs32_decode (
             rm      <= 0;
             rn      <= 0;
             bank    <= 0;
+            activate <= 0;
+            int <= 24'h0;
         end
         /* If Ready Received */
         if (rdye && reqe) begin
@@ -93,7 +101,10 @@ module hs32_decode (
             /* Critical fields are marked with comments and indicate required values */
             /*************************************************************************/
             casez (instd[31:24])
-                default: begin end
+                default: begin
+                    activate <= 1;
+                    int <= 24'h000002;
+                end
 
                 /**************/
                 /*    LDR     */
@@ -556,6 +567,8 @@ module hs32_decode (
 
                 /* INT     imm8 */
                 `HS32_INT: begin
+                    activate <= 1;
+                    int[22:16] <= `HS32_IVT;
                     aluop <= `HS32A_NOP;
                     shift <= `HS32_SHIFT;
                     imm <= `HS32_IMM;
