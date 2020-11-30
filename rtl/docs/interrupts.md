@@ -36,7 +36,7 @@ This table support the following types of interrupts:
 5. Software Interrupts - 7 Interrupts
 6. Privilege Violation
 
-## System Interrupt Table
+## System Interrupt Table (Non-Maskable)
 
 | Interrupt Code | Interrupt Address | Details             |
 | -------------- | ----------------- | ------------------- |

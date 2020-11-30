@@ -59,9 +59,12 @@ module mmio(
     // Check if there's interrupt(s)
     assign intrq = |interrupts && ~iack;
 
+    // NMI
+    assign nmi = interrupts[0] ||interrupts[1];
+
     // Interrupt Priority
     // LSB gets higher priority
-    always @(posedge clk) begin
+    always @(*) begin
         if (interrupts[0])
             vec = 5'd0;
         else if (interrupts[1])
