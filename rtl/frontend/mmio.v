@@ -35,10 +35,10 @@ module mmio(
     // SRAM Interface
     output wire sval,
     input wire srdy,
-    input wire[31:0] saddr,
-    input wire[31:0] sdtw,
-    output wire[31:0] sdtr,
-    input wire srw
+    output wire[31:0] saddr,
+    output wire[31:0] sdtw,
+    input wire[31:0] sdtr,
+    output wire srw
     
 );
 

@@ -102,7 +102,6 @@ module hs32_decode (
     end else begin
         if(rdyd && reqd) begin
             instd   <= instf;
-            reqe    <= 1;
             ctlsig  <= 0;
             aluop   <= 0;
             shift   <= 0;
@@ -112,10 +111,12 @@ module hs32_decode (
             rn      <= 0;
             bank    <= 0;
             activate <= 0;
-            int <= 24'h0;
+            //int <= 24'h0;
         end
         /* If Ready Received */
-        if (rdye && reqe) begin
+        if (rdye) begin
+            reqe <= 1;
+            
             /* ISA OP Code Decoding */
 
             /*************************************************************************/
@@ -127,7 +128,7 @@ module hs32_decode (
             casez (instd[31:24])
                 default: begin
                     activate <= 1;
-                    int <= 24'h000002;
+                    //int <= 24'h000002;
                 end
 
                 /**************/
@@ -593,7 +594,7 @@ module hs32_decode (
                 `HS32_INT: begin
                     if (!intloop) begin
                         activate <= 1;
-                        int <= `HS32_IMM;
+                        //int <= `HS32_IMM;
                         intloop <= 1;
                         aluop <= `HS32A_NOP;
                         shift <= `HS32_SHIFT;

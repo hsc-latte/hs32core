@@ -406,7 +406,7 @@ module hs32_exec (
         .i_a(`CTL_r ? ibus2_sh : ibus1),
         .i_b(`CTL_r ? ibus1 : ibus2_sh),
         .i_op(aluop), .o_r(aluout),
-        .i_fl(0), .o_fl(alu_nzcv_out)
+        .i_fl(flags[31:28]), .o_fl(alu_nzcv_out)
     );
     wire [15:0] branch_conds;
     assign branch_conds = {

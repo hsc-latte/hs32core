@@ -86,14 +86,14 @@ module tb_decode;
         .bank(bank),
 
         .addr(addr),
-        .dtrm(16'hCAFE),
+        .dtrm(32'hCAFE),
         .dtwm(dtw),
         .reqm(valid),
         .rdym(ready),
         .rw_mem(rw),
 
-        .intrq(0),
-        .addi(0)
+        .intrq(1'b0),
+        .isr(0)
     );
 
     hs32_decode decode(
@@ -101,7 +101,7 @@ module tb_decode;
         .reset(reset),
         .instf(instd),
         .reqd(),
-        .rdyd(1),
+        .rdyd(1'b1),
         .aluop(aluop),
         .shift(shift),
         .imm(imm),
