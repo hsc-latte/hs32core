@@ -38,8 +38,53 @@ module mmio(
     output wire[31:0] saddr,
     output wire[31:0] sdtw,
     input wire[31:0] sdtr,
-    output wire srw
-    
-);
+    output wire srw,
 
+    // Interrupt controller
+    input   wire[23:0] interrupts,  // Interrupt lines
+    input   wire iack,              // Interrupt acknowledge
+    output  wire[31:0] handler,     // ISR address
+    output  wire intrq,             // Request interrupt
+    output  wire[4:0] vec,          // Interrupt vector
+    output  wire nmi                // Non maskable interrupt
+
+    // TODO: Expose AICT Entries
+    // (Input and output)
+);
+    parameter AICT_LENGTH = 25; // 24 IVT + 1 base
+
+    // Advanced Interrupt Controller Table
+    reg[31:0] aict[25:0];
+
+    // Write ready
+    reg wrdy;
+
+    // AICT is from aict_base to aict_base + AICT_LENGTH*4
+    wire is_aict;
+    assign is_aict = aict[0] <= addr && addr <= aict[0] + AICT_LENGTH*4;
+
+    // Calculate the aict index from the address
+    wire[4:0] aict_idx;
+    assign aict_idx = 5'((addr-aict[0]) >> 2);
+
+    // Multiplex aict entry and sram signals
+    // Ready is 1 only when reading
+    assign ready = is_aict ? rw ? wrdy : 1 : srdy;
+    assign dtr = is_aict ? aict[aict_idx] : sdtr;
+    
+    // Assign all sram output
+    assign srw = rw;
+    assign sval = valid && !is_aict;
+    assign saddr = addr;
+    assign sdtw = dtw;
+
+    // Bus logic
+    always @(posedge clk)
+    if(reset)
+        wrdy <= 0;
+    else if(valid && rw)
+        wrdy <= 1;
+    else begin
+        wrdy <= 0;
+    end
 endmodule
