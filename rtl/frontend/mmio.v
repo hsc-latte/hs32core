@@ -24,12 +24,22 @@ module mmio(
     input wire clk,
     input wire reset,
 
+    // Memory interface in
     input wire valid,
     output wire ready,
     input wire[31:0] addr,
     input wire[31:0] dtw,
     output wire[31:0] dtr,
-    input wire rw
+    input wire rw,
+
+    // SRAM Interface
+    output wire sval,
+    input wire srdy,
+    input wire[31:0] saddr,
+    input wire[31:0] sdtw,
+    output wire[31:0] sdtr,
+    input wire srw
+    
 );
 
 endmodule

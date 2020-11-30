@@ -1,6 +1,6 @@
 // A UART serial transceiver.
-`include "cores/uart/uart_tx.v"
-`include "cores/uart/uart_rx.v"
+`include "third_party/uart/uart_tx.v"
+`include "third_party/uart/uart_rx.v"
 
 module UART #(
   // Tune the clock divider bit width to your design to avoid wasting gates.

@@ -70,6 +70,8 @@
 `define MCR_INTEN   mcr_s[0]
 `define MCR_VEC     mcr_s[7:3]
 `define MCR_NZCVi   mcr_s[11:8]
+`define MCR_USRi    mcr_s[12]
+`define MCR_MDEi    mcr_s[13]
 
 // Mode check macros
 `define IS_USR      (`MCR_USR == 1)

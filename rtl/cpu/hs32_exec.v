@@ -57,7 +57,7 @@ module hs32_exec (
     input   wire nmi,           // Non maskable?
     input   wire [31:0] isr,    // Interrupt handler
     input   wire [4:0] code,    // Interrupt vector
-    output  wire iack           // Interrupt acknowledge
+    output  reg  iack           // Interrupt acknowledge
 );
     // Assign ready signal (only when IDLE)
     assign rdy = state == `IDLE;
@@ -227,7 +227,13 @@ module hs32_exec (
         mcr_s <= 0;
         reg_we <= 0;
     end else case(state)
-        `IDLE: reg_we <= 0;
+        `IDLE: begin
+            reg_we <= 0;
+            if(req && `CTL_b == 4'b1111) begin
+                `MCR_USR <= `MCR_USRi;
+                `MCR_MDE <= `MCR_MDEi;
+            end
+        end
         // On TR1, then we haven't written to MAR yet if CTL_s is mid/mnd.
         //         so we must check for CTL_d and CTL_s
         // On TW2, then we finished memory access and we just write.
@@ -259,6 +265,8 @@ module hs32_exec (
             `MCR_MDE <= 1;
             `MCR_VEC <= code_latch;
             `MCR_NZCVi <= flags[31:28];
+            `MCR_USRi <= `MCR_USR;
+            `MCR_MDE <= `MCR_MDE;
         end
     endcase
 
@@ -307,6 +315,7 @@ module hs32_exec (
         flush <= 0;
         pc_u <= 0;
         pc_s <= 0;
+        iack <= 0;
     end else case(state)
         `IDLE: begin
             flush <= 0;
@@ -326,13 +335,18 @@ module hs32_exec (
                 pc_u <= { 16'b0, imm } + pc_u;
             else
                 pc_s <= { 16'b0, imm } + pc_s;
+            if(`CTL_b == 4'b1111) begin
+                iack <= 1;
+            end
         end
         `INT: begin
             flush <= 1;
             pc_s <= isr_latch;
             newpc <= isr_latch;
         end
-        `TB2: begin end
+        `TB2: begin
+            iack <= 0;
+        end
         // Update the PC from a Rd instruction (see "write to Rd")
         `TW2, `TR1: if(
             ((state == `TR1 && `CTL_s != `CTL_s_mid && `CTL_s != `CTL_s_mnd && `CTL_d == `CTL_d_rd) ||
