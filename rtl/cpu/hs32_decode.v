@@ -39,7 +39,6 @@
 `define HS32_RD        instd[23:20]
 `define HS32_RM        instd[19:16]
 `define HS32_RN        instd[15:12]
-`define HS32_IVT       instd[6:0]
 
 module hs32_decode (
     input clk,                  // 12 MHz Clock
@@ -66,10 +65,35 @@ module hs32_decode (
 
     // Interrupts
     output reg activate,
-    output reg [23:0] int
+    output reg [23:0] int_line
 );
     reg [31:0] instd;
     assign reqd = rdye;
+
+    assign int_line[0]  = int == 0  && activate ? 1 : 0;
+    assign int_line[1]  = int == 1  && activate ? 1 : 0;
+    assign int_line[2]  = int == 2  && activate ? 1 : 0;
+    assign int_line[3]  = int == 3  && activate ? 1 : 0;
+    assign int_line[4]  = int == 4  && activate ? 1 : 0;
+    assign int_line[5]  = int == 5  && activate ? 1 : 0;
+    assign int_line[6]  = int == 6  && activate ? 1 : 0;
+    assign int_line[7]  = int == 7  && activate ? 1 : 0;
+    assign int_line[8]  = int == 8  && activate ? 1 : 0;
+    assign int_line[9]  = int == 9  && activate ? 1 : 0;
+    assign int_line[10] = int == 10 && activate ? 1 : 0;
+    assign int_line[11] = int == 11 && activate ? 1 : 0;
+    assign int_line[12] = int == 12 && activate ? 1 : 0;
+    assign int_line[13] = int == 13 && activate ? 1 : 0;
+    assign int_line[14] = int == 14 && activate ? 1 : 0;
+    assign int_line[15] = int == 15 && activate ? 1 : 0;
+    assign int_line[16] = int == 16 && activate ? 1 : 0;
+    assign int_line[17] = int == 17 && activate ? 1 : 0;
+    assign int_line[18] = int == 18 && activate ? 1 : 0;
+    assign int_line[19] = int == 19 && activate ? 1 : 0;
+    assign int_line[20] = int == 20 && activate ? 1 : 0;
+    assign int_line[21] = int == 21 && activate ? 1 : 0;
+    assign int_line[22] = int == 22 && activate ? 1 : 0;
+    assign int_line[23] = int == 23 && activate ? 1 : 0;
 
     always @(posedge clk)
     if(reset) begin
@@ -113,7 +137,7 @@ module hs32_decode (
                 /* LDR     Rd <- [Rm + imm] */
                 `HS32_LDRI: begin
                     aluop <= `HS32A_ADD;     // ADD
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_IMM;       // Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -124,7 +148,7 @@ module hs32_decode (
                 /* LDR     Rd <- [Rm] */
                 `HS32_LDR: begin
                     aluop <= `HS32A_ADD;     // ADD
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_NULLI;     // [ZERO] Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -151,7 +175,7 @@ module hs32_decode (
                 /* STR     [Rm + imm] <- Rd */
                 `HS32_STRI: begin
                     aluop <= `HS32A_ADD;     // ADD
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_IMM;       // Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -162,7 +186,7 @@ module hs32_decode (
                 /* STR     [Rm] <- Rd */
                 `HS32_STR: begin
                     aluop <= `HS32A_ADD;     // ADD
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_NULLI;     // [ZERO] Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -189,7 +213,7 @@ module hs32_decode (
                 /* MOV     Rd <- imm */
                 `HS32_MOVI: begin
                     aluop <= `HS32A_MOV;     // MOV
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_IMM;       // Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;         // [IGNORED] Rm
@@ -211,7 +235,7 @@ module hs32_decode (
                 /* MOV     Rd <- Rm_b */
                 `HS32_MOV: begin
                     aluop <= `HS32A_MOV;     // MOV
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_NULLI;     // [ZERO] Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -222,7 +246,7 @@ module hs32_decode (
                 /* MOV     Rd_b <- Rm */
                 `HS32_MOVR: begin
                     aluop <= `HS32A_MOV;     // MOV
-                    shift <= `HS32_SHIFT;   // [IGNORED] Shift
+                    shift <= 5'd0;   // [IGNORED] Shift
                     imm <= `HS32_NULLI;     // [ZERO] Imm
                     rd <= `HS32_RD;
                     rm <= `HS32_RM;
@@ -567,16 +591,24 @@ module hs32_decode (
 
                 /* INT     imm8 */
                 `HS32_INT: begin
-                    activate <= 1;
-                    int[22:16] <= `HS32_IVT;
-                    aluop <= `HS32A_NOP;
-                    shift <= `HS32_SHIFT;
-                    imm <= `HS32_IMM;
-                    rd <= `HS32_RD;
-                    rm <= `HS32_RM;
-                    rn <= `HS32_RN;
-                    bank <= `HS32_BANK;     // [IGNORED] Bank
-                    ctlsig <= { 13'b00_0_000_0000_100, `HS32_SHIFTDIR, 1'b0 };
+                    if (!intloop) begin
+                        activate <= 1;
+                        int <= `HS32_IMM;
+                        intloop <= 1;
+                        aluop <= `HS32A_NOP;
+                        shift <= `HS32_SHIFT;
+                        imm <= `HS32_IMM;
+                        rd <= `HS32_RD;
+                        rm <= `HS32_RM;
+                        rn <= `HS32_RN;
+                        bank <= `HS32_BANK;     // [IGNORED] Bank
+                        ctlsig <= { 13'b00_0_000_0000_100, `HS32_SHIFTDIR, 1'b0 };
+                    end
+                    else begin
+                        if (`HS32_IMM == 0) begin
+                            intloop <= 0;
+                        end
+                    end
                 end
             endcase
         end
