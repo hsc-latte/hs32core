@@ -36,19 +36,31 @@ module ext_sram (
 
     // For byte addressing headaches
     reg addrl;
+    reg lastble;
+    reg hasinit;
+    wire ble;
     reg[3:0] mask;
     reg[31:0] addr;
     reg[2:0] state;
+
+    assign ble = !(mask[1] | !rw);
+
     // For waveforms and cycle names, see CPU.md
     always @(posedge clk)
     if(reset) begin
         state   <= 0;
         mask    <= 0;
         addrl   <= 0;
+        addr    <= 0;
+        lastble <= 0;
+        hasinit <= 0;
     end else case(state)
         // T1
         3'b000: begin
-            state   <= { 2'b0, valid && !reset };
+            state   <= valid ?
+                // We can skip 1 cycle if the MSBs is the same
+                ({ ble, addr[31:17] } == { lastble, addri[31:17] }) && hasinit
+                ? 3'b010 : 3'b001 : 0;
             dout    <= addri[16:1];
             addrl   <= addri[0];
             mask    <= addri[0] && !rw ? 4'b0001 : 4'b0011;
@@ -61,8 +73,11 @@ module ext_sram (
         3'b001: begin
             state   <= reset ? 0 : 3'b010;
             // BLE is active low and NOT inverted on the output
-            dout    <= { !(mask[1] | !rw), addr[31:17] };
+            dout    <= { ble, addr[31:17] };
             we      <= rw;
+`ifdef SRAM_LATCH_LAZY
+            hasinit <= 1;
+`endif
         end
         // TW (wait 1 cycle)
         3'b010: begin
@@ -83,11 +98,12 @@ module ext_sram (
         end
         // T3 (wait for oe_negedge)
         3'b100: begin
-            state   <= mask[3] ? 3'b0000 : 3'b101;
-            mask    <= mask[1] ? addrl  && !rw ? 4'b0110 : 4'b1100 : 4'b1000;
+            state   <= mask[3] || reset ? 3'b000 : 3'b101;
+            mask    <= mask[0] ? addrl  && !rw ? 4'b0110 : 4'b1100 : 4'b1000;
             ready   <= !reset && mask[3];
             we      <= 0;
-            addr    <= addr + 1;
+            addr    <= addr + 2;        
+            lastble <= ble;
             // Write result to dtr (always)
             dtr[`B0] <= mask[0] ? addrl ? din[`B1] : din[`B0] : dtr[`B0];
             dtr[`B1] <= mask[1] ? addrl ? din[`B0] : din[`B1] : dtr[`B1];
@@ -95,7 +111,10 @@ module ext_sram (
             dtr[`B3] <= mask[3] ? addrl ? din[`B0] : din[`B1] : dtr[`B3];
         end
         3'b101: begin
-            state   <= 3'b001;
+            state   <= reset ? 0 :
+                // We can skip 1 cycle if the MSBs is the same
+                { ble, addr[31:17] } == { lastble, addri[31:17] }
+                ? 3'b010 : 3'b001;
             dout    <= addr[16:1];
             isout   <= valid;
             oe      <= 0;
@@ -121,6 +140,7 @@ module ext_sram (
         end
         // Before TW
         3'b010: begin
+            ale0_negedge <= 0;
             ale1_negedge <= 0;
             oe_negedge   <= 1;
         end

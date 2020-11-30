@@ -39,23 +39,35 @@ module main (
     wire done;
     reg valid, rw;
     reg [31:0] addri;
-    reg [15:0] dtw;
-    reg [15:0] data_final;
+    reg [31:0] dtw;
+    reg [31:0] data_final;
     initial data_final = 0;
-    wire[15:0] dtr;
-    assign { GPIO8, GPIO7, GPIO6, GPIO5, GPIO4, GPIO3, GPIO2, GPIO1, GPIO0 } = data_in[15:7];
+    wire[31:0] dtr;
+    assign { GPIO8, GPIO7, GPIO6, GPIO5, GPIO4, GPIO3, GPIO2, GPIO1, GPIO0 } = data_final[15:7]; //data_in[15:7];
 
     reg[23:0] ctr;
     wire clk1;
 `ifdef SIM
     assign clk1 = CLK;
 `else
-    assign clk1 = ctr[23];
+    assign clk1 = CLK;
 `endif
     assign LEDG_N = ~clk1;
     initial ctr = 0;
     always @(posedge CLK) begin
         ctr <= ctr + 1;
+    end
+
+    // Power on reset
+    reg por, state;
+    initial por = 0;
+    initial state = 0;
+    always @(posedge CLK) begin
+        if(!state) begin
+            por <= 1;
+            state <= 1;
+        end
+        else por <= 0;
     end
 
     reg[2:0] fsm;
@@ -64,8 +76,8 @@ module main (
         3'b000: begin
             rw <= 1;
             valid <= 1;
-            dtw <= 16'b1010_1010_1010_1010;
-            addri <= { 2'b10, 30'h0000_1000 };
+            dtw <= 32'haaaa_aaaa;
+            addri <= { 32'h0000_0010 };
             fsm <= 3'b001;
             LEDR_N <= 1;
         end
@@ -85,10 +97,10 @@ module main (
         default: begin end
     endcase
 
-    EXT_SRAM sram (
-        .clk(clk1),
+    ext_sram sram (
+        .clk(clk1), .reset(por),
         // Memory requests
-        .done(done), .valid(valid), .rw(rw),
+        .ready(done), .valid(valid), .rw(rw),
         .addri(addri), .dtw(dtw), .dtr(dtr),
         // External IO interface, active >> HIGH <<
         .din(data_in), .dout(data_out),

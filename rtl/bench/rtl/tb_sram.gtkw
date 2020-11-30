@@ -1,0 +1,55 @@
+[*]
+[*] GTKWave Analyzer v3.3.100 (w)1999-2019 BSI
+[*] Sun Nov 29 20:05:54 2020
+[*]
+[dumpfile] "c:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\build\sram_tb.vcd"
+[dumpfile_mtime] "Sun Nov 29 20:03:39 2020"
+[dumpfile_size] 1267
+[savefile] "C:\Users\Kevin\Desktop\Projects\fpga\hsc\rtl\bench\rtl\tb_sram.gtkw"
+[timestart] 0
+[size] 1000 600
+[pos] 425 62
+*-2.000000 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1 -1
+[treeopen] tb_sram.
+[sst_width] 197
+[signals_width] 167
+[sst_expanded] 1
+[sst_vpaned_height] 153
+@28
+tb_sram.sram.clk
+tb_sram.sram.reset
+tb_sram.sram.state[2:0]
+@29
+tb_sram.sram.mask[3:0]
+@28
+tb_sram.sram.addrl
+@22
+tb_sram.sram.addr[31:0]
+@200
+-
+@28
+tb_sram.sram.ready
+tb_sram.sram.valid
+@22
+tb_sram.sram.addri[31:0]
+tb_sram.sram.dtw[31:0]
+tb_sram.sram.dtr[31:0]
+@28
+tb_sram.sram.rw
+@200
+-
+@22
+tb_sram.sram.din[15:0]
+tb_sram.sram.dout[15:0]
+@28
+tb_sram.sram.we
+tb_sram.sram.oe
+tb_sram.sram.oe_negedge
+tb_sram.sram.ale0_negedge
+tb_sram.sram.ale1_negedge
+tb_sram.sram.bhe
+tb_sram.sram.isout
+@200
+-
+[pattern_trace] 1
+[pattern_trace] 0

@@ -37,7 +37,15 @@ module hs32_cpu (
     input   wire[31:0] din,
     output  wire[31:0] dout,
     output  wire valid,
-    input   wire ready
+    input   wire ready,
+
+    // Interrupt controller
+    output  wire[23:0] interrupts,  // Interrupt lines
+    output  wire iack,              // Interrupt acknowledge
+    input   wire[31:0] handler,     // ISR address
+    input   wire intrq,             // Request interrupt
+    input   wire[4:0] vec,          // Interrupt vector
+    input   wire nmi                // Non maskable interrupt
 );
     parameter PREFETCH_SIZE = 3; // Depth of 2^PREFETCH_SIZE instructions
 
@@ -126,7 +134,11 @@ module hs32_cpu (
         .dtrm(dtr_e), .dtwm(dtw_e),
         .rw_mem(rw_e),
         
-        // TODO: Interrupts
-        .intrq(0), .addi(0)
+        // Interrupts
+        .intrq(intrq),
+        .isr(handler),
+        .code(vec),
+        .iack(iack),
+        .nmi(nmi)
     );
 endmodule

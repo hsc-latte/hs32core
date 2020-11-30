@@ -54,10 +54,29 @@ module hs32_exec (
 
     // Interrupts
     input   wire intrq,         // Interrupt signal
-    input   wire [31:0] addi    // Interrupt address
+    input   wire nmi,           // Non maskable?
+    input   wire [31:0] isr,    // Interrupt handler
+    input   wire [4:0] code,    // Interrupt vector
+    output  wire iack           // Interrupt acknowledge
 );
     // Assign ready signal (only when IDLE)
     assign rdy = state == `IDLE;
+
+    // Latch incoming interrupts
+    reg int_latch;
+    reg[31:0] isr_latch;
+    reg[4:0] code_latch;
+    always @(posedge clk)
+    if(reset)
+        int_latch <= 0;
+    else if(state == `INT)
+        int_latch <= 0;
+    // NMI forces an interrupt, otherwise check interrupt enable
+    else if(intrq && (nmi || !(`MCR_INTEN))) begin
+        int_latch <= 1;
+        isr_latch <= isr;
+        code_latch <= code;
+    end
 
     //===============================//
     // Busses
@@ -141,7 +160,9 @@ module hs32_exec (
     if(reset) begin
         state <= 0;
     end else case(state)
-        `IDLE: if(req) begin
+        `IDLE: if(int_latch || intrq) begin
+            state <= `INT;
+        end else if(req) begin
             state <=
                 // All states (except branch) start with `TR1
                 (`CTL_b == 0) ? `TR1 :
@@ -189,6 +210,9 @@ module hs32_exec (
         `TW2: begin
             state <= (rd == 4'b1111) ? `TB2 : `IDLE;
         end
+        `INT: begin
+            state <= `TB2;
+        end
     endcase
 
     //===============================//
@@ -228,6 +252,14 @@ module hs32_exec (
                 reg_we <= 1;
             4'b1111: begin end
         endcase
+        // Interrupt
+        `INT: begin
+            lr_i <= `IS_USR ? pc_u : pc_s;
+            `MCR_USR <= 0;
+            `MCR_MDE <= 1;
+            `MCR_VEC <= code_latch;
+            `MCR_NZCVi <= flags[31:28];
+        end
     endcase
 
     // Write to MAR (drive: mar, dtw)
@@ -278,7 +310,7 @@ module hs32_exec (
     end else case(state)
         `IDLE: begin
             flush <= 0;
-            if(req) begin
+            if(req && !(int_latch || intrq)) begin
                 // Increment PC before we change states
                 if(`IS_USR)
                     pc_u <= pc_u+4;
@@ -294,6 +326,11 @@ module hs32_exec (
                 pc_u <= { 16'b0, imm } + pc_u;
             else
                 pc_s <= { 16'b0, imm } + pc_s;
+        end
+        `INT: begin
+            flush <= 1;
+            pc_s <= isr_latch;
+            newpc <= isr_latch;
         end
         `TB2: begin end
         // Update the PC from a Rd instruction (see "write to Rd")
@@ -314,6 +351,11 @@ module hs32_exec (
     always @(posedge clk) begin
         if(reset) begin
             flags <= { 16'b0, 16'h8001 };
+        end else if(
+            (state == `TR1 && `CTL_s != `CTL_s_mid && `CTL_s != `CTL_s_mnd && `CTL_d == `CTL_d_rd) ||
+            (state == `TW2) && `BANK_F
+        ) begin
+            flags <= obus;
         end else if(state == `TR1 && `CTL_d == `CTL_d_rd && `CTL_f == 1'b1) begin
             flags <= { alu_nzcv, 12'b0, branch_conds };
         end

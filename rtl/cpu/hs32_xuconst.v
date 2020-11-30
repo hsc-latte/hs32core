@@ -62,10 +62,14 @@
 `define TM1         6
 `define TM2         7
 `define TW2         8
+`define INT         9
 
 // MCR defines current machine mode
 `define MCR_USR     mcr_s[2]
 `define MCR_MDE     mcr_s[1]
+`define MCR_INTEN   mcr_s[0]
+`define MCR_VEC     mcr_s[7:3]
+`define MCR_NZCVi   mcr_s[11:8]
 
 // Mode check macros
 `define IS_USR      (`MCR_USR == 1)
@@ -74,6 +78,7 @@
 `define BANK_U      (`CTL_B == 1 && bank == 0)
 `define BANK_S      (`CTL_B == 1 && bank == 1)
 `define BANK_I      (`CTL_B == 1 && bank == 2)
+`define BANK_F      (`CTL_B == 1 && bank == 3)
 
 // ALU Conditional flags
 `define ALU_N       alu_nzcv[3]
