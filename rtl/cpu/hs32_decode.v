@@ -64,36 +64,38 @@ module hs32_decode (
     input  wire rdye,
 
     // Interrupts
-    output reg activate,
-    output reg [23:0] int_line
+    output wire [23:0] int_line
 );
     reg [31:0] instd;
     assign reqd = rdye;
 
-    assign int_line[0]  = int == 0  && activate ? 1 : 0;
-    assign int_line[1]  = int == 1  && activate ? 1 : 0;
-    assign int_line[2]  = int == 2  && activate ? 1 : 0;
-    assign int_line[3]  = int == 3  && activate ? 1 : 0;
-    assign int_line[4]  = int == 4  && activate ? 1 : 0;
-    assign int_line[5]  = int == 5  && activate ? 1 : 0;
-    assign int_line[6]  = int == 6  && activate ? 1 : 0;
-    assign int_line[7]  = int == 7  && activate ? 1 : 0;
-    assign int_line[8]  = int == 8  && activate ? 1 : 0;
-    assign int_line[9]  = int == 9  && activate ? 1 : 0;
-    assign int_line[10] = int == 10 && activate ? 1 : 0;
-    assign int_line[11] = int == 11 && activate ? 1 : 0;
-    assign int_line[12] = int == 12 && activate ? 1 : 0;
-    assign int_line[13] = int == 13 && activate ? 1 : 0;
-    assign int_line[14] = int == 14 && activate ? 1 : 0;
-    assign int_line[15] = int == 15 && activate ? 1 : 0;
-    assign int_line[16] = int == 16 && activate ? 1 : 0;
-    assign int_line[17] = int == 17 && activate ? 1 : 0;
-    assign int_line[18] = int == 18 && activate ? 1 : 0;
-    assign int_line[19] = int == 19 && activate ? 1 : 0;
-    assign int_line[20] = int == 20 && activate ? 1 : 0;
-    assign int_line[21] = int == 21 && activate ? 1 : 0;
-    assign int_line[22] = int == 22 && activate ? 1 : 0;
-    assign int_line[23] = int == 23 && activate ? 1 : 0;
+    reg activate;
+    reg intloop;
+
+    assign int_line[0]  = `HS32_IMM == 0  && activate ? 1 : 0;
+    assign int_line[1]  = `HS32_IMM == 1  && activate ? 1 : 0;
+    assign int_line[2]  = `HS32_IMM == 2  && activate ? 1 : 0;
+    assign int_line[3]  = `HS32_IMM == 3  && activate ? 1 : 0;
+    assign int_line[4]  = `HS32_IMM == 4  && activate ? 1 : 0;
+    assign int_line[5]  = `HS32_IMM == 5  && activate ? 1 : 0;
+    assign int_line[6]  = `HS32_IMM == 6  && activate ? 1 : 0;
+    assign int_line[7]  = `HS32_IMM == 7  && activate ? 1 : 0;
+    assign int_line[8]  = `HS32_IMM == 8  && activate ? 1 : 0;
+    assign int_line[9]  = `HS32_IMM == 9  && activate ? 1 : 0;
+    assign int_line[10] = `HS32_IMM == 10 && activate ? 1 : 0;
+    assign int_line[11] = `HS32_IMM == 11 && activate ? 1 : 0;
+    assign int_line[12] = `HS32_IMM == 12 && activate ? 1 : 0;
+    assign int_line[13] = `HS32_IMM == 13 && activate ? 1 : 0;
+    assign int_line[14] = `HS32_IMM == 14 && activate ? 1 : 0;
+    assign int_line[15] = `HS32_IMM == 15 && activate ? 1 : 0;
+    assign int_line[16] = `HS32_IMM == 16 && activate ? 1 : 0;
+    assign int_line[17] = `HS32_IMM == 17 && activate ? 1 : 0;
+    assign int_line[18] = `HS32_IMM == 18 && activate ? 1 : 0;
+    assign int_line[19] = `HS32_IMM == 19 && activate ? 1 : 0;
+    assign int_line[20] = `HS32_IMM == 20 && activate ? 1 : 0;
+    assign int_line[21] = `HS32_IMM == 21 && activate ? 1 : 0;
+    assign int_line[22] = `HS32_IMM == 22 && activate ? 1 : 0;
+    assign int_line[23] = `HS32_IMM == 23 && activate ? 1 : 0;
 
     always @(posedge clk)
     if(reset) begin
@@ -111,7 +113,6 @@ module hs32_decode (
             rn      <= 0;
             bank    <= 0;
             activate <= 0;
-            //int <= 24'h0;
         end
         /* If Ready Received */
         if (rdye) begin
@@ -594,7 +595,6 @@ module hs32_decode (
                 `HS32_INT: begin
                     if (!intloop) begin
                         activate <= 1;
-                        //int <= `HS32_IMM;
                         intloop <= 1;
                         aluop <= `HS32A_NOP;
                         shift <= `HS32_SHIFT;
