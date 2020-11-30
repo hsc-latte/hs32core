@@ -1,0 +1,3 @@
+[submodule "rtl"]
+	path = rtl
+	url = https://github.com/HomebrewSiliconClub/hs32core-rtl
